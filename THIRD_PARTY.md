@@ -25,7 +25,7 @@ If the task requires a full license inventory, produce it from the final lockfil
 | --- | --- | --- | --- | --- | --- | --- |
 | GitHub | Repository hosting | https://github.com/szmefo/hackyeah-2026 | 2026-10-01, Europe/Warsaw | Source history | GitHub service terms | Private at initialization |
 | Vercel | Hosting account / workspace | https://vercel.com/hack-yeah1 | 2026-10-02, Europe/Warsaw — before event | Prepared for later deployment | https://vercel.com/legal/terms | Hobby workspace verified; no deployment or GitHub connection |
-| Supabase | Database service preparation | https://supabase.com | 2026-10-02, Europe/Warsaw — before event | Prepared for possible database use | https://supabase.com/terms | Free organization verified; project creation pending owner password entry and submission; see docs/CLOUD.md |
+| Supabase | PostgreSQL database / GitHub association | https://supabase.com/dashboard/project/omutcnsoxmjzagfbzkwa | 2026-10-02, Europe/Warsaw — before event | Empty database prepared for later use | https://supabase.com/terms | Free project created; public schema empty; hackyeah-2026 repository linked with automatic DB deployment off; no application integration; see docs/CLOUD.md |
 
 No application APIs, LLMs, external datasets or external visual assets are connected.
 `data/example.json` is newly written synthetic preparation data. Fonts are the
