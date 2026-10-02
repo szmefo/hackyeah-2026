@@ -83,6 +83,8 @@ run `npm run build` before `npm run check` if `next-env.d.ts` does not exist yet
 
 ## Deployment
 
+Cloud preparation status: [docs/CLOUD.md](docs/CLOUD.md).
+
 When ready, import this GitHub repository into Vercel, select the Next.js preset,
 leave the root directory as `.` and use Node.js 24.x. No environment variables
 are initially required. No deployment has been created during preparation.

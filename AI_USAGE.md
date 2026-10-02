@@ -9,6 +9,7 @@ permits a particular use of AI; verify and record its actual rules after reveal.
 | Timestamp / phase | Tool | Model if known | Purpose | Output / paths | Human direction / review |
 | --- | --- | --- | --- | --- | --- |
 | 2026-10-01, Europe/Warsaw — before event | Codex | GPT-6-based agent; exact model identifier unavailable | Stack selection, newly written neutral skeleton, documentation, dependency installation and local verification | Entire initial repository except downloaded third-party packages | Greg requested this preparation; no permission to import UltraSoul; Greg reviews delivered starter |
+| 2026-10-02, Europe/Warsaw — before event | Codex | Exact model identifier unavailable | Brave account verification and neutral cloud preparation | docs/CLOUD.md and resource / decision registers | Greg completed account sign-in; database password entry and final project creation handed to Greg; no UltraSoul import or application integration |
 
 No task-specific prompts or algorithms were authored before reveal. No UltraSoul
 source code or data was read or imported to construct the starter. Public Next.js

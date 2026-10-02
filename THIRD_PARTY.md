@@ -24,10 +24,13 @@ If the task requires a full license inventory, produce it from the final lockfil
 | Resource | Type | Source / version | Added at (timezone) | Used in | License / terms / attribution | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
 | GitHub | Repository hosting | https://github.com/szmefo/hackyeah-2026 | 2026-10-01, Europe/Warsaw | Source history | GitHub service terms | Private at initialization |
+| Vercel | Hosting account / workspace | https://vercel.com/hack-yeah1 | 2026-10-02, Europe/Warsaw — before event | Prepared for later deployment | https://vercel.com/legal/terms | Hobby workspace verified; no deployment or GitHub connection |
+| Supabase | Database service preparation | https://supabase.com | 2026-10-02, Europe/Warsaw — before event | Prepared for possible database use | https://supabase.com/terms | Free organization verified; project creation pending owner password entry and submission; see docs/CLOUD.md |
 
 No application APIs, LLMs, external datasets or external visual assets are connected.
 `data/example.json` is newly written synthetic preparation data. Fonts are the
-platform's system fonts. Vercel is a documented deployment option, not a deployed service.
+platform's system fonts. Cloud account preparation is recorded in
+[docs/CLOUD.md](docs/CLOUD.md); no cloud service is connected to the application.
 
 When adding a resource, record exact version/model identifier or dataset revision,
 origin, license/terms link, attribution obligations and relevant restrictions.
