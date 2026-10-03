@@ -30,6 +30,10 @@ class DemoTruthTests(unittest.TestCase):
         self.assertFalse(moment['separable'])
         self.assertEqual(moment['minGlucose'],65)
 
+    def test_missing_glucose_window_does_not_claim_separability(self):
+        gap=next(m for m in build_demo()['moments'] if m['id']=='gap')
+        self.assertFalse(gap['separable'])
+
     def test_reported_counts_and_coverage_match_observed_points(self):
         demo=build_demo()
         self.assertEqual(demo['facts']['below70Count'],sum(p['value']<70 for p in demo['glucose']))

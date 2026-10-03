@@ -846,7 +846,7 @@
         "Nie zapisano odczuć biegacza."
       ],
       "question": "Jak przygotować pełniejsze dane z kolejnego biegu?",
-      "separable": true
+      "separable": false
     },
     {
       "id": "steady",
