@@ -70,6 +70,8 @@ Nie orzekaj hipoglikemii z jednego pomiaru. Brak pomiaru nie jest prawidłowym p
 Teksty wyłącznie po polsku, krótkie i zrozumiałe. W text/unknowns/questions NIE umieszczaj
 żadnych cyfr ani liczebników przedstawiających pomiary: liczby już pokazuje interfejs z faktów.
 Nie cytuj notatek. Nie używaj słów o dawkach, insulinie, bolusie, bazie, jedzeniu ani żelach.
+Nie używaj też terminów diagnozy, hipoglikemii ani sformułowań spowodowało, wynika z,
+przyczyną, odpowiada za, na pewno. Opisuj niższy odczyt i współwystępowanie.
 Każde claim i alternative musi wskazać istniejące factIds z przekazanej listy.
 Każde zdanie o glukozie lub sensorze musi cytować fakt glukozy; zdanie o terenie,
 podbiegu lub wysokości musi cytować fakt wysokości. Cytuj od jednego do ośmiu factIds.
@@ -96,6 +98,25 @@ function isText(value: unknown): value is string {
   );
 }
 
+function textRejection(value: unknown): string {
+  if (typeof value !== "string") return "type";
+  if (/\d/u.test(value)) return "number";
+  if (/["„”]/u.test(value)) return "quote";
+  if (/(?:bolus|insulin|jednostk|dawk|mg\/kg|g\/kg|\bCHO\b)/iu.test(value))
+    return "medication";
+  if (
+    /(?:zjedz|wypij|weź|przyjmij|\bzmniejsz\b|\bzwiększ\b|\btake\b|\beat\b|\bdrink\b)/iu.test(
+      value,
+    )
+  )
+    return "directive";
+  if (/(?:hipoglikem|diagnoz|rozpoznan)/iu.test(value)) return "diagnosis";
+  if (/(?:żel|węglowodan)/iu.test(value)) return "food";
+  if (prohibited.test(value.replace(/nie dowodzi/giu, "nie potwierdza")))
+    return "causality";
+  return "length";
+}
+
 export function validateAnalysis(
   value: unknown,
   context: InterpretationContext,
@@ -116,7 +137,8 @@ export function validateAnalysis(
     if (!Array.isArray(list) || list.length < 1 || list.length > 3)
       return reject("claim_count");
     for (const item of list) {
-      if (item && !isText(item.text)) return reject("text_policy");
+      if (item && !isText(item.text))
+        return reject(`text_policy_${textRejection(item.text)}`);
       if (
         !item ||
         Object.keys(item).sort().join() !== "factIds,text" ||
@@ -238,6 +260,9 @@ export async function interpret(
       `${instructions}\nPopraw odrzucony szkic. Kod błędu: ${rejection}. Jeżeli glucose_support,
 każde zdanie o glukozie/odczytach/sensorze musi wskazać odpowiedni factId glukozy.
 Jeżeli terrain_support, dodaj właściwy factId wysokości do zdania o terenie.
+Jeżeli text_policy_number, usuń wszystkie cyfry z tekstów. Jeżeli text_policy_causality,
+usuń sformułowania sugerujące przyczynę, również w zdaniach przeczących. Jeżeli
+text_policy_diagnosis, nie używaj terminów diagnozy; napisz o niższym odczycie.
 Nie dodawaj liczb ani porad. Nie zmieniaj faktów, zachowaj ograniczenia i niepewność.`,
       { context, rejectedDraft: analysis },
       analysisSchema,
