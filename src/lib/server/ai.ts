@@ -199,7 +199,7 @@ export async function interpret(
   model: string,
   provider: AIProvider = "OpenAI",
 ) {
-  const analysis = await callModel(
+  let analysis = await callModel(
     key,
     model,
     instructions,
@@ -208,12 +208,33 @@ export async function interpret(
     "run_interpretation",
     provider,
   );
+  let rejection = "";
   if (
-    !validateAnalysis(analysis, context, (code) =>
-      console.warn("AI output rejected", code),
+    !validateAnalysis(analysis, context, (code) => {
+      rejection = code;
+    })
+  ) {
+    // One bounded correction remains a draft. It must pass the same checks and review.
+    console.warn("AI output correction", rejection);
+    analysis = await callModel(
+      key,
+      model,
+      `${instructions}\nPopraw odrzucony szkic. Kod błędu: ${rejection}. Jeżeli glucose_support,
+każde zdanie o glukozie/odczytach/sensorze musi wskazać odpowiedni factId glukozy.
+Jeżeli terrain_support, dodaj właściwy factId wysokości do zdania o terenie.
+Nie dodawaj liczb ani porad. Nie zmieniaj faktów, zachowaj ograniczenia i niepewność.`,
+      { context, rejectedDraft: analysis },
+      analysisSchema,
+      "run_interpretation",
+      provider,
+    );
+    if (
+      !validateAnalysis(analysis, context, (code) =>
+        console.warn("AI output rejected", code),
+      )
     )
-  )
-    throw new Error("analysis_rejected");
+      throw new Error("analysis_rejected");
+  }
   const review = await callModel(
     key,
     model,

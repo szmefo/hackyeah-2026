@@ -215,3 +215,61 @@ test("provider outage cannot return invented interpretation", async () => {
     globalThis.fetch = original;
   }
 });
+
+test("invalid evidence gets one bounded correction and a separate review", async () => {
+  const original = globalThis.fetch;
+  let count = 0;
+  const bad = valid();
+  bad.claims[0].factIds = ["m.pace"];
+  globalThis.fetch = async () =>
+    Response.json({
+      status: "completed",
+      output: [
+        {
+          content: [
+            {
+              type: "output_text",
+              text: JSON.stringify(
+                ++count === 1
+                  ? bad
+                  : count === 2
+                    ? valid()
+                    : { passed: true, issues: [] },
+              ),
+            },
+          ],
+        },
+      ],
+    });
+  try {
+    const result = await interpret(context, "test-key", "test-model");
+    assert.equal(result.status, "ai");
+    assert.equal(count, 3);
+  } finally {
+    globalThis.fetch = original;
+  }
+});
+test("repeated invalid evidence is rejected without unbounded retry or review", async () => {
+  const original = globalThis.fetch;
+  let count = 0;
+  const bad = valid();
+  bad.claims[0].factIds = ["invented"];
+  globalThis.fetch = async () => {
+    count++;
+    return Response.json({
+      status: "completed",
+      output: [
+        { content: [{ type: "output_text", text: JSON.stringify(bad) }] },
+      ],
+    });
+  };
+  try {
+    await assert.rejects(
+      interpret(context, "test-key", "test-model"),
+      /analysis_rejected/,
+    );
+    assert.equal(count, 2);
+  } finally {
+    globalThis.fetch = original;
+  }
+});

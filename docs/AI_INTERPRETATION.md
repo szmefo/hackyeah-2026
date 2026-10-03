@@ -83,3 +83,12 @@ https://privacy.claude.com/en/articles/7996866-how-long-do-you-store-my-organiza
 and structured output docs:
 https://platform.claude.com/docs/en/build-with-claude/structured-outputs
 Live result and verification are recorded in PHASE_2_REVIEW.md.
+
+## Live validation adjustment
+
+The first synthetic Claude drafts failed the evidence-reference guard and were not
+shown as AI interpretation. One bounded correction of a rejected draft is now allowed,
+then the same code checks and separate AI review are required. Repeated failure keeps
+the deterministic fallback. Each call is limited to 16 seconds; at most three calls
+fit within the 60-second route budget. Logs contain only finite rejection labels,
+never model text, notes, measurements or secrets.

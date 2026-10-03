@@ -79,7 +79,7 @@ export async function callStructured(
                 max_output_tokens: 1800,
               },
         ),
-        signal: AbortSignal.timeout(22000),
+        signal: AbortSignal.timeout(16000),
         cache: "no-store",
       },
     );
