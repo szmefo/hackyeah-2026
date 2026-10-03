@@ -41,3 +41,5 @@ Recorded review handoff at 2026-10-03T15:39:05.9263158+02:00 (Europe/Warsaw); Gr
 | 2026-10-03T15:30:58+02:00 | Implement approved v3 concept 04 in an isolated worktree, with a separate cream-lavender.css presentation layer | Greg requested the summary-first cream/lavender layout and protection from concurrent edits; retain current phase-2 import/AI behavior and existing print styles |
 
 | 2026-10-03T15:55:34+02:00 | Cherry-pick cream/lavender UI onto b0e45ec; preserve both documentation histories and publish a86ea60 to existing Vercel project. | Application files merged cleanly; newer Anthropic, validation and import code unchanged; production checks passed. |
+
+| 2026-10-03T18:54:39+02:00 | Version four corrected synthetic scenario pairs and their generator in demos/synthetic-scenarios. | Local tmp assets were absent from Git; reproduce matching FIT/CSV dates and preserve demo inputs on GitHub. |
