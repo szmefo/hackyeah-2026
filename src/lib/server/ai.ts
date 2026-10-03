@@ -68,7 +68,8 @@ odczyt mogą być powyżej progu, gdy odczyt pomiędzy nimi był niższy. Nie tw
 że odczyty pozostawały powyżej progu, jeśli minGlucose jest poniżej progu.
 Nie orzekaj hipoglikemii z jednego pomiaru. Brak pomiaru nie jest prawidłowym pomiarem.
 Teksty wyłącznie po polsku, krótkie i zrozumiałe. W text/unknowns/questions NIE umieszczaj
-żadnych cyfr ani liczebników przedstawiających pomiary: liczby już pokazuje interfejs z faktów.
+nazw pól technicznych takich jak separable, minGlucose i factIds; pisz dla biegacza.
+Nie umieszczaj żadnych cyfr ani liczebników przedstawiających pomiary: liczby pokazuje interfejs z faktów.
 Nie cytuj notatek. Nie używaj słów o dawkach, insulinie, bolusie, bazie, jedzeniu ani żelach.
 Nie używaj też terminów diagnozy, hipoglikemii ani sformułowań spowodowało, wynika z,
 przyczyną, odpowiada za, na pewno. Opisuj niższy odczyt i współwystępowanie.
@@ -313,6 +314,16 @@ Nie traktuj tego przeglądu jako weryfikacji medycznej. Zwróć passed oraz list
   return {
     status: "ai" as const,
     ...analysis,
+    // Drop redundant internal-flag annotations, retaining the reviewed human sentence.
+    unknowns: analysis.unknowns.map((text) =>
+      text
+        .replace(
+          /\s*[–—-]?\s*separable\s*=\s*(?:false|true)(?: dla tego momentu)?\.?/giu,
+          ".",
+        )
+        .replace(/\.+/gu, ".")
+        .trim(),
+    ),
     review: "passed" as const,
     provider,
     model,

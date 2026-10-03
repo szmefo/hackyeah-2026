@@ -339,3 +339,38 @@ test("glucose contradiction variants reject while unrelated pace absence does no
   a.claims[0].text = "Zmniejszmy wysiłek podczas biegu.";
   assert.equal(validateAnalysis(a, context), false);
 });
+
+test("reviewed output does not expose internal separation flags to the runner", async () => {
+  const original = globalThis.fetch;
+  let count = 0;
+  const draft = valid();
+  draft.unknowns = [
+    "Dane nie pozwalają ustalić przyczyny. Nie można rozdzielić czynników – separable=false dla tego momentu.",
+  ];
+  globalThis.fetch = async () =>
+    Response.json({
+      status: "completed",
+      output: [
+        {
+          content: [
+            {
+              type: "output_text",
+              text: JSON.stringify(
+                ++count === 1 ? draft : { passed: true, issues: [] },
+              ),
+            },
+          ],
+        },
+      ],
+    });
+  try {
+    const result = await interpret(context, "test-key", "test-model");
+    assert.equal(
+      result.unknowns[0],
+      "Dane nie pozwalają ustalić przyczyny. Nie można rozdzielić czynników.",
+    );
+    assert.equal(count, 2);
+  } finally {
+    globalThis.fetch = original;
+  }
+});
