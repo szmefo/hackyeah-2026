@@ -23,6 +23,8 @@ If the task requires a full license inventory, produce it from the final lockfil
 
 | Resource | Type | Source / version | Added at (timezone) | Used in | License / terms / attribution | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
+| Prettier | Formatting tool, ephemeral npm exec | 3.6.2; https://github.com/prettier/prettier | 2026-10-03, Europe/Warsaw | Format newly authored TSX/CSS for readable review | MIT | Not a runtime dependency; pinned invocation; no UltraSoul files formatted |
+| Vercel deployment | Application hosting | cukier-w-biegu; CLI locally 53.4.0, remote build CLI 62.1.0 | 2026-10-03, Europe/Warsaw | Phase-1 synthetic public demo | Existing Vercel Hobby service terms | https://cukier-w-biegu.vercel.app; no app keys or patient data; manual CLI deployment, no automatic GitHub connection |
 | pydantic | Python library | 2.12.5; https://github.com/pydantic/pydantic | 2026-10-03, Europe/Warsaw | Imported signal models, engine/requirements.txt | MIT | Existing local runtime verified; not a browser dependency |
 | garmin-fit-sdk | Official Python FIT decoder | 21.214.0; https://github.com/garmin/fit-python-sdk | 2026-10-03, Europe/Warsaw | Imported FIT parser and fixtures | Garmin FIT SDK license in package / source repository; preserve applicable notices | Pin matches source environment with Encoder fixture support; global 21.195.0 lacks Encoder. No Garmin account integration; no real FIT uploaded in phase 1 |
 | pytest | Python test runner | 9.0.2; https://github.com/pytest-dev/pytest | 2026-10-03, Europe/Warsaw | Imported engine tests | MIT | Verification tooling |
@@ -33,7 +35,9 @@ If the task requires a full license inventory, produce it from the final lockfil
 No application APIs, LLMs, external datasets or external visual assets are connected.
 `data/example.json` is newly written synthetic preparation data. Fonts are the
 platform's system fonts. Cloud account preparation is recorded in
-[docs/CLOUD.md](docs/CLOUD.md); no cloud service is connected to the application.
+[docs/CLOUD.md](docs/CLOUD.md). These sentences describe preparation; phase-1
+application hosting on Vercel is disclosed separately above. Supabase is still not
+connected to the application.
 
 When adding a resource, record exact version/model identifier or dataset revision,
 origin, license/terms link, attribution obligations and relevant restrictions.
