@@ -32,7 +32,12 @@ Uploaded results, observations and AI responses live in React memory until reset
 [Architecture](docs/ARCHITECTURE.md) · [API contract](docs/PHASE_2_CONTRACT.md).
 
 ## Demo
-**https://cukier-w-biegu.vercel.app**
+[Open the live application](https://cukier-w-biegu.vercel.app/)
+
+The current interface is version 04 **Cream and lavender / Krem i lawenda**:
+a run summary beside three aligned plots on desktop, with a stacked layout on phones.
+[UI scope and production verification](docs/CREAM_LAVENDER_UI.md).
+The production AI provider is **Anthropic (Claude)**; analysis requires separate consent.
 
 1. Open **Źródła**, click **Wybierz przykładową parę**.
 2. Confirm processing consent, click **Połącz pliki i zobacz bieg**.
@@ -48,6 +53,29 @@ has manually selected illustrative moments. See provenance on each dataset.
 
 Refresh or direct opening a new tab restores the built-in example. Printing opens
 the browser print flow; long notes/AI content can require more than one page.
+
+## Additional synthetic scenarios
+
+Four complete FIT/CSV pairs are versioned in [demos/synthetic-scenarios](demos/synthetic-scenarios/README.md):
+
+| Folder | Scenario |
+| --- | --- |
+| `01-niski-cukier-na-plaskim` | Lower glucose readings and slower pace on a mostly flat route |
+| `02-podbieg-cukier-w-normie` | Uphill section with glucose readings remaining above 70 mg/dL |
+| `03-podbieg-i-niski-cukier` | Uphill section and lower glucose readings in the same window |
+| `04-luka-w-danych` | Glucose readings stop before the final part of the run |
+
+These are wholly synthetic measurements. Upload `bieg.fit` and `glukoza.csv` from
+the **same folder**, select **Europe/Warsaw**, and confirm processing consent.
+Leave the checkbox for the downloaded website example **unchecked**: it validates
+only the exact built-in pair. Other uploads are labelled uploaded data, including
+these locally generated synthetic scenarios. FIT and CSV dates are aligned.
+
+Regenerate all four pairs from the repository root:
+
+```powershell
+engine/.venv/Scripts/python.exe demos/synthetic-scenarios/generate.py
+```
 
 ## Running locally
 Node **24.x**, npm, Python **3.12+**, Git and PowerShell **7**.
@@ -97,6 +125,9 @@ Web needs `ENGINE_URL`, `ENGINE_SHARED_SECRET`; engine needs the same secret.
 Only web needs optional `ANTHROPIC_API_KEY` / `ANTHROPIC_MODEL` (or OpenAI settings). No secrets in Git.
 Manual authenticated artifact deployment; automatic GitHub deployment remains disabled.
 [Cloud status](docs/CLOUD.md).
+The current UI deployment uses application source commit `a86ea60`; later commits
+add verification records and corrected local demo assets. Pushing to GitHub alone
+does not publish a new Vercel release.
 
 ## Background IP
 [BACKGROUND_IP.md](BACKGROUND_IP.md): six approved UltraSoul source/test imports with
@@ -122,9 +153,18 @@ git diff --stat task-reveal-2026..HEAD
 
 `pre-hackathon-starter-2026` records neutral preparation. Imports remain Background IP.
 Phase 1 implemented Opowieść and synthetic review; phase 2 adds actual import, measured
-contexts and optional model integration. No DB/auth, Garmin, period summaries, extra
+contexts and optional model integration. Version 04 adds the cream/lavender UI;
+corrected, reproducible synthetic scenarios are committed separately. No DB/auth, Garmin, period summaries, extra
 diabetes profiles or final submission in this phase.
 
 ## Verification
-[Phase 1](docs/PHASE_1_REVIEW.md) · [Phase 2](docs/PHASE_2_REVIEW.md).
+[Phase 1](docs/PHASE_1_REVIEW.md) · [Phase 2](docs/PHASE_2_REVIEW.md) ·
+[Current UI integration and deployment](docs/CREAM_LAVENDER_UI.md).
+
+Latest UI release passed build, TypeScript/ESLint checks, 29 AI/transport tests and
+10 production route tests. Browser checks covered desktop, a 390px phone viewport,
+synthetic import, missing-data selection, observations and their presence in the brief.
+All four additional scenarios passed the Python analysis pipeline; scenario 03 also
+passed the public import endpoint (HTTP 200). Native print/PDF was not re-tested
+for this UI release; no new paid AI call was made during its verification.
 [Submission folder](submission/README.md) remains a placeholder.

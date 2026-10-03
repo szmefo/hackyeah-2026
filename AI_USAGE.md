@@ -78,3 +78,5 @@ Greg selected v3 concept 04 and requested implementation isolated from concurren
 | 2026-10-03T15:55:34+02:00 | Codex | GPT-6 | Integrated cream/lavender commit eb510e2 as a86ea60 preserving newer application changes; resolved append-only documentation conflicts; tested and published existing Vercel site. | docs/CREAM_LAVENDER_UI.md; a86ea60 | User requested integration/publication; build, check, 29 AI tests, 10 production route tests and Brave GUI verified. |
 
 2026-10-03T18:54:39+02:00 — Codex (GPT-6): diagnosed mismatched FIT/CSV dates in local synthetic scenarios, regenerated all four pairs, verified each with analyze_upload and scenario 03 through production import (HTTP 200). Added the existing synthetic generator and corrected pairs under demos/synthetic-scenarios with portable repository paths at Greg's request to commit/push. No model API used.
+
+2026-10-03T18:55:38+02:00 — Codex (GPT-6): updated README to match deployed cream/lavender UI, Anthropic provider, versioned synthetic scenarios, local commands and actual verification scope. Checked documentation against repository files and recorded release evidence; Greg requested README update.
