@@ -211,6 +211,11 @@ _STRENGTH_SENTENCES = {
 }
 
 
+def _occurred(subject: str) -> str:
+    """'wystąpił'/'wystąpiła' agreeing with the first noun of the subject."""
+    return "wystąpiła " if subject.startswith("flaga") else "wystąpił "
+
+
 def _describe(context: dict, kinds: set[str], signal_kinds: set[str], terrain_unknown: bool) -> tuple[str, str, str, str]:
     """Deterministic label, title, narrative and question for one moment.
 
@@ -252,7 +257,7 @@ def _describe(context: dict, kinds: set[str], signal_kinds: set[str], terrain_un
             title = "Zwolnienie na podbiegu przy niskim odczycie glukozy."
         else:
             title = "Niski odczyt glukozy i podbieg w jednym oknie."
-        narrative = ("W tym oknie jednocześnie wystąpił " + low_text +
+        narrative = ("W tym oknie jednocześnie " + _occurred(low_text) + low_text +
                      " oraz wzrost wysokości" + pace_clause + ". Oba sygnały wystąpiły razem, więc dane"
                      " nie pozwalają rozdzielić ich wpływu ani wskazać przyczyny zmiany tempa.")
         question = "Jak odróżnić spadek glukozy od zmęczenia na podbiegu, gdy wystąpiły w tym samym czasie?"
@@ -267,7 +272,7 @@ def _describe(context: dict, kinds: set[str], signal_kinds: set[str], terrain_un
             title = "Niski odczyt glukozy w kontekście biegu."
         terrain = (" Nie było tu podbiegu, więc teren nie współwystępował z tym odczytem." if flat else
                    " Pomiary wysokości są niepełne, więc nie wiadomo, jak zmieniał się teren.")
-        narrative = ("W tym oknie wystąpił " + low_text + pace_clause + "." +
+        narrative = ("W tym oknie " + _occurred(low_text) + low_text + pace_clause + "." +
                      terrain + " To obserwacja z sensora, bez rozpoznania przyczyny ani zalecenia leczenia.")
         question = "Jak omówić ten niski odczyt w kontekście wysiłku i ograniczeń sensora?"
     elif state == "high":
@@ -277,7 +282,7 @@ def _describe(context: dict, kinds: set[str], signal_kinds: set[str], terrain_un
         numeric_high = context["maximum"] is not None and context["maximum"] > 180
         high_text = ("odczyt glukozy powyżej 180 mg/dL i flaga High" if numeric_high and context["highFlags"]
                      else "flaga High z sensora" if context["highFlags"] else "odczyt glukozy powyżej 180 mg/dL")
-        narrative = ("W tym oknie wystąpił " + high_text +
+        narrative = ("W tym oknie " + _occurred(high_text) + high_text +
                      (" oraz wzrost wysokości" + pace_clause + ". Dane nie pozwalają rozdzielić ich wpływu."
                       if uphill else pace_clause + ". To obserwacja z sensora, bez rozpoznania przyczyny.")
                      )
@@ -296,9 +301,9 @@ def _describe(context: dict, kinds: set[str], signal_kinds: set[str], terrain_un
         title = ("Zwolnienie na podbiegu, glukoza w zakresie." if slowdown
                  else "Podbieg przy glukozie w zakresie.")
         narrative = ("W tym oknie teren się wznosił" + pace_and + ", a wszystkie odczyty glukozy mieściły się"
-                     " w zakresie 70–180 mg/dL. W danych widać podbieg, nie spadek glukozy. To współwystępowanie,"
-                     " nie dowód przyczyny.")
-        question = "Czy takie zwolnienie przy glukozie w zakresie warto omawiać w kontekście cukrzycy?"
+                     " w zakresie 70–180 mg/dL. To współwystępowanie, nie dowód przyczyny.")
+        question = ("Czy takie zwolnienie przy glukozie w zakresie warto omawiać w kontekście cukrzycy?" if slowdown
+                    else "Czy taki podbieg przy glukozie w zakresie warto omawiać w kontekście cukrzycy?")
     elif signal_kinds:
         label = "Zmiana w biegu"
         title = ("Zwolnienie tempa przy glukozie w zakresie." if slowdown
@@ -652,10 +657,7 @@ def analyze_upload(fit_bytes: bytes, csv_bytes: bytes, timezone_name: str = "Eur
                         "unknowns": unknowns, "question": question, "separable": separable})
     strengths = list(dict.fromkeys(_STRENGTH_SENTENCES[strength.type.value] for strength in signals.strengths
                                    if strength.type.value in _STRENGTH_SENTENCES))
-    # Neutral observation, not praise: only when CGM covered the whole run.
-    if numeric and not any(gap["end"] - gap["start"] > 1 for gap in gaps) and facts["below70Count"] == 0 \
-            and facts["belowRangeCount"] == 0:
-        strengths.append("Odczyty sensora objęły cały bieg i żaden z nich nie był niższy niż 70 mg/dL.")
+    # Strengths are watch-derived run sentences only; glucose is never framed as "went well".
     warnings = []
     if any(reading.source_unit == "mmol/L" for reading in readings):
         warnings.append("Glukozę przeliczono z mmol/L na mg/dL współczynnikiem 18,0182.")

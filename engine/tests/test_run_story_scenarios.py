@@ -19,6 +19,17 @@ def scenario(name: str) -> dict:
     return analyze_upload((folder / "bieg.fit").read_bytes(), (folder / "glukoza.csv").read_bytes(), "Europe/Warsaw")
 
 
+def scenario_with_csv(name: str, edit) -> dict:
+    """Scenario FIT with an edited copy of its CSV; `edit(time, value)` returns the new value."""
+    folder = SCENARIOS / name
+    lines = (folder / "glukoza.csv").read_text(encoding="utf-8").splitlines()
+    rows = [lines[0]]
+    for line in lines[1:]:
+        stamp, kind, value = line.split(",")
+        rows.append(",".join((stamp, kind, str(edit(stamp[11:16], value)))))
+    return analyze_upload((folder / "bieg.fit").read_bytes(), ("\n".join(rows) + "\n").encode("utf-8"), "Europe/Warsaw")
+
+
 def builtin() -> dict:
     return analyze_upload((ROOT / "public" / "demo-run.fit").read_bytes(),
                           (ROOT / "public" / "demo-glucose.csv").read_bytes(), "Europe/Warsaw", synthetic=True)
@@ -85,7 +96,9 @@ def test_02_hill_with_glucose_in_range_is_terrain_not_glucose():
     assert hill["separable"] is True
     text = hill["narrative"]
     assert "teren się wznosił" in text and "w zakresie 70–180 mg/dL" in text
-    assert "podbieg, nie spadek glukozy" in text and "nie dowód przyczyny" in text
+    assert "nie dowód przyczyny" in text
+    # No claim about the glucose trend: in-range state does not compute one.
+    assert "nie spadek glukozy" not in text
 
 
 def test_03_hill_and_low_together_are_not_separable():
@@ -110,7 +123,7 @@ def test_04_gap_is_unknown_and_never_separable():
     assert "Nie wiemy" in moment["narrative"]
     assert "pozwalają rozdzielić" not in moment["narrative"]
     assert any(gap["start"] <= moment["minute"] <= gap["end"] for gap in run["gaps"])
-    assert not any("70 mg/dL" in sentence for sentence in run["strengths"]), "CGM did not cover this run"
+    assert not any("70 mg/dL" in sentence for sentence in run["strengths"]), "strengths are watch-only"
 
 
 def test_builtin_demo_has_gap_and_single_co_occurrence_moment():
@@ -134,12 +147,36 @@ def test_data_gap_moment_is_never_separable_even_on_flat_ground():
 
 
 def test_strengths_are_genuine_or_empty():
-    # 02-04 have no detector strengths; only 02 had full CGM without lows.
+    # 02-04 have no detector strengths; strengths never hold glucose outcomes.
     assert scenario("03-podbieg-i-niski-cukier")["strengths"] == []
     assert scenario("04-luka-w-danych")["strengths"] == []
-    assert scenario("02-podbieg-cukier-w-normie")["strengths"] == [
-        "Odczyty sensora objęły cały bieg i żaden z nich nie był niższy niż 70 mg/dL."]
+    assert scenario("02-podbieg-cukier-w-normie")["strengths"] == []
     flat = scenario("01-niski-cukier-na-plaskim")["strengths"]
     assert flat == ["Obie połowy biegu miały bardzo podobne tempo: równy, kontrolowany wysiłek od startu do mety."]
     for run in (scenario("01-niski-cukier-na-plaskim"), builtin()):
         assert all("Połączono czas" not in sentence for sentence in run["strengths"])
+
+
+def test_strengths_never_praise_glucose_even_when_all_readings_are_high():
+    run = scenario_with_csv("02-podbieg-cukier-w-normie", lambda _time, value: int(value) + 150)
+    assert run["facts"]["below70Count"] == 0
+    assert run["strengths"] == []
+    assert any("glukoz" in moment["narrative"] for moment in run["moments"])
+
+
+def test_in_range_fall_is_not_described_as_no_fall():
+    falling = {"09:45": 178, "09:50": 140, "09:55": 105, "10:00": 72}
+    run = scenario_with_csv("02-podbieg-cukier-w-normie", lambda time, value: falling.get(time, value))
+    hill = next(moment for moment in run["moments"] if "uphill" in factor_ids(moment))
+    assert hill["label"] == "Podbieg, glukoza w zakresie"
+    assert "nie spadek" not in hill["narrative"]
+    if "Zwolnienie" not in hill["title"]:
+        assert "zwolnienie" not in hill["question"]
+
+
+def test_low_flag_only_uses_feminine_verb():
+    run = scenario_with_csv("01-niski-cukier-na-plaskim",
+                            lambda time, value: {"08:50": "Low", "08:55": 72}.get(time, value))
+    texts = " ".join(moment["narrative"] for moment in run["moments"])
+    assert "wystąpiła flaga Low" in texts
+    assert "wystąpił flaga" not in texts
