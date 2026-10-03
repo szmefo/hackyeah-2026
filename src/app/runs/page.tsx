@@ -1,8 +1,11 @@
+"use client";
 import Link from "next/link";
-import { AppShell, SyntheticBadge } from "@/components/app-shell";
+import { AppShell, DataBadge } from "@/components/app-shell";
 import { Icon } from "@/components/icons";
-import { demo, decimal } from "@/lib/demo";
+import { useDemo } from "@/components/demo-context";
+import { decimal, dateLabel, durationLabel } from "@/lib/demo";
 export default function Runs() {
+  const { currentRun: run, resetRun } = useDemo();
   return (
     <AppShell>
       <div className="listing-intro">
@@ -19,15 +22,19 @@ export default function Runs() {
       </div>
       <Link href="/" className="run-list-card">
         <div>
-          <span className="eyebrow">03 października 2026</span>
-          <h2>{demo.title}</h2>
-          <SyntheticBadge />
+          <span className="eyebrow">{dateLabel(run)}</span>
+          <h2>{run.title}</h2>
+          <DataBadge synthetic={run.synthetic} />
         </div>
         <div className="list-metrics">
-          <span>{decimal(demo.distanceKm)} km</span>
-          <span>1:34:00</span>
           <span>
-            {demo.facts.coveragePct}%<small> pokrycia glukozy</small>
+            {run.distanceKm === null
+              ? "Brak dystansu"
+              : `${decimal(run.distanceKm)} km`}
+          </span>
+          <span>{durationLabel(run.durationMinutes)}</span>
+          <span>
+            {run.facts.coveragePct}%<small> pokrycia glukozy</small>
           </span>
         </div>
         <span className="button primary">
@@ -36,8 +43,20 @@ export default function Runs() {
         </span>
       </Link>
       <p className="listing-note">
-        Na razie jeden przykładowy bieg, gotowy do przejścia całej ścieżki demo.
+        Jeden bieg naraz. Dane i obserwacje pozostają tylko w pamięci tej karty;
+        odświeżenie strony je usuwa.
       </p>
+      <div className="upload-actions">
+        <Link className="button primary" href="/sources">
+          Dodaj FIT i CSV
+          <Icon name="arrow" />
+        </Link>
+        {run.provenance.engineUsed && (
+          <button className="button secondary" onClick={resetRun}>
+            Usuń dane i wróć do demo
+          </button>
+        )}
+      </div>
     </AppShell>
   );
 }

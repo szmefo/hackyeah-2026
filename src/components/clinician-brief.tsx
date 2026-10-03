@@ -1,20 +1,24 @@
 "use client";
 import Link from "next/link";
-import { AppShell, SyntheticBadge } from "./app-shell";
+import { AppShell, DataBadge } from "./app-shell";
 import { Icon, Logo } from "./icons";
 import { useDemo } from "./demo-context";
 import {
-  demo,
   decimal,
   disclaimer,
   paceLabel,
   momentUnknowns,
+  dateLabel,
+  durationLabel,
+  readingTime,
+  minuteLabel,
+  factReferenceLabel,
 } from "@/lib/demo";
-
 export function ClinicianBrief() {
-  const { selectedId, observations } = useDemo();
+  const { selectedId, observations, currentRun: run, aiResult } = useDemo();
   const selected =
-    demo.moments.find((m) => m.id === selectedId) ?? demo.moments[2];
+    run.moments.find((m) => m.id === selectedId) ?? run.moments[0];
+  const lowReadings = run.glucose.filter((p) => p.value < 70);
   return (
     <AppShell active="brief">
       <div className="brief-toolbar no-print">
@@ -23,7 +27,7 @@ export function ClinicianBrief() {
           Wróć do biegu
         </Link>
         <div>
-          <span>Jedna strona do rozmowy</span>
+          <span>Podsumowanie do rozmowy</span>
           <button className="button primary" onClick={() => window.print()}>
             <Icon name="file" />
             Drukuj / zapisz PDF
@@ -36,7 +40,7 @@ export function ClinicianBrief() {
             <Logo />
             Cukier w biegu
           </span>
-          <SyntheticBadge />
+          <DataBadge synthetic={run.synthetic} />
         </header>
         <div className="paper-title">
           <p className="eyebrow">Do rozmowy z diabetologiem</p>
@@ -45,42 +49,51 @@ export function ClinicianBrief() {
             <br />
             Konkretny kontekst.
           </h1>
-          <p>Podsumowanie przykładowego biegu i pytania do specjalisty.</p>
+          <p>
+            Podsumowanie {run.synthetic ? "przykładowego" : "wgranego"} biegu i
+            pytania do specjalisty.
+          </p>
         </div>
         <section className="paper-profile">
           <div>
-            <span>Profil demonstracyjny</span>
-            <strong>Dorosły biegacz · typ 1 · CGM</strong>
+            <span>Źródła</span>
+            <strong>
+              {run.synthetic
+                ? "Syntetyczny bieg i CGM"
+                : "FIT z zegarka · CSV z CGM"}
+            </strong>
           </div>
           <div>
             <span>Zakres</span>
-            <strong>03.10.2026 · {demo.title}</strong>
+            <strong>
+              {dateLabel(run)} · {run.title}
+            </strong>
           </div>
         </section>
         <dl className="brief-metrics">
           <div>
             <dt>Dystans</dt>
             <dd>
-              {decimal(demo.distanceKm)}
-              <small> km</small>
+              {decimal(run.distanceKm)}
+              {run.distanceKm !== null && <small> km</small>}
             </dd>
           </div>
           <div>
             <dt>Czas</dt>
-            <dd>1:34:00</dd>
+            <dd>{durationLabel(run.durationMinutes)}</dd>
           </div>
           <div>
             <dt>Pokrycie glukozy</dt>
             <dd>
-              {demo.facts.coveragePct}
+              {run.facts.coveragePct}
               <small>%</small>
             </dd>
           </div>
           <div>
             <dt>Najniższy odczyt</dt>
             <dd>
-              {demo.facts.minGlucose}
-              <small> mg/dL</small>
+              {run.facts.minGlucose ?? "—"}
+              {run.facts.minGlucose !== null && <small> mg/dL</small>}
             </dd>
           </div>
         </dl>
@@ -91,10 +104,16 @@ export function ClinicianBrief() {
           </p>
           <div className="brief-window">
             <span>
-              {selected.minute}. minuta · {decimal(selected.distanceKm)} km ·
-              okno ±10 min
+              {minuteLabel(selected.minute)}. minuta
+              {selected.distanceKm !== null
+                ? ` · ${decimal(selected.distanceKm)} km`
+                : ""}{" "}
+              · okno ±10 min
             </span>
-            <span>Tempo w momencie: {paceLabel(selected.pace)} min/km</span>
+            <span>
+              Tempo w momencie: {paceLabel(selected.pace)}
+              {selected.pace !== null ? " min/km" : ""}
+            </span>
           </div>
           <ul>
             {selected.factors.map((f) => (
@@ -104,53 +123,66 @@ export function ClinicianBrief() {
             ))}
           </ul>
           <p>
-            Odczyty poniżej 70 mg/dL: <strong>{demo.facts.below70Count}</strong>
-            . Poniżej 54 mg/dL: <strong>{demo.facts.below54Count}</strong>. To
+            Odczyty poniżej 70 mg/dL: <strong>{run.facts.below70Count}</strong>.
+            Poniżej 54 mg/dL: <strong>{run.facts.below54Count}</strong>. To
             liczba punktowych odczytów, a nie czas epizodów.
           </p>
-          <table>
-            <caption>Odczyty poniżej 70 mg/dL — dane syntetyczne</caption>
-            <thead>
-              <tr>
-                <th>Data / czas lokalny</th>
-                <th>Minuta biegu</th>
-                <th>Odczyt</th>
-                <th>Podstawa</th>
-              </tr>
-            </thead>
-            <tbody>
-              {demo.glucose
-                .filter((p) => p.value < 70)
-                .map((p) => (
+          {lowReadings.length > 0 && (
+            <table>
+              <caption>
+                Odczyty poniżej 70 mg/dL
+                {run.synthetic ? " — dane syntetyczne" : ""} · {run.timezone}
+              </caption>
+              <thead>
+                <tr>
+                  <th>Data / czas lokalny</th>
+                  <th>Minuta biegu</th>
+                  <th>Odczyt</th>
+                  <th>Podstawa</th>
+                </tr>
+              </thead>
+              <tbody>
+                {lowReadings.slice(0, 12).map((p) => (
                   <tr key={p.minute}>
-                    <td>
-                      03.10.2026 ·{" "}
-                      {String(8 + Math.floor((30 + p.minute) / 60)).padStart(
-                        2,
-                        "0",
-                      )}
-                      :{String((30 + p.minute) % 60).padStart(2, "0")}
-                    </td>
-                    <td>{p.minute}</td>
+                    <td>{readingTime(run, p.minute)}</td>
+                    <td>{minuteLabel(p.minute)}</td>
                     <td>{p.value} mg/dL</td>
                     <td>Pojedynczy odczyt CGM</td>
                   </tr>
                 ))}
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          )}
+          {lowReadings.length > 12 && (
+            <p>
+              W tabeli pierwsze 12 z {lowReadings.length} odczytów. Liczby
+              powyżej obejmują cały bieg.
+            </p>
+          )}
+          {!!run.glucoseFlags?.length && (
+            <p>
+              Sensor zapisał również {run.glucoseFlags.length} oznaczeń
+              Low/High. Nie zamieniono ich na wymyślone wartości liczbowe.
+            </p>
+          )}
         </section>
         <section className="paper-section">
           <h2>02 / Czego dane nie rozstrzygają</h2>
           <ul>
-            <li>
-              Glukoza nie jest obserwowana między {demo.gaps[0].start}. a{" "}
-              {demo.gaps[0].end}. minutą; tej przerwy nie uzupełniono.
-            </li>
+            {run.gaps.map((gap) => (
+              <li key={`${gap.start}-${gap.end}`}>
+                Brak obserwacji glukozy między {minuteLabel(gap.start)}. a{" "}
+                {minuteLabel(gap.end)}. minutą; tej przerwy nie uzupełniono.
+              </li>
+            ))}
             {momentUnknowns(selected, observations).map((u) => (
               <li key={u}>{u}</li>
             ))}
+            {run.warnings?.map((w, i) => (
+              <li key={`warning-${i}`}>{w}</li>
+            ))}
           </ul>
-          <p className="basis-note">{demo.facts.basis}</p>
+          <p className="basis-note">{run.facts.basis}</p>
         </section>
         <section className="paper-section">
           <h2>03 / Pytania na wizytę</h2>
@@ -166,7 +198,7 @@ export function ClinicianBrief() {
             <ul>
               {observations.map((o, i) => (
                 <li key={i}>
-                  {o.minute}. minuta · {o.kind}: {o.text}
+                  {minuteLabel(o.minute)}. minuta · {o.kind}: {o.text}
                 </li>
               ))}
             </ul>
@@ -177,12 +209,52 @@ export function ClinicianBrief() {
             </p>
           )}
         </section>
+        {aiResult?.status === "ai" && (
+          <section className="paper-section">
+            <h2>05 / Interpretacja AI wybranego momentu</h2>
+            <ul>
+              {aiResult.claims.map((c, i) => (
+                <li key={i}>
+                  {c.text}{" "}
+                  <small>Podstawa: {factReferenceLabel(run, c.factIds)}</small>
+                </li>
+              ))}
+            </ul>
+            {aiResult.alternatives.length > 0 && (
+              <>
+                <strong>Możliwe wyjaśnienia</strong>
+                <ul>
+                  {aiResult.alternatives.map((c, i) => (
+                    <li key={i}>{c.text}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+            <strong>Niepewność i pytania</strong>
+            <ul>
+              {[...aiResult.unknowns, ...aiResult.questions].map((text, i) => (
+                <li key={i}>{text}</li>
+              ))}
+            </ul>
+            <p className="basis-note">
+              {aiResult.provider} · {aiResult.model}. Drugi przegląd AI i
+              kontrola odwołań do faktów nie są niezależną weryfikacją medyczną.
+            </p>
+          </section>
+        )}
         <footer className="paper-footer">
-          <strong>Dane syntetyczne · prototyp HackYeah 2026</strong>
+          <strong>
+            {run.synthetic ? "Dane syntetyczne" : "Dane z wgranych plików"} ·
+            prototyp HackYeah 2026
+          </strong>
           <p>{disclaimer}</p>
           <p>
-            Wszystkie liczby pochodzą z przykładowego zestawu danych. To nie
-            jest analiza danych pacjenta.
+            {run.synthetic
+              ? "Wszystkie liczby pochodzą z przykładowego zestawu danych."
+              : "Fakty obliczono z pomiarów; brakujących wartości nie uzupełniono."}{" "}
+            {aiResult?.status === "ai"
+              ? "Sekcja AI jest interpretacją, a nie pomiarem."
+              : "Podsumowanie faktów nie korzysta z modelu AI."}
           </p>
         </footer>
       </article>

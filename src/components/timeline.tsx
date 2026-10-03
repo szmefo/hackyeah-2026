@@ -1,37 +1,15 @@
 "use client";
-
 import { useSyncExternalStore } from "react";
-import { demo, type DemoMoment, paceLabel } from "@/lib/demo";
-import { SyntheticBadge } from "./app-shell";
-
-function plotGeometry(compact: boolean) {
-  const W = compact ? 400 : 760,
-    H = compact ? 130 : 116,
-    LEFT = 42,
-    RIGHT = 14,
-    TOP = 13,
-    BOTTOM = 27;
-  const x = (minute: number) =>
-    LEFT + (minute / demo.durationMinutes) * (W - LEFT - RIGHT);
-  const y = (value: number, min: number, max: number, reverse = false) =>
-    TOP +
-    (reverse ? (value - min) / (max - min) : (max - value) / (max - min)) *
-      (H - TOP - BOTTOM);
-  const path = (
-    points: { minute: number; value: number }[],
-    min: number,
-    max: number,
-    reverse = false,
-  ) =>
-    points
-      .map(
-        (p, i) =>
-          `${i ? "L" : "M"}${x(p.minute).toFixed(2)},${y(p.value, min, max, reverse).toFixed(2)}`,
-      )
-      .join(" ");
-  return { W, H, LEFT, RIGHT, TOP, BOTTOM, x, y, path };
-}
-
+import {
+  type DemoMoment,
+  paceLabel,
+  minuteLabel,
+  durationLabel,
+  decimal,
+} from "@/lib/demo";
+import type { Point } from "@/lib/run-story";
+import { useDemo } from "./demo-context";
+import { DataBadge } from "./app-shell";
 function subscribeViewport(onChange: () => void) {
   const media = window.matchMedia("(max-width: 780px)");
   media.addEventListener("change", onChange);
@@ -39,7 +17,24 @@ function subscribeViewport(onChange: () => void) {
 }
 const compactViewport = () => window.matchMedia("(max-width: 780px)").matches;
 const serverViewport = () => false;
-
+function measuredSegments(samples: { minute: number; value: number | null }[]) {
+  const segments: Point[][] = [];
+  let current: Point[] = [];
+  for (const p of samples) {
+    if (p.value === null || !Number.isFinite(p.value)) {
+      if (current.length) segments.push(current);
+      current = [];
+      continue;
+    }
+    if (current.length && p.minute - current[current.length - 1].minute > 2) {
+      segments.push(current);
+      current = [];
+    }
+    current.push({ minute: p.minute, value: p.value });
+  }
+  if (current.length) segments.push(current);
+  return segments;
+}
 function Plot({
   kind,
   selected,
@@ -49,30 +44,53 @@ function Plot({
   selected: DemoMoment;
   onSelect: (id: string) => void;
 }) {
+  const { currentRun: run } = useDemo();
   const compact = useSyncExternalStore(
     subscribeViewport,
     compactViewport,
     serverViewport,
   );
-  const { W, H, LEFT, RIGHT, TOP, BOTTOM, x, y, path } = plotGeometry(compact);
-  const min = kind === "glucose" ? 40 : kind === "pace" ? 4 : 90;
-  const max = kind === "glucose" ? 200 : kind === "pace" ? 9 : 180;
-  const ticks =
-    kind === "glucose"
-      ? [180, 120, 70]
-      : kind === "pace"
-        ? [4, 6, 8]
-        : [180, 140, 100];
-  const reverse = kind === "pace";
+  const W = compact ? 400 : 760,
+    H = compact ? 130 : 116,
+    LEFT = 42,
+    RIGHT = 14,
+    TOP = 13,
+    BOTTOM = 27;
+  const duration = Math.max(run.durationMinutes, 0.01);
+  const x = (minute: number) =>
+    LEFT +
+    (Math.max(0, Math.min(duration, minute)) / duration) * (W - LEFT - RIGHT);
   const segments =
     kind === "glucose"
-      ? demo.glucoseSegments
-      : [
-          demo.samples.map((s) => ({
+      ? run.glucoseSegments
+      : measuredSegments(
+          run.samples.map((s) => ({
             minute: s.minute,
             value: kind === "pace" ? s.pace : s.hr,
           })),
-        ];
+        );
+  const values = segments.flat().map((p) => p.value);
+  const baseMin = kind === "glucose" ? 40 : kind === "pace" ? 4 : 90;
+  const baseMax = kind === "glucose" ? 200 : kind === "pace" ? 9 : 180;
+  const min = values.reduce((lo, v) => Math.min(lo, v), baseMin),
+    max = values.reduce((hi, v) => Math.max(hi, v), baseMax);
+  const reverse = kind === "pace";
+  const y = (v: number, lo = min, hi = max, rev = reverse) =>
+    TOP +
+    (rev ? (v - lo) / (hi - lo || 1) : (hi - v) / (hi - lo || 1)) *
+      (H - TOP - BOTTOM);
+  const path = (points: Point[], lo = min, hi = max, rev = reverse) =>
+    points
+      .map(
+        (p, i) =>
+          `${i ? "L" : "M"}${x(p.minute).toFixed(2)},${y(p.value, lo, hi, rev).toFixed(2)}`,
+      )
+      .join(" ");
+  const ticks =
+    kind === "glucose"
+      ? [min, 70, 180, max].filter((v, i, a) => a.indexOf(v) === i)
+      : [min, (min + max) / 2, max];
+  const timeTicks = Array.from({ length: 6 }, (_, i) => (duration * i) / 5);
   const label =
     kind === "glucose" ? "Glukoza" : kind === "pace" ? "Tempo" : "Tętno";
   const unit =
@@ -83,6 +101,12 @@ function Plot({
       : kind === "pace"
         ? selected.pace
         : selected.hr;
+  const terrain = measuredSegments(
+    run.samples.map((s) => ({ minute: s.minute, value: s.altitude })),
+  );
+  const heights = terrain.flat().map((p) => p.value);
+  const hMin = heights.reduce((lo, v) => Math.min(lo, v), heights[0] ?? 0) - 5;
+  const hMax = heights.reduce((hi, v) => Math.max(hi, v), heights[0] ?? 0) + 5;
   return (
     <div className={`plot plot-${kind}`}>
       <div className="plot-heading">
@@ -91,24 +115,28 @@ function Plot({
           <small>{unit}</small>
         </span>
         {kind === "glucose" ? (
-          <SyntheticBadge />
+          <DataBadge synthetic={run.synthetic} />
         ) : (
           <span className="plot-detail">
-            {kind === "pace" ? "wysokość trasy w tle" : "dane przykładowe"}
+            {kind === "pace" && heights.length
+              ? "wysokość trasy w tle"
+              : run.synthetic
+                ? "dane przykładowe"
+                : "pomiar z zegarka"}
           </span>
         )}
       </div>
       <svg
         viewBox={`0 0 ${W} ${H}`}
         role="img"
-        aria-label={`${label} w czasie biegu; wybrany moment ${selected.minute}. minuta`}
+        aria-label={`${label} w czasie biegu; wybrany moment ${minuteLabel(selected.minute)}. minuta`}
         onClick={(event) => {
           const rect = event.currentTarget.getBoundingClientRect();
           const minute =
             ((((event.clientX - rect.left) / rect.width) * W - LEFT) /
               (W - LEFT - RIGHT)) *
-            demo.durationMinutes;
-          const nearest = demo.moments.reduce((a, b) =>
+            duration;
+          const nearest = run.moments.reduce((a, b) =>
             Math.abs(a.minute - minute) < Math.abs(b.minute - minute) ? a : b,
           );
           onSelect(nearest.id);
@@ -117,14 +145,14 @@ function Plot({
         {kind === "glucose" && (
           <rect
             x={LEFT}
-            y={y(180, min, max)}
+            y={y(180)}
             width={W - LEFT - RIGHT}
-            height={y(70, min, max) - y(180, min, max)}
+            height={y(70) - y(180)}
             fill="var(--accent)"
             opacity=".035"
           />
         )}
-        {[0, 20, 40, 60, 80, 94].map((t) => (
+        {timeTicks.map((t) => (
           <g key={t}>
             <line
               x1={x(t)}
@@ -134,9 +162,7 @@ function Plot({
               className="grid-line"
             />
             <text x={x(t)} y={H - 5} textAnchor="middle" className="axis-label">
-              {t === 94
-                ? "1:34"
-                : `${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")}`}
+              {durationLabel(t).replace(/^0:/, "")}
             </text>
           </g>
         ))}
@@ -145,8 +171,8 @@ function Plot({
             <line
               x1={LEFT}
               x2={W - RIGHT}
-              y1={y(t, min, max, reverse)}
-              y2={y(t, min, max, reverse)}
+              y1={y(t)}
+              y2={y(t)}
               className={
                 kind === "glucose" && (t === 70 || t === 180)
                   ? "range-line"
@@ -155,27 +181,22 @@ function Plot({
             />
             <text
               x={LEFT - 10}
-              y={y(t, min, max, reverse) + 4}
+              y={y(t) + 4}
               textAnchor="end"
               className="axis-label"
             >
-              {kind === "pace" ? `${t}:00` : t}
+              {kind === "pace" ? paceLabel(t) : Math.round(t)}
             </text>
           </g>
         ))}
-        {kind === "pace" && (
-          <path
-            d={`${path(
-              demo.samples.map((s) => ({
-                minute: s.minute,
-                value: s.altitude,
-              })),
-              195,
-              270,
-            )} L${x(94)},${H - BOTTOM} L${LEFT},${H - BOTTOM} Z`}
-            className="terrain-area"
-          />
-        )}
+        {kind === "pace" &&
+          terrain.map((s, i) => (
+            <path
+              key={i}
+              d={`${path(s, hMin, hMax, false)} L${x(s[s.length - 1].minute)},${H - BOTTOM} L${x(s[0].minute)},${H - BOTTOM} Z`}
+              className="terrain-area"
+            />
+          ))}
         <rect
           x={x(selected.windowStart)}
           y={TOP}
@@ -184,8 +205,8 @@ function Plot({
           className="selection-window"
         />
         {kind === "glucose" &&
-          demo.gaps.map((gap) => (
-            <g key={gap.start}>
+          run.gaps.map((gap) => (
+            <g key={`${gap.start}-${gap.end}`}>
               <rect
                 x={x(gap.start)}
                 y={TOP}
@@ -193,22 +214,26 @@ function Plot({
                 height={H - TOP - BOTTOM}
                 fill="url(#missing-pattern)"
               />
-              <text
-                x={x((gap.start + gap.end) / 2)}
-                y={49}
-                textAnchor="middle"
-                className="gap-label"
-              >
-                Brak danych
-              </text>
-              <text
-                x={x((gap.start + gap.end) / 2)}
-                y={65}
-                textAnchor="middle"
-                className="axis-label"
-              >
-                {gap.start}–{gap.end} min
-              </text>
+              {x(gap.end) - x(gap.start) > 70 && (
+                <>
+                  <text
+                    x={x((gap.start + gap.end) / 2)}
+                    y={49}
+                    textAnchor="middle"
+                    className="gap-label"
+                  >
+                    Brak danych
+                  </text>
+                  <text
+                    x={x((gap.start + gap.end) / 2)}
+                    y={65}
+                    textAnchor="middle"
+                    className="axis-label"
+                  >
+                    {minuteLabel(gap.start)}–{minuteLabel(gap.end)} min
+                  </text>
+                </>
+              )}
             </g>
           ))}
         <defs>
@@ -226,14 +251,43 @@ function Plot({
             />
           </pattern>
         </defs>
-        {segments.map((segment, i) => (
-          <path
-            key={i}
-            d={path(segment, min, max, reverse)}
-            fill="none"
-            className={`data-line ${kind === "glucose" ? "glucose-line" : "neutral-line"}`}
-          />
-        ))}
+        {segments.map((segment, i) =>
+          segment.length === 1 ? (
+            <circle
+              key={i}
+              cx={x(segment[0].minute)}
+              cy={y(segment[0].value)}
+              r="3"
+              className={
+                kind === "glucose" ? "glucose-single" : "neutral-single"
+              }
+            />
+          ) : (
+            <path
+              key={i}
+              d={path(segment)}
+              fill="none"
+              className={`data-line ${kind === "glucose" ? "glucose-line" : "neutral-line"}`}
+            />
+          ),
+        )}
+        {!values.length && (
+          <text x={W / 2} y={H / 2} textAnchor="middle" className="gap-label">
+            Brak pomiarów {label.toLowerCase()}
+          </text>
+        )}
+        {kind === "glucose" &&
+          run.glucoseFlags?.map((p) => (
+            <text
+              key={`${p.minute}-${p.flag}`}
+              x={x(p.minute)}
+              y={p.flag === "below_range" ? H - BOTTOM - 4 : TOP + 12}
+              textAnchor="middle"
+              className="axis-label"
+            >
+              {p.flag === "below_range" ? "Low" : "High"}
+            </text>
+          ))}
         <line
           x1={x(selected.minute)}
           x2={x(selected.minute)}
@@ -244,7 +298,7 @@ function Plot({
         {selectedValue !== null && kind !== "glucose" && (
           <circle
             cx={x(selected.minute)}
-            cy={y(selectedValue, min, max, reverse)}
+            cy={y(selectedValue)}
             r="3.5"
             fill="var(--cream)"
           />
@@ -252,26 +306,26 @@ function Plot({
         {kind === "glucose" &&
           selectedValue !== null &&
           (() => {
-            const point = demo.glucose.find(
+            const p = run.glucose.find(
               (p) =>
                 p.minute >= selected.windowStart &&
                 p.minute <= selected.windowEnd &&
                 p.value === selectedValue,
             );
-            return point ? (
+            return p ? (
               <g>
                 <circle
-                  cx={x(point.minute)}
-                  cy={y(point.value, min, max)}
+                  cx={x(p.minute)}
+                  cy={y(p.value)}
                   r="4"
                   fill="var(--cream)"
                 />
                 <text
-                  x={x(point.minute) + 9}
-                  y={y(point.value, min, max) + 15}
+                  x={Math.min(x(p.minute) + 9, W - 28)}
+                  y={y(p.value) + 15}
                   className="point-label"
                 >
-                  {point.value}
+                  {p.value}
                 </text>
               </g>
             ) : null;
@@ -280,7 +334,6 @@ function Plot({
     </div>
   );
 }
-
 export function Timeline({
   selected,
   onSelect,
@@ -288,6 +341,7 @@ export function Timeline({
   selected: DemoMoment;
   onSelect: (id: string) => void;
 }) {
+  const { currentRun: run } = useDemo();
   return (
     <section className="timeline-section" aria-labelledby="timeline-title">
       <div className="section-label">
@@ -297,8 +351,8 @@ export function Timeline({
       <div className="chart-card">
         <div className="chart-topline">
           <span>
-            <span className="live-dot" /> Wybrany moment · {selected.minute}.
-            minuta
+            <span className="live-dot" /> Wybrany moment ·{" "}
+            {minuteLabel(selected.minute)}. minuta
           </span>
           <span>Okno ±10 min</span>
         </div>
@@ -315,22 +369,25 @@ export function Timeline({
           <span>
             <i className="legend-terrain" /> Teren
           </span>
-          <span>1:34:00</span>
+          <span>{durationLabel(run.durationMinutes)}</span>
         </div>
       </div>
       <div className="moment-picker" aria-label="Wybierz moment biegu">
-        {demo.moments.map((m, i) => (
+        {run.moments.map((m, i) => (
           <button
             key={m.id}
             onClick={() => onSelect(m.id)}
             aria-pressed={selected.id === m.id}
             className={selected.id === m.id ? "selected" : ""}
           >
-            <span className="moment-number">0{i + 1}</span>
+            <span className="moment-number">
+              {String(i + 1).padStart(2, "0")}
+            </span>
             <span>
               {m.label}
               <small>
-                {m.minute}. minuta · {m.distanceKm.toLocaleString("pl-PL")} km
+                {minuteLabel(m.minute)}. minuta
+                {m.distanceKm !== null ? ` · ${decimal(m.distanceKm)} km` : ""}
               </small>
             </span>
             <span className={`moment-dot ${m.id}`} />
@@ -339,7 +396,10 @@ export function Timeline({
       </div>
       <p className="chart-note">
         Wybierz moment poniżej lub kliknij wykres. Tempo w min/km: niżej na
-        wykresie oznacza wolniej. Wszystkie przebiegi są przykładowe.
+        wykresie oznacza wolniej.{" "}
+        {run.synthetic
+          ? "Wszystkie przebiegi są przykładowe."
+          : "Brakujących pomiarów nie uzupełniamy."}
       </p>
       <div className="moment-evidence" aria-live="polite">
         <span className="eyebrow">W wybranym oknie</span>
@@ -353,10 +413,19 @@ export function Timeline({
             </strong>
           </span>
           <span>
-            Tempo w momencie <strong>{paceLabel(selected.pace)} min/km</strong>
+            Tempo w momencie{" "}
+            <strong>
+              {paceLabel(selected.pace)}
+              {selected.pace !== null ? " min/km" : ""}
+            </strong>
           </span>
           <span>
-            Tętno w momencie <strong>{selected.hr} ud./min</strong>
+            Tętno w momencie{" "}
+            <strong>
+              {selected.hr === null
+                ? "Brak danych"
+                : `${Math.round(selected.hr)} ud./min`}
+            </strong>
           </span>
         </div>
       </div>

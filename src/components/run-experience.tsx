@@ -1,18 +1,25 @@
 "use client";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
-import { AppShell, BriefLink, SyntheticBadge } from "./app-shell";
+import { AppShell, BriefLink, DataBadge } from "./app-shell";
+import { AIAnalysis } from "./ai-analysis";
 import { Icon } from "./icons";
 import { useDemo } from "./demo-context";
 import { Timeline } from "./timeline";
-import { demo, decimal, momentUnknowns } from "@/lib/demo";
+import {
+  decimal,
+  momentUnknowns,
+  durationLabel,
+  dateLabel,
+  minuteLabel,
+} from "@/lib/demo";
 
 function ObservationDialog({ onClose }: { onClose: () => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
-  const { addObservation, selectedId } = useDemo();
+  const { addObservation, selectedId, currentRun: demo } = useDemo();
   const [text, setText] = useState("");
   const [minute, setMinute] = useState(
-    () => demo.moments.find((m) => m.id === selectedId)?.minute ?? 82,
+    () => demo.moments.find((m) => m.id === selectedId)?.minute ?? 0,
   );
   const [kind, setKind] = useState("Odczucia");
   useEffect(() => {
@@ -44,8 +51,8 @@ function ObservationDialog({ onClose }: { onClose: () => void }) {
         <br />z tego momentu?
       </h2>
       <p>
-        Obserwacja uzupełni brief z przykładowego biegu. W demo pozostaje tylko
-        w tej karcie i znika po odświeżeniu strony.
+        Obserwacja uzupełni brief z tego biegu. Pozostaje tylko w pamięci tej
+        karty i znika po odświeżeniu strony.
       </p>
       <form onSubmit={submit}>
         <div className="form-row">
@@ -62,6 +69,7 @@ function ObservationDialog({ onClose }: { onClose: () => void }) {
             Minuta biegu
             <input
               type="number"
+              step="0.1"
               min={0}
               max={demo.durationMinutes}
               required
@@ -91,7 +99,7 @@ function ObservationDialog({ onClose }: { onClose: () => void }) {
             disabled={!text.trim()}
             type="submit"
           >
-            Dodaj do demo
+            Dodaj do briefu
             <Icon name="check" />
           </button>
         </div>
@@ -101,10 +109,16 @@ function ObservationDialog({ onClose }: { onClose: () => void }) {
 }
 
 export function RunExperience() {
-  const { selectedId, setSelectedId, observations } = useDemo();
+  const {
+    selectedId,
+    setSelectedId,
+    observations,
+    currentRun: demo,
+    revision,
+  } = useDemo();
   const [showObservation, setShowObservation] = useState(false);
   const selected =
-    demo.moments.find((m) => m.id === selectedId) ?? demo.moments[2];
+    demo.moments.find((m) => m.id === selectedId) ?? demo.moments[0];
   return (
     <AppShell>
       <div className="run-topbar">
@@ -113,8 +127,10 @@ export function RunExperience() {
           Wróć do biegów
         </Link>
         <span>
-          03 października 2026 <span className="topbar-separator">/</span>{" "}
-          Analiza przykładowego biegu
+          {dateLabel(demo)} <span className="topbar-separator">/</span>{" "}
+          {demo.synthetic
+            ? "Analiza przykładowego biegu"
+            : "Analiza wgranego biegu"}
         </span>
       </div>
       <div className="run-layout">
@@ -125,11 +141,13 @@ export function RunExperience() {
             <div className="run-stats">
               <span>
                 <Icon name="location" size={17} />
-                {decimal(demo.distanceKm)} km
+                {demo.distanceKm === null
+                  ? "Dystans nieznany"
+                  : `${decimal(demo.distanceKm)} km`}
               </span>
               <span>
                 <Icon name="clock" size={17} />
-                1:34:00
+                {durationLabel(demo.durationMinutes)}
               </span>
             </div>
           </div>
@@ -137,10 +155,12 @@ export function RunExperience() {
             <span className="eyebrow">Wybrany moment</span>
             <p>
               {decimal(selected.distanceKm)}
-              <span>km</span>
+              <span>
+                {selected.distanceKm === null ? "brak dystansu" : "km"}
+              </span>
             </p>
             <small>
-              {selected.minute}. minuta <span>·</span> Okno ±10 min
+              {minuteLabel(selected.minute)}. minuta <span>·</span> Okno ±10 min
             </small>
           </div>
           <h1 id="story-title" aria-live="polite">
@@ -166,7 +186,7 @@ export function RunExperience() {
             ) : (
               <span>
                 <Icon name="check" size={25} />
-                Odczyty w zakresie
+                Dostępny kontekst
               </span>
             )}
           </div>
@@ -206,12 +226,18 @@ export function RunExperience() {
               {selected.factors.map((f) => (
                 <li key={f.id}>{f.evidence}</li>
               ))}
-              <li>Tempo i tętno są widoczne na wspólnej osi czasu.</li>
+              <li>
+                Pomiarów z zegarka i sensora szukamy w tym samym oknie czasu.
+              </li>
             </ul>
           ) : (
             <ul>
-              <li>W oknie są odczyty glukozy i dane zegarka.</li>
-              <li>Najniższy odczyt w oknie: {selected.minGlucose} mg/dL.</li>
+              <li>Odczyty glukozy w oknie: {selected.readingCount}.</li>
+              <li>
+                {selected.minGlucose === null
+                  ? "Brak liczbowego odczytu glukozy w oknie."
+                  : `Najniższy odczyt w oknie: ${selected.minGlucose} mg/dL.`}
+              </li>
             </ul>
           )}
         </article>
@@ -225,10 +251,12 @@ export function RunExperience() {
             {momentUnknowns(selected, observations).map((u) => (
               <li key={u}>{u}</li>
             ))}
-            <li>
-              W całym biegu brakuje glukozy między {demo.gaps[0].start}. a{" "}
-              {demo.gaps[0].end}. minutą.
-            </li>
+            {demo.gaps.map((gap) => (
+              <li key={`${gap.start}-${gap.end}`}>
+                W całym biegu brakuje glukozy między {minuteLabel(gap.start)}. a{" "}
+                {minuteLabel(gap.end)}. minutą.
+              </li>
+            ))}
           </ul>
         </article>
         <article className="insight-card question-card">
@@ -243,6 +271,17 @@ export function RunExperience() {
           </Link>
         </article>
       </section>
+      {demo.warnings?.length ? (
+        <div className="run-warnings" role="status">
+          <strong>Ważne dla interpretacji</strong>
+          <ul>
+            {demo.warnings.map((w, i) => (
+              <li key={i}>{w}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+      <AIAnalysis key={revision} />
       <section className="next-step-section">
         <div className="next-observation">
           <span className="eyebrow">Jedna rzecz do zapisania</span>
@@ -259,7 +298,7 @@ export function RunExperience() {
             className="text-link"
             onClick={() => setShowObservation(true)}
           >
-            Dodaj obserwację do demo
+            Dodaj obserwację do biegu
             <Icon name="pen" size={17} />
           </button>
           {observations.length > 0 && (
@@ -269,7 +308,7 @@ export function RunExperience() {
                   <Icon name="check" size={16} />
                   <span>
                     <strong>
-                      {o.minute}. minuta · {o.kind}
+                      {minuteLabel(o.minute)}. minuta · {o.kind}
                     </strong>
                     {o.text}
                   </span>
@@ -322,10 +361,13 @@ export function RunExperience() {
         </Link>
       </section>
       <div className="demo-disclosure">
-        <SyntheticBadge />
+        <DataBadge synthetic={demo.synthetic} />
         <p>
-          Cały bieg i wszystkie odczyty są przykładowe. To działający prototyp
-          do oceny wyglądu i ścieżki użytkownika.
+          {demo.synthetic
+            ? "Cały bieg i wszystkie odczyty są przykładowe."
+            : "Wykresy i fakty pochodzą z Twoich wgranych plików."}{" "}
+          Dane pozostają w pamięci karty; odświeżenie strony je usuwa.{" "}
+          <Link href="/sources">Zmień lub usuń dane</Link>.
         </p>
       </div>
       {showObservation && (

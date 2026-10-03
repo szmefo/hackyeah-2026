@@ -5,6 +5,13 @@ import { disclaimer } from "@/lib/demo";
 export function SyntheticBadge() {
   return <span className="synthetic-badge">Dane syntetyczne</span>;
 }
+export function DataBadge({ synthetic }: { synthetic: boolean }) {
+  return synthetic ? (
+    <SyntheticBadge />
+  ) : (
+    <span className="synthetic-badge uploaded-badge">Wgrane dane</span>
+  );
+}
 export function AppShell({
   children,
   active = "runs",
