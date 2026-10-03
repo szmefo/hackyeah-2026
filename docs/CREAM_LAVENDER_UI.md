@@ -88,3 +88,15 @@ checks and release workflow after integration.
 
 The local preview is already implemented and running independently. Production
 has not been replaced while the other session owns its ongoing release.
+
+## Integration and production verification (2026-10-03T15:55:34+02:00)
+
+Source commit: `eb510e2`; cherry-picked as `a86ea60` onto current application baseline `b0e45ec` in `C:/hackyeah-2026`. Only AI_USAGE.md and DECISIONS.md had append conflicts; both histories were preserved. No differences against baseline in server AI, API routes, engine, data, dependency manifests or global print CSS.
+
+Passed: npm run build; npm run check; 29 AI/transport tests; 10 integration tests against production. Brave GUI: imported synthetic FIT/CSV pair, selected gap (no glucose invented), saved a synthetic observation and confirmed it in the brief; imported result retained 80 min, minimum 65 mg/dL and ascent 40 m. Anthropic status configured and provider-specific consent appeared. No new paid model request was made. Phone viewport 390 x 844 had no horizontal overflow; desktop appearance verified; viewport restored. Browser error/warning log empty. Native print/PDF was not re-tested.
+
+Production: https://cukier-w-biegu.vercel.app/
+Immutable deployment: https://cukier-w-biegu-ec4av15y9-hack-yeah1.vercel.app
+Deployment ID: dpl_7Jxhr3PrMdAGTbCAN3Sc1sfsm2Xr (READY).
+Artifact: C:/_HackYeah2026/deploy/cream-lavender-a86ea60; explicit source whitelist, no .git or .env files. Python engine deployment unchanged.
+Screenshot: C:/_HackYeah2026/review/cream-lavender/desktop.jpg
