@@ -1,4 +1,6 @@
 // Newly authored interpretation + separate review. Numbers remain in computed facts.
+import { callStructured } from "./llm-transport.ts";
+import type { AIProvider } from "./provider-config.ts";
 export type Claim = { text: string; factIds: string[] };
 export type Analysis = {
   claims: Claim[];
@@ -171,47 +173,22 @@ async function callModel(
   data: unknown,
   schema: object,
   name: string,
+  provider: AIProvider,
 ) {
-  const response = await fetch("https://api.openai.com/v1/responses", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model,
-      store: false,
-      instructions: system,
-      input: [
-        {
-          role: "user",
-          content: [{ type: "input_text", text: JSON.stringify(data) }],
-        },
-      ],
-      text: { format: { type: "json_schema", name, schema, strict: true } },
-      max_output_tokens: 1800,
-    }),
-    signal: AbortSignal.timeout(22000),
-    cache: "no-store",
-  });
-  if (!response.ok) throw new Error("provider_unavailable");
-  const output = await response.json();
-  if (output.status !== "completed") throw new Error("provider_incomplete");
-  const parts = (output.output ?? []).flatMap(
-    (item: { content?: { type: string; text?: string }[] }) =>
-      item.content ?? [],
+  return callStructured(
+    { provider, key, model, configured: Boolean(key) },
+    system,
+    data,
+    schema,
+    name,
   );
-  const text = parts
-    .filter((part: { type: string }) => part.type === "output_text")
-    .map((part: { text: string }) => part.text)
-    .join("");
-  return JSON.parse(text);
 }
 
 export async function interpret(
   context: InterpretationContext,
   key: string,
   model: string,
+  provider: AIProvider = "OpenAI",
 ) {
   const analysis = await callModel(
     key,
@@ -220,6 +197,7 @@ export async function interpret(
     context,
     analysisSchema,
     "run_interpretation",
+    provider,
   );
   if (!validateAnalysis(analysis, context))
     throw new Error("analysis_rejected");
@@ -236,18 +214,21 @@ przeglądu jako weryfikacji medycznej. Zwróć passed oraz listę issues.`,
     { context, analysis },
     reviewSchema,
     "run_review",
+    provider,
   );
   if (
-    review?.passed !== true ||
-    !Array.isArray(review.issues) ||
-    review.issues.length !== 0
+    !review ||
+    typeof review !== "object" ||
+    (review as { passed?: unknown }).passed !== true ||
+    !Array.isArray((review as { issues?: unknown }).issues) ||
+    (review as { issues: unknown[] }).issues.length !== 0
   )
     throw new Error("review_rejected");
   return {
     status: "ai" as const,
     ...analysis,
     review: "passed" as const,
-    provider: "OpenAI",
+    provider,
     model,
   };
 }

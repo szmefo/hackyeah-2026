@@ -64,3 +64,22 @@ Rate limiting is bounded in-memory per server instance (two requests/minute,
 eight/hour per hashed network bucket, three concurrent calls), not a global distributed
 quota. Configure provider spend limits before exposing an unrestricted public workload.
 Verification status, including any unavailable live key, is in PHASE_2_REVIEW.md.
+
+## Provider update — 2026-10-03T14:59:05+02:00
+
+Greg confirmed an Anthropic credential. Default Claude model: `claude-sonnet-4-6`.
+Native server Messages API uses structured JSON, 1800 output tokens and a 22-second
+limit per call. Anthropic has no `store:false` parameter. Two calls still perform
+interpretation and separate quality review; numerical facts stay computed by Python.
+
+`ANTHROPIC_API_KEY` takes precedence. The owner's existing sensitive credential may
+remain under `OPENAI_API_KEY`: a `sk-ant-` prefix selects Anthropic at runtime and
+is never forwarded to OpenAI. The secret is not read back, printed or copied to Git.
+UI consent names the runtime provider and the server rejects mismatched consent.
+
+Anthropic's standard API retention is up to 30 days, with contractual, policy and
+legal exceptions; this is not a zero-retention claim. See
+https://privacy.claude.com/en/articles/7996866-how-long-do-you-store-my-organization-s-data
+and structured output docs:
+https://platform.claude.com/docs/en/build-with-claude/structured-outputs
+Live result and verification are recorded in PHASE_2_REVIEW.md.

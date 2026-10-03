@@ -17,6 +17,7 @@ export function AIAnalysis() {
   const [consent, setConsent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [configured, setConfigured] = useState<boolean | null>(null);
+  const [provider, setProvider] = useState<"OpenAI" | "Anthropic" | null>(null);
   const [error, setError] = useState("");
   const inflight = useRef<AbortController | null>(null);
   const revisionRef = useRef(revision);
@@ -31,13 +32,22 @@ export function AIAnalysis() {
     fetch("/api/ai-status", { signal: controller.signal, cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
       .then((v) => {
-        if (v) setConfigured(v.configured === true);
+        if (controller.signal.aborted) return;
+        const actualProvider =
+          v?.provider === "OpenAI" || v?.provider === "Anthropic"
+            ? v.provider
+            : null;
+        setProvider(actualProvider);
+        setConfigured(v?.configured === true && actualProvider !== null);
+        setConsent(false);
       })
-      .catch(() => {});
+      .catch(() => {
+        if (!controller.signal.aborted) setConfigured(false);
+      });
     return () => controller.abort();
   }, []);
   async function analyze() {
-    if (!consent || loading) return;
+    if (!consent || loading || configured !== true || !provider) return;
     inflight.current?.abort();
     const controller = new AbortController();
     inflight.current = controller;
@@ -53,6 +63,7 @@ export function AIAnalysis() {
           momentId: selectedId,
           observations,
           consent: true,
+          provider,
         }),
         signal: controller.signal,
       });
@@ -155,27 +166,46 @@ export function AIAnalysis() {
             <input
               type="checkbox"
               checked={consent}
+              disabled={configured !== true || !provider || loading}
               onChange={(e) => setConsent(e.target.checked)}
             />
             <span>
-              Zgadzam się wysłać do OpenAI obliczone fakty, kontekst wybranego
-              momentu i moje obserwacje. Mogą zawierać dane zdrowotne. Pliki
-              źródłowe i GPS nie są wysyłane do modelu.
+              {provider ? (
+                <>
+                  Zgadzam się wysłać do {provider} obliczone fakty, kontekst
+                  wybranego momentu i moje obserwacje. Mogą zawierać dane
+                  zdrowotne. Pliki źródłowe i GPS nie są wysyłane do modelu.
+                </>
+              ) : (
+                "Zgoda na analizę będzie dostępna po potwierdzeniu dostawcy AI. Dane nie zostaną wysłane do modelu bez osobnej zgody."
+              )}
             </span>
           </label>
-          <p className="privacy-note">
-            Nie zapisujemy analizy w bazie. OpenAI może przechowywać treść w
-            logach monitorowania nadużyć do 30 dni; wyłączenie zapisu odpowiedzi
-            nie usuwa tych logów.{" "}
-            <a
-              href="https://developers.openai.com/api/docs/guides/your-data"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Zasady przetwarzania danych OpenAI
-            </a>
-            .
-          </p>
+          {provider && (
+            <p className="privacy-note">
+              Nie zapisujemy analizy w bazie.{" "}
+              {provider === "Anthropic"
+                ? "Anthropic standardowo usuwa dane wejściowe i odpowiedzi API w ciągu 30 dni. Wyjątki, m.in. związane z zasadami korzystania lub prawem, mogą oznaczać dłuższe przechowywanie."
+                : "OpenAI może przechowywać treść w logach monitorowania nadużyć do 30 dni; wyłączenie zapisu odpowiedzi nie usuwa tych logów."}{" "}
+              <a
+                href={
+                  provider === "Anthropic"
+                    ? "https://privacy.claude.com/en/articles/7996866-how-long-do-you-store-my-organization-s-data"
+                    : "https://developers.openai.com/api/docs/guides/your-data"
+                }
+                target="_blank"
+                rel="noreferrer"
+              >
+                Zasady przetwarzania danych {provider}
+              </a>
+              .
+            </p>
+          )}
+          {configured === null && (
+            <p className="upload-message" role="status">
+              Sprawdzam dostępność AI i dostawcę analizy…
+            </p>
+          )}
           {configured === false && (
             <p className="upload-message">
               AI nie jest jeszcze podłączone. Wykresy, fakty i brief są dostępne
@@ -185,7 +215,7 @@ export function AIAnalysis() {
           <button
             className="button primary"
             onClick={analyze}
-            disabled={!consent || loading || configured === false}
+            disabled={!consent || loading || configured !== true || !provider}
           >
             {loading ? "Analizuję kontekst…" : "Przeanalizuj ten moment z AI"}
             <Icon name="arrow" />

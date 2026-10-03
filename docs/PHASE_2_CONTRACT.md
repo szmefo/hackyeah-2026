@@ -60,3 +60,7 @@ for glucose alignment rather than fabricating matching. Missing HR/altitude stay
 
 Root commits explicit scoped files. Workers do not commit, stage, deploy, read secrets or edit
 other owners' files; report cross-cutting needs. Import adaptation stays separate from new modules.
+
+Provider update: Anthropic is the owner's current selection. `/api/ai-status` returns
+only configured/provider; `/api/interpret` requires provider-matching separate consent.
+Model transport/payload/retention: AI_INTERPRETATION.md. UI numbers remain Python facts.

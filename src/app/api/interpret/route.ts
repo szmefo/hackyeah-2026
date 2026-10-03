@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import fixture from "../../../../data/demo-run.json";
 import { canonical, verifyRun } from "@/lib/server/run-integrity";
 import { interpret, type InterpretationContext } from "@/lib/server/ai";
+import { getAIConfig } from "@/lib/server/provider-config";
+import { ProviderError } from "@/lib/server/llm-transport";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -38,14 +40,22 @@ export async function POST(request: Request) {
   } catch {
     return fallback("Nieprawidłowe dane analizy.", 400);
   }
+  if (!data || typeof data !== "object" || Array.isArray(data))
+    return fallback("Nieprawidłowe dane analizy.", 400);
   if (data.consent !== true)
     return fallback(
-      "Analiza AI wymaga osobnej zgody na przesłanie danych do OpenAI.",
+      "Analiza AI wymaga osobnej zgody na przesłanie danych do wskazanego dostawcy.",
       400,
     );
-  if (!process.env.OPENAI_API_KEY)
+  const config = getAIConfig();
+  if (!config.configured)
     return fallback(
       "AI nie jest jeszcze podłączone. Fakty i podsumowanie nadal są dostępne.",
+    );
+  if (data.provider !== config.provider)
+    return fallback(
+      "Dostawca AI się zmienił. Odśwież stronę i sprawdź zgodę na analizę.",
+      400,
     );
   const run = data.run;
   if (
@@ -202,10 +212,27 @@ export async function POST(request: Request) {
   rates.set(bucket, [...recent, now]);
   active += 1;
   try {
-    const model = process.env.OPENAI_MODEL || "gpt-4.1-2025-04-14";
-    const result = await interpret(context, process.env.OPENAI_API_KEY, model);
+    const result = await interpret(
+      context,
+      config.key,
+      config.model,
+      config.provider,
+    );
     return NextResponse.json(result, { headers });
-  } catch {
+  } catch (error) {
+    // Log only finite diagnostic labels, never request/provider content or secrets.
+    if (error instanceof ProviderError)
+      console.warn(
+        "AI provider failure",
+        error.provider,
+        error.code,
+        error.status ?? "network",
+      );
+    else if (
+      error instanceof Error &&
+      ["analysis_rejected", "review_rejected"].includes(error.message)
+    )
+      console.warn("AI quality check", error.message);
     return fallback(
       "Nie udało się uzyskać sprawdzonej interpretacji AI. Poniżej pozostają fakty i podsumowanie z danych.",
     );

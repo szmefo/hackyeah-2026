@@ -27,3 +27,6 @@ Use actual ISO 8601 timestamps with timezone. One short entry per meaningful dec
 | 2026-10-01T21:56:25+02:00 | Disable automatic framework edits to AGENTS.md | Starting dev should not modify the IP/scope instructions or dirty Git history |
 | 2026-10-02T21:45:59+02:00 | Prepare a separate Vercel Hobby workspace and a Supabase Free project form; defer schema and application integration | Greg requested cloud readiness before the event; the full brief remains unknown. Database password and creation are an owner handoff; readiness is tracked in docs/CLOUD.md |
 | 2026-10-02T21:52:35+02:00 | Save owner-selected Supabase GitHub association with root directory `.` and Deploy to production off | Keep requested repository association without running migrations or adding a speculative schema; database public schema verified empty; no paid branching |
+
+| 2026-10-03T14:59:05+02:00 | Select Anthropic after owner confirmation; route sk-ant credentials by prefix even under legacy env name | Sensitive Vercel values cannot be pulled; avoid exposing or sending a credential to the wrong provider |
+| 2026-10-03T14:59:05+02:00 | Bind separate AI consent to the actual configured provider | Changing providers must not reuse consent naming a different destination |
