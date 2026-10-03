@@ -43,3 +43,6 @@ Recorded review handoff at 2026-10-03T15:39:05.9263158+02:00 (Europe/Warsaw); Gr
 | 2026-10-03T15:55:34+02:00 | Cherry-pick cream/lavender UI onto b0e45ec; preserve both documentation histories and publish a86ea60 to existing Vercel project. | Application files merged cleanly; newer Anthropic, validation and import code unchanged; production checks passed. |
 
 | 2026-10-03T18:54:39+02:00 | Version four corrected synthetic scenario pairs and their generator in demos/synthetic-scenarios. | Local tmp assets were absent from Git; reproduce matching FIT/CSV dates and preserve demo inputs on GitHub. |
+
+| 2026-10-03T22:28:16+02:00 | Phase 3 tonight is local only (option B): six topic commits on overnight/phase-3; deploy, production AI checks and merge to main wait for owner approval | Owner decision; local checks, Playwright E2E, PDF and error states recorded in docs/PHASE_3_REVIEW.md |
+| 2026-10-03T22:28:16+02:00 | Label a run synthetic only on exact byte match with one of five known public pairs; one story per run; separable=false for gaps, partial CGM and low/high glucose on an uphill | Prevents mislabelled uploads and duplicate or overclaiming moments; co-occurrence never causation |
