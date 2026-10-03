@@ -23,6 +23,9 @@ If the task requires a full license inventory, produce it from the final lockfil
 
 | Resource | Type | Source / version | Added at (timezone) | Used in | License / terms / attribution | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
+| pydantic | Python library | 2.12.5; https://github.com/pydantic/pydantic | 2026-10-03, Europe/Warsaw | Imported signal models, engine/requirements.txt | MIT | Existing local runtime verified; not a browser dependency |
+| garmin-fit-sdk | Official Python FIT decoder | 21.214.0; https://github.com/garmin/fit-python-sdk | 2026-10-03, Europe/Warsaw | Imported FIT parser and fixtures | Garmin FIT SDK license in package / source repository; preserve applicable notices | Pin matches source environment with Encoder fixture support; global 21.195.0 lacks Encoder. No Garmin account integration; no real FIT uploaded in phase 1 |
+| pytest | Python test runner | 9.0.2; https://github.com/pytest-dev/pytest | 2026-10-03, Europe/Warsaw | Imported engine tests | MIT | Verification tooling |
 | GitHub | Repository hosting | https://github.com/szmefo/hackyeah-2026 | 2026-10-01, Europe/Warsaw | Source history | GitHub service terms | Private at initialization |
 | Vercel | Hosting account / workspace | https://vercel.com/hack-yeah1 | 2026-10-02, Europe/Warsaw — before event | Prepared for later deployment | https://vercel.com/legal/terms | Hobby workspace verified; no deployment or GitHub connection |
 | Supabase | PostgreSQL database / GitHub association | https://supabase.com/dashboard/project/omutcnsoxmjzagfbzkwa | 2026-10-02, Europe/Warsaw — before event | Empty database prepared for later use | https://supabase.com/terms | Free project created; public schema empty; hackyeah-2026 repository linked with automatic DB deployment off; no application integration; see docs/CLOUD.md |

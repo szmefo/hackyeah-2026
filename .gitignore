@@ -20,3 +20,9 @@ next-env.d.ts
 Thumbs.db
 *.log
 .verification/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+
+.vercel
