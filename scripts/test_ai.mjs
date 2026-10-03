@@ -284,3 +284,21 @@ test("higher glucose endpoints cannot establish that every reading stayed above 
   a.claims[0].text = "W oknie nie odnotowano niskich odczytów glukozy.";
   assert.equal(validateAnalysis(a, context), false);
 });
+
+test("descriptive changes and steady pace are allowed while imperatives stay rejected", () => {
+  const a = valid();
+  a.claims[0].text =
+    "Zwiększone tętno współwystępowało ze zmniejszeniem tempa.";
+  a.claims[0].factIds = ["m.pace"];
+  assert.equal(validateAnalysis(a, context), true);
+  a.claims[0].text = "Tempo nie było jednostajne w tym fragmencie biegu.";
+  assert.equal(validateAnalysis(a, context), true);
+  for (const text of [
+    "Zwiększ tempo biegu.",
+    "Zmniejsz wysiłek teraz.",
+    "Przyjmij jednostki leku.",
+  ]) {
+    a.claims[0].text = text;
+    assert.equal(validateAnalysis(a, context), false);
+  }
+});

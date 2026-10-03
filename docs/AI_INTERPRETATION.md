@@ -103,3 +103,7 @@ that readings stayed above the threshold from two higher endpoint values, ignori
 the lower measured minimum. Manual review caught this. A specific contradiction guard,
 regression test and explicit minimum-versus-endpoints reviewer instruction were added.
 This demonstrates why valid citations and a second model call are not clinical proof.
+
+Language guard contrast: descriptive increased heart rate/reduced pace and steady pace
+are allowed; imperative instructions and medication units remain rejected. Added a
+regression test distinguishing Polish descriptive forms from direct commands.
