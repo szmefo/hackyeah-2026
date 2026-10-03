@@ -302,3 +302,12 @@ test("descriptive changes and steady pace are allowed while imperatives stay rej
     assert.equal(validateAnalysis(a, context), false);
   }
 });
+
+test("individual sensor measurement is not medication units", () => {
+  const a = valid();
+  a.claims[0].text =
+    "Jednostkowy odczyt sensora nie pozwala ustalić przyczyny zmiany tempa.";
+  assert.equal(validateAnalysis(a, context), true);
+  a.claims[0].text = "Przyjmij jednostkę leku.";
+  assert.equal(validateAnalysis(a, context), false);
+});
