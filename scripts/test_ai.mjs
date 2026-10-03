@@ -319,3 +319,23 @@ test("Polish conditional word is not a gel recommendation", () => {
   a.claims[0].text = "Żel może rozwiązać problem w czasie biegu.";
   assert.equal(validateAnalysis(a, context), false);
 });
+
+test("glucose contradiction variants reject while unrelated pace absence does not", () => {
+  const a = valid();
+  for (const text of [
+    "Najniższy odczyt glukozy był powyżej progu.",
+    "Nie zarejestrowano odczytów glukozy poniżej progu.",
+  ]) {
+    a.claims[0].text = text;
+    assert.equal(validateAnalysis(a, context), false);
+  }
+  a.claims[0] = {
+    text: "Nie było niższego tempa w tym oknie.",
+    factIds: ["m.pace"],
+  };
+  assert.equal(validateAnalysis(a, context), true);
+  a.claims[0].text = "Zwiększcie wysiłek podczas biegu.";
+  assert.equal(validateAnalysis(a, context), false);
+  a.claims[0].text = "Zmniejszmy wysiłek podczas biegu.";
+  assert.equal(validateAnalysis(a, context), false);
+});
