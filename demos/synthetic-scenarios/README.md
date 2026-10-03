@@ -1,5 +1,11 @@
 # Syntetyczne scenariusze demo — Cukier w biegu
 
+**Aplikacja: https://cukier-w-biegu.vercel.app/**
+
+Lokalna kopia na komputerze prezentacyjnym: `C:\_HackYeah2026\tmp\synthetic-scenarios`.
+Ten katalog `demos/synthetic-scenarios` jest kopią zapisaną w Git, dostępną dla sędziów
+po pobraniu repozytorium. [Instrukcja demo](../../submission/README.md).
+
 DANE SYNTETYCZNE. Wygenerowane skryptem `generate.py` (seed stały), nie pochodzą od pacjenta.
 Każdy katalog: `bieg.fit` + `glukoza.csv` (format Dexcom Clarity, czas lokalny Europe/Warsaw).
 
@@ -9,4 +15,3 @@ Każdy katalog: `bieg.fit` + `glukoza.csv` (format Dexcom Clarity, czas lokalny 
 - **04-luka-w-danych** (start 2026-10-01T18:00:00+02:00): Sensor traci sygnał od ~58. minuty do końca biegu; podbieg bez odczytów glukozy.
 
 Upload both files from the same folder with Europe/Warsaw selected. Leave the checkbox for the downloaded website example unchecked: it applies only to the exact built-in demo pair. These four scenarios are entirely synthetic, although this upload path labels them as uploaded data. Regenerate from the repository root with: engine/.venv/Scripts/python.exe demos/synthetic-scenarios/generate.py
-

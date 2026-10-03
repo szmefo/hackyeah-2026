@@ -54,7 +54,23 @@ has manually selected illustrative moments. See provenance on each dataset.
 Refresh or direct opening a new tab restores the built-in example. Printing opens
 the browser print flow; long notes/AI content can require more than one page.
 
+## Jury quick start
+
+**Live app: https://cukier-w-biegu.vercel.app/**
+
+For the fastest demo, open **Źródła → Wybierz przykładową parę**, confirm processing
+consent and import. No account is required. For the four alternative scenarios,
+use the file locations below. [Short jury instructions](submission/README.md).
+
 ## Additional synthetic scenarios
+
+On the presentation computer, all four synthetic pairs are available at
+**`C:\_HackYeah2026\tmp\synthetic-scenarios`** (relative local path:
+`tmp\synthetic-scenarios`). This is a local demo folder, not a GitHub directory.
+
+For judges reviewing the repository on another computer, the same corrected
+FIT/CSV pairs are committed in **`demos/synthetic-scenarios`**. Download or clone
+the repository to use them; do not rely on the presenter’s local `C:` path.
 
 Four complete FIT/CSV pairs are versioned in [demos/synthetic-scenarios](demos/synthetic-scenarios/README.md):
 

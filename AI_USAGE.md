@@ -80,3 +80,5 @@ Greg selected v3 concept 04 and requested implementation isolated from concurren
 2026-10-03T18:54:39+02:00 — Codex (GPT-6): diagnosed mismatched FIT/CSV dates in local synthetic scenarios, regenerated all four pairs, verified each with analyze_upload and scenario 03 through production import (HTTP 200). Added the existing synthetic generator and corrected pairs under demos/synthetic-scenarios with portable repository paths at Greg's request to commit/push. No model API used.
 
 2026-10-03T18:55:38+02:00 — Codex (GPT-6): updated README to match deployed cream/lavender UI, Anthropic provider, versioned synthetic scenarios, local commands and actual verification scope. Checked documentation against repository files and recorded release evidence; Greg requested README update.
+
+2026-10-03T18:58:57+02:00 — Codex (GPT-6): documented public app URL, local tmp/synthetic-scenarios path versus versioned demos copy, and short jury demo steps in README, submission/README and scenario README. Requested by Greg; checked file paths against repository.
