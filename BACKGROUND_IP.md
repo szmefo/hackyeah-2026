@@ -69,3 +69,14 @@ Source revision is recorded rather than inventing a pre-event tag; UltraSoul rem
 Import commit: `import(background-ip): preserve approved UltraSoul parsers and signal extractor`.
 SHA-256 hashes refer to bytes from the committed source revision and byte-identical imported files.
 Any later adaptation must have its own commit and modification record.
+
+### Adaptation record
+
+2026-10-03, Europe/Warsaw, immediately after byte-exact import:
+`fit_parser.py`: removed FastAPI import and historical HTTP wrapper; existing
+`FitParseError` passes through `parse_fit_bytes`. No algorithm changes.
+`test_fit_parser_alignment.py`: changed the legacy HTTP-wrapper assertion to the
+typed error contract. Source fixture, adapter and signal extractor remain unchanged.
+Commit: `adapt(background-ip): decouple FIT parser from HTTP framework`.
+Verification: original extractor tests passed before adaptation (19 tests);
+full imported suite run after adaptation, results in docs/VERIFICATION.md.

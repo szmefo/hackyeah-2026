@@ -77,13 +77,11 @@ def test_multisport_is_refused_not_glued():
         parse_fit_activity(build_run_fit(seconds=10, sport="multisport"))
 
 
-def test_http_wrapper_maps_typed_error_to_422_with_code():
-    from fastapi import HTTPException
-
-    with pytest.raises(HTTPException) as exc:
+def test_bytes_entrypoint_preserves_typed_error_code():
+    with pytest.raises(FitParseError) as exc:
         parse_fit_bytes(build_run_fit(seconds=10, extra_sessions=["cycling"]))
-    assert exc.value.status_code == 422
-    assert exc.value.headers["X-FIT-Error-Code"] == "multisport_unsupported"
+    assert exc.value.code == "multisport_unsupported"
+    assert exc.value.detail_pl
 
 
 def test_device_summary_has_no_serial_and_no_gps():

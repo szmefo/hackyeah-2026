@@ -32,7 +32,6 @@ from datetime import datetime, timedelta, timezone
 from io import BytesIO
 from typing import Any
 
-from fastapi import HTTPException, status
 
 logger = logging.getLogger(__name__)
 
@@ -76,34 +75,8 @@ class FitParseError(ValueError):
 
 
 def parse_fit_bytes(content: bytes) -> dict[str, Any]:
-    """Parse raw FIT file bytes and return a unified activity JSON (HTTP contract).
-
-    Thin wrapper over :func:`parse_fit_activity` that keeps the historical
-    ``HTTPException`` contract of the upload endpoint.
-
-    Args:
-        content: Raw bytes of a .fit file.
-
-    Returns:
-        Unified activity dict with source, streams, samples and summary_stats.
-
-    Raises:
-        HTTPException 422 if the bytes are not a valid / supported FIT file.
-        HTTPException 500 if the decoder library is missing.
-    """
-    try:
-        return parse_fit_activity(content)
-    except FitParseError as exc:
-        if exc.code == "decoder_unavailable":
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="FIT parsing library not available",
-            ) from exc
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=exc.detail_pl,
-            headers={"X-FIT-Error-Code": exc.code},
-        ) from exc
+    """Parse FIT bytes with typed failures; future API adapters map them to HTTP."""
+    return parse_fit_activity(content)
 
 
 def parse_fit_activity(content: bytes, *, include_gps: bool = False, include_details: bool = False) -> dict[str, Any]:
