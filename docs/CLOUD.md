@@ -75,3 +75,22 @@ artifact flow or, after the owner's account setup, ordinary Git deployment.
 Updated deployment inspector:
 https://vercel.com/hack-yeah1/cukier-w-biegu/9X2jZZ2EGwJLyXifnBxufts26VFH
 This is artifact deployment, not automatic synchronization with GitHub.
+
+### Phase 2 — transient import and model integration
+
+Web alias: https://cukier-w-biegu.vercel.app
+Engine alias: https://cukier-w-biegu-engine.vercel.app
+Engine deployment: dpl_5vHuojkv9sFRdUqGXX6Zx779jUTQ, READY.
+
+Web has ENGINE_URL and ENGINE_SHARED_SECRET; engine has the matching shared secret.
+Owner provided a sensitive Anthropic credential under the legacy OPENAI_API_KEY name.
+Runtime prefix recognition routes it only to Anthropic. Preferred future name is
+ANTHROPIC_API_KEY. No secret value was recovered, printed or committed.
+
+Next and Python process uploads transiently; Supabase remains empty/unconnected.
+Model data are sent only after separate Anthropic consent. Only summaries and nearby
+notes, never source files or GPS. Provider retention: AI_INTERPRETATION.md.
+
+Final web revision, deployment and artifact hashes: phase-2-deployment.json.
+Artifact exports exclude .git, env credentials and unrelated source; source hashes
+allow matching the deployed artifact to Git without changing commit authorship.

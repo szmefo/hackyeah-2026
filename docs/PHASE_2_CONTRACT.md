@@ -14,7 +14,7 @@ Next proxy forwards to private Python `POST /analyze` with same fields and
 Success `{run: RunStory}`; failure `{error: string, code: string}` with appropriate 4xx/5xx.
 Do not cache responses. No files persist; browser run lives in React memory.
 
-Browser `POST /api/interpret`: JSON `{run, momentId, observations, consent:true}`.
+Browser `POST /api/interpret`: JSON `{run, momentId, observations, consent:true, provider:'Anthropic'|'OpenAI'}`.
 Separate explicit AI consent. Server sends only computed facts and selected-moment
 summaries plus consented observations to the configured provider, never original files/GPS/name.
 Success `{status:'ai', claims:[{text,factIds}], alternatives:[{text,factIds}],
@@ -64,4 +64,3 @@ other owners' files; report cross-cutting needs. Import adaptation stays separat
 Provider update: Anthropic is the owner's current selection. `/api/ai-status` returns
 only configured/provider; `/api/interpret` requires provider-matching separate consent.
 Model transport/payload/retention: AI_INTERPRETATION.md. UI numbers remain Python facts.
-

@@ -1,0 +1,202 @@
+{
+  "sourceCommit": "9344056",
+  "recordedAt": "2026-10-03T15:39:05.8500465+02:00",
+  "engine": {
+    "files": [
+      {
+        "path": ".gitignore",
+        "sha256": "319c3304702d205b9fba52d0f12ce3d388bacdade80ad223c550935fadaa20a6"
+      },
+      {
+        "path": ".python-version",
+        "sha256": "7b55f8e67b5623c4bef3fa691288da9437d79d3aba156de48d481db32ac7d16d"
+      },
+      {
+        "path": ".vercelignore",
+        "sha256": "bcbacced1e1c464bd834ad0bbd5a24932626a8f879f5246793bfb430924d9d41"
+      },
+      {
+        "path": "main.py",
+        "sha256": "27661c6884f8a1f09da260c9bc3fe246be757bbbc1dfa44adba5f951d76587e5"
+      },
+      {
+        "path": "requirements.txt",
+        "sha256": "2bd9e8905533a59fe3f0e3cb55d1d751c29e19a49410d0bc151068c3b35cd5b2"
+      },
+      {
+        "path": "vercel.json",
+        "sha256": "cd7d42d02d0db5ffdba62be11dcf41827591a02d45278af9c2bcace2c86b407c"
+      },
+      {
+        "path": "app/services/analysis.py",
+        "sha256": "ba6f65ac65068e643eaa89b41e274de9f06fb48011091f8cfb992b6ec2ab0fb4"
+      },
+      {
+        "path": "app/services/fit_adapter.py",
+        "sha256": "1f15f6377fa6e0185f869113e6844761671c5f69c85465dce0bf14d35e0fb35a"
+      },
+      {
+        "path": "app/services/fit_parser.py",
+        "sha256": "f2b06761491560f0e0d771b3d567b116762c51c6dc7bd65af010fffc0474b07a"
+      },
+      {
+        "path": "app/services/glucose.py",
+        "sha256": "b865dbbbfcebeff63dad1b903e61553f95dd4db649a821dbd8b064e855ceb13c"
+      },
+      {
+        "path": "app/services/run_signal_extractor.py",
+        "sha256": "1d2755c437851c80697a184afc2fab044901c43504418a7b78f7f270ba072078"
+      }
+    ],
+    "id": "dpl_5vHuojkv9sFRdUqGXX6Zx779jUTQ",
+    "artifact": "C:/_HackYeah2026/deploy/phase2-engine",
+    "url": "https://cukier-w-biegu-engine.vercel.app"
+  },
+  "web": {
+    "files": [
+      {
+        "sha256": "ffb5108016794e1e4286a5d226c470fe9ca27f55e5eeaa06721f2cdfc9b2e46c",
+        "path": ".gitignore"
+      },
+      {
+        "sha256": "74a32d731ce875e366296d5f4cd81fcef5c8b87585a1892115b57fd4afa90cf3",
+        "path": ".vercelignore"
+      },
+      {
+        "sha256": "c88af8a6fc9fbf79ba8fffbe410f87624654672b5672fe7cf219e6017ee0a2d9",
+        "path": "next.config.ts"
+      },
+      {
+        "sha256": "fb8fa6eb950f1701d42b133d15f27465c54c76a8a389909b92f0f9254ca1c386",
+        "path": "package-lock.json"
+      },
+      {
+        "sha256": "f028e502f796352143a8cfe13e72f16c5c76e5f046856bae9039c7e323f23f08",
+        "path": "package.json"
+      },
+      {
+        "sha256": "c474ca7e02166e9f4d328c6a8bd629ea7d31d9d12cab480d5c9bc6886e3612be",
+        "path": "tsconfig.json"
+      },
+      {
+        "sha256": "175e7c5f3988ca50fd5ada5e7f595a2b9b5d7a761ec125ebeeb8466bfb7af54c",
+        "path": "data/demo-run.json"
+      },
+      {
+        "sha256": "757d0998c3320edbf61419b489177a7187d30ab70cd1144e87a30a0696779999",
+        "path": "data/example.json"
+      },
+      {
+        "sha256": "746cacb23eb8933489b3870bdd46da7d2b6053f7d8a3b69025e6c14d197e8119",
+        "path": "data/README.md"
+      },
+      {
+        "sha256": "2fd8916165fae33cbe94a58dc298955218db96c31708541dee39c52ff1aa8470",
+        "path": "public/demo-glucose.csv"
+      },
+      {
+        "sha256": "4b4a6789bf9e5ea1a0d6d40739ca8cef50a0cfc310e22a6cc68feee5c7394f71",
+        "path": "public/demo-run.fit"
+      },
+      {
+        "sha256": "b9056d54313b45558408fd143422881634569c203c27cc13dbbb163c1b803ecb",
+        "path": "src/app/globals.css"
+      },
+      {
+        "sha256": "635c2e81b06bce138496dd548ddb5d7ebd7aed8f71d77bc9632d79cd7c1fa5f9",
+        "path": "src/app/layout.tsx"
+      },
+      {
+        "sha256": "3804be1f96771cfe6ba5b7ab575e3c4cbfee5f23d46eb3912ce84e3198595f22",
+        "path": "src/app/page.tsx"
+      },
+      {
+        "sha256": "8d032e0071b2873ad76b12cda3e4bf8f81fd84dcc4696ce03cef4907728b3f8c",
+        "path": "src/app/api/ai-status/route.ts"
+      },
+      {
+        "sha256": "41ea2ed4e65e76a564fad61237a58018986fa0e40ba2f1ebf9ef41342a49abe6",
+        "path": "src/app/api/health/route.ts"
+      },
+      {
+        "sha256": "c68b0d602c173f44a9bb42a04260dbf57f20f25977081514cd0e2a7d2c670054",
+        "path": "src/app/api/import/route.ts"
+      },
+      {
+        "sha256": "a0831f17a2746304b3e53c24ffc9a97461659cf7be01cab54ef8bcd54177d1f8",
+        "path": "src/app/api/interpret/route.ts"
+      },
+      {
+        "sha256": "c093c4465f7824d5ad535905a20ca783f174f84f9e35e94619d43cc5f9194d3c",
+        "path": "src/app/brief/page.tsx"
+      },
+      {
+        "sha256": "2254a25fc40a6efd3be3b3dc1b5ff11fafa8d8aeb6a572578b89d4ce88ff7a88",
+        "path": "src/app/runs/page.tsx"
+      },
+      {
+        "sha256": "5882066f9f2c9dc720c249d206ab148646f3c595cb9f7a06e6c2f63809342f62",
+        "path": "src/app/sources/page.tsx"
+      },
+      {
+        "sha256": "73befae3072333307f0f91c15546b57e0d7cedf44e9cc48b773860a6fe2bb021",
+        "path": "src/components/ai-analysis.tsx"
+      },
+      {
+        "sha256": "2d21dae787556999a521e357f87aecc99c41e37d3aaefbb3b6150143da332ab6",
+        "path": "src/components/app-shell.tsx"
+      },
+      {
+        "sha256": "c63447e97b08ce11127ac27b6b50de4d608fdade8514eb03bd10442cdb4ba422",
+        "path": "src/components/clinician-brief.tsx"
+      },
+      {
+        "sha256": "b8e4b0891000863be551357f195253920032885cfc325d6c62149384b1790bb1",
+        "path": "src/components/demo-context.tsx"
+      },
+      {
+        "sha256": "1da4e0a37b1433db46107505ede19ce92ea3bac02f2ba53e5fc605b1274e292c",
+        "path": "src/components/health-check.tsx"
+      },
+      {
+        "sha256": "a8ef6f67bd0b17bfca0e939940f0725dcbaec7122322980cfee28eef2351111c",
+        "path": "src/components/icons.tsx"
+      },
+      {
+        "sha256": "ed9f2bfcc78f5b0852bd220c3589d3eea6ba86b9bf1115faf2fd8aeabea79a43",
+        "path": "src/components/run-experience.tsx"
+      },
+      {
+        "sha256": "8393255626212c03ac1f11df92e91d7d8be41fa0dcdd4774879ec3769198c4d3",
+        "path": "src/components/timeline.tsx"
+      },
+      {
+        "sha256": "b8c42874c528baf580478f513e6bc13eec81991fe551fa4381b6a6e3bfac7ce1",
+        "path": "src/lib/demo.ts"
+      },
+      {
+        "sha256": "39eb3e6ea13e3f85c8a010bdff5e9f76574f40f0751d55f675003643ac3a40da",
+        "path": "src/lib/run-story.ts"
+      },
+      {
+        "sha256": "8b02f6b80e55ca13e782f9e3fc3977d59c2f8d00c85021770c9ad93e49ddc69d",
+        "path": "src/lib/server/ai.ts"
+      },
+      {
+        "sha256": "eb045046564c7ea4f6e83756c2acd3a95c57f4686afc8b67b7d818cb53386c6b",
+        "path": "src/lib/server/llm-transport.ts"
+      },
+      {
+        "sha256": "94c97b0b19b481a2823419a0859cae0e3adad002d9a05d63e0f7f99bca7d1e72",
+        "path": "src/lib/server/provider-config.ts"
+      },
+      {
+        "sha256": "72dda668232b8da70ae253f55c9bf4867970aa2096d77710c295cae0fc6b7b37",
+        "path": "src/lib/server/run-integrity.ts"
+      }
+    ],
+    "id": "dpl_EL2QygWeFt71EG9XUHZG2qB662GW",
+    "artifact": "C:/_HackYeah2026/deploy/phase2-9344056",
+    "url": "https://cukier-w-biegu.vercel.app"
+  }
+}

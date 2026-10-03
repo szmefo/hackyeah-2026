@@ -104,3 +104,10 @@ the evidence above. All accepted checks used the local, pinned Next.js 16.3.8.
 
 No automated regression test suite was introduced for this small neutral starter.
 The real health response and rendered result were checked directly.
+
+## Phase 2
+
+Actual FIT/Dexcom import and optional Anthropic analysis are implemented separately
+from the historical phase-1 UI. Current executed checks and live status:
+[PHASE_2_REVIEW.md](PHASE_2_REVIEW.md). Artifact provenance:
+[phase-2-deployment.json](phase-2-deployment.json).

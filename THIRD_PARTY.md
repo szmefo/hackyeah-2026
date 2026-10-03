@@ -62,4 +62,8 @@ OpenAI disclosure and exact payload: docs/AI_INTERPRETATION.md. Integration is i
 live provider verification depends on the owner's server key. `store:false` does not
 eliminate default provider abuse-monitoring retention. Supabase remains unconnected.
 
+## Owner-selected Anthropic provider
+
+| Resource | Version / source | License / terms | Purpose and data |
+| --- | --- | --- | --- |
 | Anthropic Messages API | Default claude-sonnet-4-6; configurable ANTHROPIC_MODEL | https://www.anthropic.com/legal/commercial-terms | Native server fetch; selected computed facts and separately consented nearby notes. Interpretation + separate review; no source files, GPS or keys sent as prompt data. Standard retention and exceptions disclosed in docs/AI_INTERPRETATION.md. |

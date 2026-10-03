@@ -53,8 +53,19 @@ Checks and limits: [docs/PHASE_1_REVIEW.md](docs/PHASE_1_REVIEW.md).
 Source UI release: `9523dd9`; artifact deployment retains honest Git authorship.
 Greg reviews the live direction before real-data/model integration.
 
+## Anthropic integration session
+
+| Timestamp with timezone | Tool / model | Contribution | Paths | Human direction and verification |
+| --- | --- | --- | --- | --- |
 | 2026-10-03T14:59:05+02:00 | Codex, model not exposed in this session; root plus engine/web/QA subagents | Anthropic transport, provider routing, consent UI and mocked tests | src/lib/server/provider-config.ts; llm-transport.ts; api/interpret; api/ai-status; ai-analysis.tsx; scripts/test_transport.mjs | Greg selected Anthropic; root integrates; independent QA, type/build checks and synthetic live verification recorded in docs/PHASE_2_REVIEW.md |
 
 Application AI provider update: owner selected Anthropic, default `claude-sonnet-4-6`.
 Two separate requests interpret and review. Only explicit consent sends selected
 computed facts and nearby notes. Actual live verification is in docs/PHASE_2_REVIEW.md.
+
+Live synthetic verification completed: Anthropic claude-sonnet-4-6 interpreted the
+imported run and a separate call approved the corrected explanation. It described
+the lower intermediate reading despite higher endpoints, pace/HR changes, competing
+terrain context and unresolved causality. Final presentation strips redundant internal
+separation-flag annotations; 29 Node tests cover transport/guards/presentation.
+No personal health records were used for provider verification.

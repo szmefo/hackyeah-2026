@@ -89,8 +89,8 @@ Live result and verification are recorded in PHASE_2_REVIEW.md.
 The first synthetic Claude drafts failed the evidence-reference guard and were not
 shown as AI interpretation. One bounded correction of a rejected draft is now allowed,
 then the same code checks and separate AI review are required. Repeated failure keeps
-the deterministic fallback. Each call is limited to 16 seconds; at most three calls
-fit within the 60-second route budget. Logs contain only finite rejection labels,
+the deterministic fallback. All calls share a 54-second deadline, with at most 22 seconds per call
+within the 60-second route budget. Logs contain only finite rejection labels,
 never model text, notes, measurements or secrets.
 
 
@@ -107,3 +107,12 @@ This demonstrates why valid citations and a second model call are not clinical p
 Language guard contrast: descriptive increased heart rate/reduced pace and steady pace
 are allowed; imperative instructions and medication units remain rejected. Added a
 regression test distinguishing Polish descriptive forms from direct commands.
+
+Independent QA added contrast cases for glucose threshold language versus unrelated pace,
+plural directives and Polish word collisions (individual readings and conditional jeżeli).
+28 Node tests cover the final guard/transport behavior; numerical Python suite has 87.
+Logs give only static category labels to guide one correction; no prompt/model text.
+
+29 final Node tests include reviewed-output presentation (no internal separation flag).
+A real synthetic interpretation completed and passed review, with lower intermediate
+CGM reading correctly recognized. Exact live/release evidence: PHASE_2_REVIEW.md.
