@@ -315,3 +315,48 @@
   .button, .moment-picker button { transition: none; }
   .button:hover { transform: none; }
 }
+
+/* Chart readability: 70–180 band, Low/High markers, synthetic chart label,
+   distinguishable moment cards and the run strengths section. */
+@media screen {
+  .range-band { fill: var(--glucose); opacity: 0.08; }
+  .flag-mark { stroke: var(--glucose); stroke-width: 1.5; }
+  .chart-legend .legend-band { height: 9px; background: var(--glucose); opacity: 0.18; }
+  .plot-heading .synthetic-badge {
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 6px 11px;
+  }
+  .moment-text { min-width: 0; }
+  .moment-picker .moment-label { display: block; font-weight: 600; }
+  .moment-picker .moment-where {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 5px;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+  .strengths-section {
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.7fr);
+    gap: 22px clamp(28px, 3.4vw, 56px);
+    margin-top: 36px;
+    padding: 30px 32px;
+    border-radius: 28px;
+    background: #edf2ee;
+  }
+  .strengths-intro .eyebrow { color: #3f6a58; }
+  .strengths-intro h2 { font: 34px/1.1 var(--serif); letter-spacing: -1px; color: var(--cream); margin: 10px 0 10px; }
+  .strengths-intro p { font-size: 13px; line-height: 1.6; color: var(--muted); margin: 0; }
+  .strengths-section ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; align-content: center; }
+  .strengths-section li { display: flex; gap: 12px; align-items: flex-start; font-size: 16px; line-height: 1.55; color: var(--text); }
+  .strengths-section li svg { flex: 0 0 auto; color: #3f6a58; margin-top: 2px; }
+}
+@media screen and (max-width: 780px) {
+  .plot-heading .synthetic-badge { font-size: 10px; padding: 5px 10px; }
+  .strengths-section { grid-template-columns: minmax(0, 1fr); margin-top: 26px; padding: 25px 21px; border-radius: 24px; }
+  .strengths-intro h2 { font-size: 30px; }
+  .strengths-section li { font-size: 15px; }
+}

@@ -7,9 +7,14 @@ import {
   durationLabel,
   decimal,
 } from "@/lib/demo";
-import type { Point } from "@/lib/run-story";
+import type { Point, RunStory } from "@/lib/run-story";
 import { useDemo } from "./demo-context";
-import { DataBadge } from "./app-shell";
+import { DataBadge, SyntheticBadge } from "./app-shell";
+
+/** A run counts as synthetic when either the flag or its provenance says so. */
+export function isSyntheticRun(run: RunStory) {
+  return run.synthetic === true || run.provenance?.kind === "synthetic";
+}
 function subscribeViewport(onChange: () => void) {
   const media = window.matchMedia("(max-width: 780px)");
   media.addEventListener("change", onChange);
@@ -35,6 +40,54 @@ function measuredSegments(samples: { minute: number; value: number | null }[]) {
   if (current.length) segments.push(current);
   return segments;
 }
+/**
+ * Keeps required ticks (e.g. the 70 and 180 mg/dL range lines) and adds
+ * optional ones only when their labels cannot touch any label already kept.
+ */
+function spacedTicks(
+  required: number[],
+  optional: number[],
+  position: (value: number) => number,
+  minGap: number,
+) {
+  const kept: number[] = [];
+  for (const value of [...required, ...optional]) {
+    if (!Number.isFinite(value)) continue;
+    if (kept.some((t) => Math.abs(position(t) - position(value)) < minGap))
+      continue;
+    kept.push(value);
+  }
+  return kept.sort((a, b) => a - b);
+}
+/** Same idea for the time axis: estimated label widths must not touch. */
+function spacedTimeTicks(
+  candidates: number[],
+  duration: number,
+  position: (minute: number) => number,
+  text: (minute: number) => string,
+  charWidth: number,
+) {
+  const span = (t: number) => {
+    const w = text(t).length * charWidth;
+    const x = position(t);
+    if (t === 0) return [x, x + w];
+    if (t === duration) return [x - w, x];
+    return [x - w / 2, x + w / 2];
+  };
+  const ordered = [0, duration, ...candidates.filter((t) => t > 0 && t < duration)];
+  const kept: number[] = [];
+  for (const t of ordered) {
+    const [a, b] = span(t);
+    if (kept.some((k) => {
+      const [c, d] = span(k);
+      return a < d + 10 && c < b + 10;
+    }))
+      continue;
+    kept.push(t);
+  }
+  return kept.sort((a, b) => a - b);
+}
+const timeText = (t: number) => durationLabel(t).replace(/^0:/, "");
 function Plot({
   kind,
   selected,
@@ -45,17 +98,22 @@ function Plot({
   onSelect: (id: string) => void;
 }) {
   const { currentRun: run } = useDemo();
+  const synthetic = isSyntheticRun(run);
   const compact = useSyncExternalStore(
     subscribeViewport,
     compactViewport,
     serverViewport,
   );
+  // Glucose is the primary chart, so it gets more height for the 70–180 band.
   const W = compact ? 400 : 760,
-    H = compact ? 150 : 132,
+    H =
+      kind === "glucose" ? (compact ? 196 : 172) : compact ? 150 : 132,
     LEFT = 42,
     RIGHT = 14,
     TOP = 13,
-    BOTTOM = 27;
+    BOTTOM = 30;
+  // Axis labels are 13–14 user units tall; keep their centres further apart.
+  const LABEL_GAP = 21;
   const duration = Math.max(run.durationMinutes, 0.01);
   const x = (minute: number) =>
     LEFT +
@@ -70,10 +128,24 @@ function Plot({
           })),
         );
   const values = segments.flat().map((p) => p.value);
-  const baseMin = kind === "glucose" ? 40 : kind === "pace" ? 4 : 90;
-  const baseMax = kind === "glucose" ? 200 : kind === "pace" ? 9 : 180;
-  const min = values.reduce((lo, v) => Math.min(lo, v), baseMin),
-    max = values.reduce((hi, v) => Math.max(hi, v), baseMax);
+  const dataMin = values.reduce((lo, v) => Math.min(lo, v), Infinity);
+  const dataMax = values.reduce((hi, v) => Math.max(hi, v), -Infinity);
+  // Round the axis domain so the outer tick labels are readable numbers.
+  const [min, max] =
+    kind === "glucose"
+      ? [
+          Math.min(40, Math.floor(dataMin / 10) * 10),
+          Math.max(200, Math.ceil(dataMax / 50) * 50),
+        ]
+      : kind === "pace"
+        ? [
+            Math.min(4, Math.floor(dataMin * 2) / 2),
+            Math.max(9, Math.ceil(dataMax * 2) / 2),
+          ]
+        : [
+            Math.min(90, Math.floor(dataMin / 10) * 10),
+            Math.max(180, Math.ceil(dataMax / 10) * 10),
+          ];
   const reverse = kind === "pace";
   const y = (v: number, lo = min, hi = max, rev = reverse) =>
     TOP +
@@ -86,28 +158,33 @@ function Plot({
           `${i ? "L" : "M"}${x(p.minute).toFixed(2)},${y(p.value, lo, hi, rev).toFixed(2)}`,
       )
       .join(" ");
+  const mid =
+    kind === "pace"
+      ? Math.round(min + max) / 2
+      : Math.round((min + max) / 10) * 5;
   const ticks =
     kind === "glucose"
-      ? [
-          70,
-          180,
-          ...(Math.abs(y(min) - y(70)) >= 18 ? [min] : []),
-          ...(Math.abs(y(max) - y(180)) >= 18 ? [max] : []),
-        ]
-      : [min, (min + max) / 2, max];
+      ? spacedTicks(
+          [70, 180],
+          [min, max, ...[250, 300, 350].filter((v) => v > 180 && v < max)],
+          (v) => y(v),
+          LABEL_GAP,
+        )
+      : spacedTicks([], [min, max, mid], (v) => y(v), LABEL_GAP);
   // Round tick intervals keep labels scannable; positions still use elapsed time.
   const tickStep =
     [1 / 60, 5 / 60, 0.25, 0.5, 1, 2, 5, 10, 15, 20, 30, 60, 120, 240, 480, 1440]
       .find((step) => step >= duration / (compact ? 3 : 5)) ?? duration / 5;
-  const timeTicks = Array.from(
-    { length: Math.floor(duration / tickStep) + 1 },
-    (_, i) => i * tickStep,
+  const timeTicks = spacedTimeTicks(
+    Array.from(
+      { length: Math.floor(duration / tickStep) + 1 },
+      (_, i) => i * tickStep,
+    ),
+    duration,
+    x,
+    timeText,
+    compact ? 8 : 8.5,
   );
-  if (duration - timeTicks[timeTicks.length - 1] < tickStep * 0.4) {
-    timeTicks[timeTicks.length - 1] = duration;
-  } else {
-    timeTicks.push(duration);
-  }
   const label =
     kind === "glucose" ? "Glukoza" : kind === "pace" ? "Tempo" : "Tętno";
   const unit =
@@ -124,6 +201,17 @@ function Plot({
   const heights = terrain.flat().map((p) => p.value);
   const hMin = heights.reduce((lo, v) => Math.min(lo, v), heights[0] ?? 0) - 5;
   const hMax = heights.reduce((hi, v) => Math.max(hi, v), heights[0] ?? 0) + 5;
+  const plotMid = TOP + (H - TOP - BOTTOM) / 2;
+  // Low/High flags: a marker for every flag, a text label only where it fits.
+  const flagLabels: { minute: number; flag: string }[] = [];
+  for (const f of run.glucoseFlags ?? []) {
+    if (
+      flagLabels.every(
+        (p) => p.flag !== f.flag || Math.abs(x(p.minute) - x(f.minute)) >= 40,
+      )
+    )
+      flagLabels.push(f);
+  }
   return (
     <div className={`plot plot-${kind}`}>
       <div className="plot-heading">
@@ -131,11 +219,13 @@ function Plot({
           {label}
           <small>{unit}</small>
         </span>
-        {kind !== "glucose" && (
+        {kind === "glucose" ? (
+          synthetic && <SyntheticBadge />
+        ) : (
           <span className="plot-detail">
             {kind === "pace" && heights.length
               ? "wysokość trasy w tle"
-              : run.synthetic
+              : synthetic
                 ? "dane przykładowe"
                 : "pomiar z zegarka"}
           </span>
@@ -144,7 +234,7 @@ function Plot({
       <svg
         viewBox={`0 0 ${W} ${H}`}
         role="img"
-        aria-label={`${label} w czasie biegu; wybrany moment ${minuteLabel(selected.minute)}. minuta`}
+        aria-label={`${label} w czasie biegu${synthetic ? " (dane syntetyczne)" : ""}; wybrany moment ${minuteLabel(selected.minute)}. minuta`}
         onClick={(event) => {
           const rect = event.currentTarget.getBoundingClientRect();
           const minute =
@@ -163,8 +253,7 @@ function Plot({
             y={y(180)}
             width={W - LEFT - RIGHT}
             height={y(70) - y(180)}
-            fill="var(--accent)"
-            opacity=".035"
+            className="range-band"
           />
         )}
         {timeTicks.map((t) => (
@@ -176,8 +265,13 @@ function Plot({
               y2={H - BOTTOM}
               className="grid-line"
             />
-            <text x={x(t)} y={H - 5} textAnchor="middle" className="axis-label">
-              {durationLabel(t).replace(/^0:/, "")}
+            <text
+              x={x(t)}
+              y={H - 6}
+              textAnchor={t === 0 ? "start" : t === duration ? "end" : "middle"}
+              className="axis-label"
+            >
+              {timeText(t)}
             </text>
           </g>
         ))}
@@ -195,8 +289,9 @@ function Plot({
               }
             />
             <text
-              x={LEFT - 10}
-              y={y(t) + 4}
+              x={LEFT - 8}
+              y={y(t)}
+              dominantBaseline="middle"
               textAnchor="end"
               className="axis-label"
             >
@@ -229,11 +324,11 @@ function Plot({
                 height={H - TOP - BOTTOM}
                 fill="url(#missing-pattern)"
               />
-              {x(gap.end) - x(gap.start) > 70 && (
+              {x(gap.end) - x(gap.start) > 84 && (
                 <>
                   <text
                     x={x((gap.start + gap.end) / 2)}
-                    y={49}
+                    y={plotMid - 10}
                     textAnchor="middle"
                     className="gap-label"
                   >
@@ -241,7 +336,7 @@ function Plot({
                   </text>
                   <text
                     x={x((gap.start + gap.end) / 2)}
-                    y={65}
+                    y={plotMid + 12}
                     textAnchor="middle"
                     className="axis-label"
                   >
@@ -287,16 +382,27 @@ function Plot({
           ),
         )}
         {!values.length && (
-          <text x={W / 2} y={H / 2} textAnchor="middle" className="gap-label">
+          <text x={W / 2} y={plotMid} textAnchor="middle" className="gap-label">
             Brak pomiarów {label.toLowerCase()}
           </text>
         )}
         {kind === "glucose" &&
           run.glucoseFlags?.map((p) => (
+            <line
+              key={`m-${p.minute}-${p.flag}`}
+              x1={x(p.minute)}
+              x2={x(p.minute)}
+              y1={p.flag === "below_range" ? H - BOTTOM - 6 : TOP}
+              y2={p.flag === "below_range" ? H - BOTTOM : TOP + 6}
+              className="flag-mark"
+            />
+          ))}
+        {kind === "glucose" &&
+          flagLabels.map((p) => (
             <text
               key={`${p.minute}-${p.flag}`}
-              x={x(p.minute)}
-              y={p.flag === "below_range" ? H - BOTTOM - 4 : TOP + 12}
+              x={Math.max(LEFT + 14, Math.min(W - RIGHT - 14, x(p.minute)))}
+              y={p.flag === "below_range" ? H - BOTTOM - 10 : TOP + 18}
               textAnchor="middle"
               className="axis-label"
             >
@@ -327,7 +433,10 @@ function Plot({
                 p.minute <= selected.windowEnd &&
                 p.value === selectedValue,
             );
-            return p ? (
+            if (!p) return null;
+            // Below the point unless that would reach the time axis.
+            const below = y(p.value) + 17 <= H - BOTTOM - 2;
+            return (
               <g>
                 <circle
                   cx={x(p.minute)}
@@ -336,14 +445,14 @@ function Plot({
                   fill="var(--cream)"
                 />
                 <text
-                  x={Math.min(x(p.minute) + 9, W - 28)}
-                  y={y(p.value) + 15}
+                  x={Math.min(x(p.minute) + 9, W - RIGHT - 26)}
+                  y={below ? y(p.value) + 15 : y(p.value) - 9}
                   className="point-label"
                 >
                   {p.value}
                 </text>
               </g>
-            ) : null;
+            );
           })()}
       </svg>
     </div>
@@ -357,6 +466,7 @@ export function Timeline({
   onSelect: (id: string) => void;
 }) {
   const { currentRun: run } = useDemo();
+  const synthetic = isSyntheticRun(run);
   return (
     <section className="timeline-section" aria-labelledby="timeline-title">
       <div className="section-label">
@@ -364,7 +474,8 @@ export function Timeline({
           <h2 id="timeline-title">Analiza biegu</h2>
           <p>Trzy wykresy, jedna oś czasu.</p>
         </div>
-        <DataBadge synthetic={run.synthetic} />
+        {/* Synthetic runs carry the badge on the glucose chart itself. */}
+        {!synthetic && <DataBadge synthetic={false} />}
       </div>
       <div className="chart-card">
         <Plot kind="glucose" selected={selected} onSelect={onSelect} />
@@ -373,6 +484,9 @@ export function Timeline({
         <div className="chart-legend">
           <span>
             <i className="legend-glucose" /> Glukoza
+          </span>
+          <span>
+            <i className="legend-band" /> Zakres 70–180 mg/dL
           </span>
           <span>
             <i className="legend-pace" /> Tempo
@@ -387,32 +501,41 @@ export function Timeline({
         </div>
       </div>
       <div className="moment-picker" role="group" aria-label="Wybierz moment biegu">
-        {run.moments.map((m, i) => (
-          <button
-            key={m.id}
-            onClick={() => onSelect(m.id)}
-            aria-pressed={selected.id === m.id}
-            className={selected.id === m.id ? "selected" : ""}
-          >
-            <span className="moment-number">
-              {String(i + 1).padStart(2, "0")}
-            </span>
-            <span>
-              {m.label}
-              <small>
-                {minuteLabel(m.minute)}. minuta
-                {m.distanceKm !== null ? ` · ${decimal(m.distanceKm)} km` : ""}
-              </small>
-            </span>
-            <span className={`moment-dot ${m.id}`} />
-          </button>
-        ))}
+        {run.moments.map((m, i) => {
+          const where =
+            m.distanceKm !== null
+              ? `${decimal(m.distanceKm)} km`
+              : "dystans nieznany";
+          return (
+            <button
+              key={m.id}
+              onClick={() => onSelect(m.id)}
+              aria-pressed={selected.id === m.id}
+              aria-label={`Moment ${i + 1}: ${m.label}, ${minuteLabel(m.minute)}. minuta, ${where}`}
+              title={m.title}
+              className={selected.id === m.id ? "selected" : ""}
+            >
+              <span className="moment-number">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span className="moment-text">
+                <strong className="moment-label">{m.label}</strong>
+                <small className="moment-where">
+                  <span>{minuteLabel(m.minute)}. min</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{where}</span>
+                </small>
+              </span>
+              <span className={`moment-dot ${m.id}`} />
+            </button>
+          );
+        })}
       </div>
       <p className="chart-note">
         Wybierz moment, aby zmienić podsumowanie. Możesz też kliknąć wykres.
         Tempo w min/km: niżej na
         wykresie oznacza wolniej.{" "}
-        {run.synthetic
+        {synthetic
           ? "Wszystkie przebiegi są przykładowe."
           : "Brakujących pomiarów nie uzupełniamy."}
       </p>

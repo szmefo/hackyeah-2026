@@ -3,6 +3,7 @@ import Link from "next/link";
 import { AppShell, DataBadge } from "./app-shell";
 import { Icon, Logo } from "./icons";
 import { useDemo } from "./demo-context";
+import { isSyntheticRun } from "./timeline";
 import {
   decimal,
   disclaimer,
@@ -19,6 +20,9 @@ export function ClinicianBrief() {
   const selected =
     run.moments.find((m) => m.id === selectedId) ?? run.moments[0];
   const lowReadings = run.glucose.filter((p) => p.value < 70);
+  const synthetic = isSyntheticRun(run);
+  // Keep the brief to one printed page: at most three strengths.
+  const strengths = (run.strengths ?? []).filter((s) => s.trim()).slice(0, 3);
   return (
     <AppShell active="brief">
       <div className="brief-toolbar no-print">
@@ -40,7 +44,7 @@ export function ClinicianBrief() {
             <Logo />
             Cukier w biegu
           </span>
-          <DataBadge synthetic={run.synthetic} />
+          <DataBadge synthetic={synthetic} />
         </header>
         <div className="paper-title">
           <p className="eyebrow">Do rozmowy z diabetologiem</p>
@@ -50,7 +54,7 @@ export function ClinicianBrief() {
             Konkretny kontekst.
           </h1>
           <p>
-            Podsumowanie {run.synthetic ? "przykładowego" : "wgranego"} biegu i
+            Podsumowanie {synthetic ? "przykładowego" : "wgranego"} biegu i
             pytania do specjalisty.
           </p>
         </div>
@@ -58,7 +62,7 @@ export function ClinicianBrief() {
           <div>
             <span>Źródła</span>
             <strong>
-              {run.synthetic
+              {synthetic
                 ? "Syntetyczny bieg i CGM"
                 : "FIT z zegarka · CSV z CGM"}
             </strong>
@@ -97,6 +101,16 @@ export function ClinicianBrief() {
             </dd>
           </div>
         </dl>
+        {strengths.length > 0 && (
+          <section className="paper-section paper-strengths">
+            <h2>Co poszło dobrze w biegu</h2>
+            <ul>
+              {strengths.map((s, i) => (
+                <li key={i}>{s}</li>
+              ))}
+            </ul>
+          </section>
+        )}
         <section className="paper-section">
           <h2>01 / Co widać w danych</h2>
           <p>
@@ -131,7 +145,7 @@ export function ClinicianBrief() {
             <table>
               <caption>
                 Odczyty poniżej 70 mg/dL
-                {run.synthetic ? " — dane syntetyczne" : ""} · {run.timezone}
+                {synthetic ? " — dane syntetyczne" : ""} · {run.timezone}
               </caption>
               <thead>
                 <tr>
@@ -244,12 +258,12 @@ export function ClinicianBrief() {
         )}
         <footer className="paper-footer">
           <strong>
-            {run.synthetic ? "Dane syntetyczne" : "Dane z wgranych plików"} ·
+            {synthetic ? "Dane syntetyczne" : "Dane z wgranych plików"} ·
             prototyp HackYeah 2026
           </strong>
           <p>{disclaimer}</p>
           <p>
-            {run.synthetic
+            {synthetic
               ? "Wszystkie liczby pochodzą z przykładowego zestawu danych."
               : "Fakty obliczono z pomiarów; brakujących wartości nie uzupełniono."}{" "}
             {aiResult?.status === "ai"

@@ -75,6 +75,12 @@ export function factReferenceLabel(run: RunStory, ids: string[]) {
     distance: "Dystans biegu",
     "glucose.minimum": "Najniższy odczyt w oknie",
     "glucose.count": "Liczba odczytów w oknie",
+    "glucose.maximum": "Najwyższy odczyt w oknie",
+    "glucose.partial": "Przerwa w odczytach glukozy w oknie",
+    "glucose.belowRangeCount": "Oznaczenia Low w oknie",
+    "glucose.aboveRangeCount": "Oznaczenia High w oknie",
+    "altitude.partial": "Niepełne pomiary wysokości w oknie",
+    "altitude.count": "Liczba pomiarów wysokości w oknie",
     "altitude.change": "Zmiana wysokości w oknie",
     "altitude.ascent": "Suma podbiegów w oknie",
     heartrate: "Tętno w momencie",
@@ -102,7 +108,11 @@ export function factReferenceLabel(run: RunStory, ids: string[]) {
         const label =
           labels[suffix] ??
           (suffix.startsWith("signal.")
-            ? "Sygnał z danych biegu"
+            ? suffix.endsWith(".start")
+              ? "Początek sygnału z danych biegu"
+              : suffix.endsWith(".end")
+                ? "Koniec sygnału z danych biegu"
+                : "Sygnał z danych biegu"
             : "Obliczony fakt z danych");
         const unit =
           {
@@ -118,8 +128,13 @@ export function factReferenceLabel(run: RunStory, ids: string[]) {
               ? unit === "min/km"
                 ? paceLabel(fact.value)
                 : Number(fact.value.toFixed(2)).toLocaleString("pl-PL")
-              : "zarejestrowany";
-        return `${label}: ${value}${fact.value !== null && unit ? ` ${unit}` : ""}`;
+              : fact.value === "yes"
+                ? "tak"
+                : fact.value === "no"
+                  ? "nie"
+                  : "zarejestrowany";
+        const shownUnit = typeof fact.value === "number" ? unit : "";
+        return `${label}: ${value}${shownUnit ? ` ${shownUnit}` : ""}`;
       }
       return (
         run.moments.flatMap((m) => m.factors).find((f) => f.factId === id)

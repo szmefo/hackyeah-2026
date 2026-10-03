@@ -3,9 +3,9 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { AppShell, BriefLink, DataBadge } from "./app-shell";
 import { AIAnalysis } from "./ai-analysis";
-import { Icon } from "./icons";
+import { Icon, type IconName } from "./icons";
 import { useDemo } from "./demo-context";
-import { Timeline } from "./timeline";
+import { Timeline, isSyntheticRun } from "./timeline";
 import {
   decimal,
   momentUnknowns,
@@ -108,6 +108,19 @@ function ObservationDialog({ onClose }: { onClose: () => void }) {
   );
 }
 
+const glucoseFactors = new Set([
+  "low_glucose_nearby",
+  "below_range",
+  "high_glucose_nearby",
+  "above_range",
+]);
+/** Glucose factors get a drop; watch-derived pace/HR changes get a clock. */
+function factorIcon(id: string): IconName {
+  if (id === "uphill") return "hill";
+  if (id === "no_glucose_data") return "question";
+  return glucoseFactors.has(id) ? "drop" : "clock";
+}
+
 export function RunExperience() {
   const {
     selectedId,
@@ -117,6 +130,8 @@ export function RunExperience() {
     revision,
   } = useDemo();
   const [showObservation, setShowObservation] = useState(false);
+  const synthetic = isSyntheticRun(demo);
+  const strengths = (demo.strengths ?? []).filter((s) => s.trim());
   const selected =
     demo.moments.find((m) => m.id === selectedId) ?? demo.moments[0];
   return (
@@ -164,13 +179,7 @@ export function RunExperience() {
               selected.factors.map((f) => (
                 <span key={f.id}>
                   <Icon
-                    name={
-                      f.id === "uphill"
-                        ? "hill"
-                        : f.id === "no_glucose_data"
-                          ? "question"
-                          : "drop"
-                    }
+                    name={factorIcon(f.id)}
                     size={25}
                   />
                   {f.label}
@@ -260,6 +269,27 @@ export function RunExperience() {
           </Link>
         </article>
       </section>
+      {strengths.length > 0 && (
+        <section className="strengths-section" aria-labelledby="strengths-title">
+          <div className="strengths-intro">
+            <span className="eyebrow">Cały bieg, nie tylko trudne chwile</span>
+            <h2 id="strengths-title">Co poszło dobrze</h2>
+            <p>
+              Obliczone z pomiarów zegarka
+              {synthetic ? " w przykładowym biegu" : ""}. To opis przebiegu,
+              nie ocena medyczna.
+            </p>
+          </div>
+          <ul>
+            {strengths.map((s, i) => (
+              <li key={i}>
+                <Icon name="check" size={20} />
+                <span>{s}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       {demo.warnings?.length ? (
         <div className="run-warnings" role="status">
           <strong>Ważne dla interpretacji</strong>
@@ -350,9 +380,9 @@ export function RunExperience() {
         </Link>
       </section>
       <div className="demo-disclosure">
-        <DataBadge synthetic={demo.synthetic} />
+        <DataBadge synthetic={synthetic} />
         <p>
-          {demo.synthetic
+          {synthetic
             ? "Cały bieg i wszystkie odczyty są przykładowe."
             : "Wykresy i fakty pochodzą z Twoich wgranych plików."}{" "}
           Dane pozostają w pamięci karty; odświeżenie strony je usuwa.{" "}
