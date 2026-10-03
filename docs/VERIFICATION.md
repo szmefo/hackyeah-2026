@@ -1,4 +1,12 @@
-# Starter verification — 2026-10-01
+# Verification
+
+## Current phase 1 — 2026-10-03
+
+Live demo: https://cukier-w-biegu.vercel.app.
+See [PHASE_1_REVIEW.md](PHASE_1_REVIEW.md) for executed checks, runtime screenshots,
+31 passing Python tests, final deployment and the native print-preview verification limit.
+
+## Archived starter verification — 2026-10-01
 
 This verifies pre-event preparation only. It is not evidence of a SPORT & HEALTHCARE
 solution, live LLM integration, deployed demo or competition eligibility.

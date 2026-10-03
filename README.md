@@ -1,42 +1,35 @@
-# HackYeah 2026
+# Cukier w biegu — HackYeah 2026
 
 ## Project name
-
-HackYeah 2026 — temporary name. Repository: `hackyeah-2026`.
-
-Neutral development starter prepared **before** the challenge reveal. This is not
-the competition solution. No UltraSoul source code was copied into this repository.
+Cukier w biegu. Repository: `szmefo/hackyeah-2026`.
 
 ## Challenge
-
-TBD — full challenge will be revealed on October 3, 2026.
-
-SPORT & HEALTHCARE is a task of interest, not a confirmed product specification.
+SPORT & HEALTHCARE. Reveal: 2026-10-03 at 11:00 Europe/Warsaw, confirmed by Greg. See [working record](docs/HACKATHON.md).
 
 ## Problem
-
-TBD
+A runner has activity data and glucose readings in separate places. Discussing a difficult moment with a clinician needs facts, context and explicit gaps.
 
 ## Solution
+Phase 1: a responsive **synthetic single-run demo** in the selected Opowieść design. Open a run, select one of three moments, inspect co-occurring signals and unknowns, add a temporary observation, then open a printable clinician brief.
 
-TBD
+The run, CGM readings and selected moments are entirely synthetic, not patient data or clinically validated analysis. The imported signal engine is not called by this phase. No medication or nutrition recommendations.
 
 ## Architecture
-
-TBD — competition architecture depends on the full task.
-
-Starter only: one Next.js application, React GUI and Route Handler API,
-TypeScript, npm, plain CSS. See [starter architecture](docs/ARCHITECTURE.md).
+Next.js 16, React 19, TypeScript, plain CSS and native SVG. Python generates a deterministic JSON fixture. The application renders its facts and templates without an LLM. Observations live only in React memory. [Architecture](docs/ARCHITECTURE.md).
 
 ## Demo
+Production: **https://cukier-w-biegu.vercel.app**; deployment evidence/status in [CLOUD.md](docs/CLOUD.md).
 
-TBD — the local starter page is an environment check, not a competition demo.
+- `/` — run story, synchronized charts, clickable moments, observations.
+- `/runs` — one example run.
+- `/sources` — synthetic source information and downloadable CSV.
+- `/brief` — selected moment, facts, questions, observations and print styles.
+- `/api/health` — health response.
+
+Review: select **Luka w danych**, **Spokojny odcinek**, **Dwa sygnały**; add an observation; open **Brief dla lekarza**; click **Drukuj / zapisz PDF**. Observations stay in the current tab, are not sent to a server and disappear on refresh. Directly opening `/brief` starts with the default moment and no observations.
 
 ## Running locally
-
-Prerequisites: **Node.js 24.x**, npm and Git. No database, Docker or API key needed.
-
-From a fresh clone (PowerShell, bash or another terminal):
+Node.js **24.x**, npm and Git. No database, API key or Python needed to run the checked-in web demo.
 
 ```sh
 git clone https://github.com/szmefo/hackyeah-2026.git
@@ -45,97 +38,58 @@ npm ci
 npm run dev
 ```
 
-Open **http://127.0.0.1:3000** and click **Sprawdź API**.
-Expected result: **API działa. Odpowiedź serwera: ok.**
-
-The repository is initially private; cloning requires your GitHub account's access.
-For the already-created local checkout, just run `npm ci` and `npm run dev` there.
-
-`.env.example` documents the empty initial configuration. Copying it to
-`.env.local` is optional; no variables are consumed by the starter.
-Add server-side provider credentials only when an integration is selected.
-
-Health endpoint:
+Open **http://127.0.0.1:3000**. If occupied: `npm run dev -- --port 3010`. The repository is private and cloning requires access.
 
 ```sh
-curl http://127.0.0.1:3000/api/health
-```
-
-Expected JSON:
-
-```json
-{"status":"ok","service":"hackyeah-2026","phase":"pre-hackathon-starter"}
-```
-
-On Windows PowerShell 5, use `curl.exe` instead of its `curl` alias.
-If port 3000 is occupied, use `npm run dev -- --port 3010` and adjust the URL.
-
-Checks and production run (stop the dev server with Ctrl+C first):
-
-```sh
-npm run check
 npm run build
+npm run check
 npm start
 ```
 
-`npm run build` generates Next.js types automatically. In a completely clean clone,
-run `npm run build` before `npm run check` if `next-env.d.ts` does not exist yet.
+Build first in a clean checkout to generate Next.js types. No env variables required; `.env.example` lists unused future placeholders.
+
+Health JSON: `{"status":"ok","service":"cukier-w-biegu","phase":"phase-1-synthetic-demo"}`.
+
+### Optional Python checks and regeneration
+```sh
+python scripts/build_demo.py
+python scripts/test_demo.py
+```
+
+Imported engine tests, PowerShell (Python 3.12+; verified locally with 3.14):
+
+```powershell
+python -m venv engine/.venv
+engine/.venv/Scripts/python.exe -m pip install -r engine/requirements.txt
+cd engine
+.venv/Scripts/python.exe -m pytest tests -q
+```
 
 ## Deployment
-
-Cloud preparation status: [docs/CLOUD.md](docs/CLOUD.md).
-
-When ready, import this GitHub repository into Vercel, select the Next.js preset,
-leave the root directory as `.` and use Node.js 24.x. No environment variables
-are initially required. No deployment has been created during preparation.
-
-Alternatively, a host with Node.js can run `npm ci`, `npm run build`, then
-`npm start -- --hostname 0.0.0.0 --port 3000`. Use deployment settings for secrets.
-Do not use a static export when the solution needs server API routes.
+Vercel project `cukier-w-biegu`, scope `hack-yeah1`. No runtime secrets. `.vercelignore` excludes the engine and scratch artifacts from CLI uploads. Authorized CLI deployment; automatic GitHub deployment is not enabled. [Cloud status](docs/CLOUD.md).
 
 ## Background IP
-
-See [BACKGROUND_IP.md](BACKGROUND_IP.md). The UltraSoul register is initially empty.
-The pre-event starter is separately disclosed in that file and in Git history.
+[BACKGROUND_IP.md](BACKGROUND_IP.md) documents six approved UltraSoul source/test files with source SHA, SHA-256 hashes, pre-event history and adaptation. The pre-event starter is separately disclosed. Imported code is not used by the phase-1 runtime. UltraSoul itself was not changed.
 
 ## AI & external resources
-
-- [AI_USAGE.md](AI_USAGE.md)
-- [THIRD_PARTY.md](THIRD_PARTY.md)
+- [AI_USAGE.md](AI_USAGE.md): concept/design and development assistance; no application AI calls.
+- [THIRD_PARTY.md](THIRD_PARTY.md): frameworks, engine libraries, hosting.
+- [DECISIONS.md](DECISIONS.md): decisions and reasons.
 
 ## Built during HackYeah
-
-**Nothing yet.** Everything in the initial commit was prepared before the event.
-
-At the actual task reveal, record the timestamp and official task/rules links in
-[HACKATHON.md](docs/HACKATHON.md), then create an annotated `task-reveal-2026`
-tag at the last pre-implementation commit. Record any intervening pre-event edits.
-Do not backdate commits. Make regular, focused commits during implementation.
-
-The initial `pre-hackathon-starter-2026` tag identifies the original starter.
-After the reveal, compare it with the solution using:
+The reveal tag precedes implementation and was recorded at the actual current time, not backdated. `import(background-ip):` commits identify pre-existing files; `adapt(background-ip):` identifies modifications; `feat:`, `test:` and `docs:` identify new demo work. Earlier product planning/design is disclosed in the AI register.
 
 ```sh
 git log --reverse --oneline task-reveal-2026..HEAD
 git diff --stat task-reveal-2026..HEAD
-git diff task-reveal-2026..HEAD
 ```
 
-Imported Background IP and third-party additions inside that diff must still be
-identified separately in their registers; a post-reveal commit alone does not
-prove that every line was created during the event.
+`pre-hackathon-starter-2026` identifies neutral preparation. Post-tag imports remain Background IP.
 
-## Hackathon mode
+## Phase 1 boundary
+For Greg's UI/journey review. Real FIT/CGM import, automatic analysis, health-data storage, consent/auth, Supabase schema, Garmin, LLM narration and submission are later phases. The sources page says this explicitly.
 
-Paste: **Full HackYeah task is below: [full task]**.
-
-The working procedure is in [AGENTS.md](AGENTS.md) and [HACKATHON.md](docs/HACKATHON.md).
-One strong problem → one clear insight → one convincing solution → one excellent demo.
-
-## Submission
-
-See [submission/README.md](submission/README.md). No final submission prepared yet.
+Updated future AI role: [analysis, alternative explanations, synthesis and a separate AI review](docs/AI_INTERPRETATION.md), backed by deterministic facts and checks. No model is connected in this phase.
 
 ## Verification
-
-See [docs/VERIFICATION.md](docs/VERIFICATION.md) for the recorded clean-start checks.
+[docs/VERIFICATION.md](docs/VERIFICATION.md). [Submission folder](submission/README.md) remains a placeholder.

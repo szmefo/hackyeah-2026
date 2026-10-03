@@ -4,6 +4,12 @@ Use actual ISO 8601 timestamps with timezone. One short entry per meaningful dec
 
 | Timestamp | Decision | Reason |
 | --- | --- | --- |
+| 2026-10-03T13:33:16+02:00 | Phase 1: selected Opowieść design, one wholly synthetic run, three clickable moments and a printable clinician brief | Greg requests a live site for visual/journey review before the next phase |
+| 2026-10-03T13:33:16+02:00 | Byte-exact approved UltraSoul import, then HTTP adaptation in a separate commit | Preserve ownership and provenance; no UltraSoul repository changes |
+| 2026-10-03T13:33:16+02:00 | Generate demo facts in Python, render directly; no application AI or patient persistence in this phase | Review the UI without provider dependencies; synthetic claims remain reproducible and explicit |
+| 2026-10-03T13:33:16+02:00 | Future model analyzes patterns/alternatives and synthesizes evidence-linked conclusions, with a separate AI review and code checks | Owner update revises phrasing-only role; target documented in docs/AI_INTERPRETATION.md, not yet implemented |
+| 2026-10-03T13:33:16+02:00 | Manual Vercel CLI deployment in hack-yeah1; defer automatic GitHub linking | Existing account lacks GitHub Login Connection; working public review site requires no new grant or paid plan |
+| 2026-10-03T13:33:16+02:00 | Mobile SVG uses a compact viewBox rather than scaling desktop labels down | Phone check found unreadable small axis text |
 | 2026-10-01T21:44:58+02:00 | New standalone `hackyeah-2026` repository outside UltraSoul; initially private | Clear Git/IP separation; no publishing decision needed before task reveal |
 | 2026-10-01T21:44:58+02:00 | Single Next.js app, TypeScript, npm and plain CSS; GUI + Route Handler API | Solo 24h work benefits from one install, one server and one deployment |
 | 2026-10-01T21:44:58+02:00 | Pin direct packages and commit npm lockfile; use Node 24.x | Repeatable setup without version drift during the event |

@@ -1,0 +1,108 @@
+{
+  "source_commit": "9523dd9ee3c462adab0d64a9fe5e5cbdfce802d6",
+  "export_directory": "C:\\_HackYeah2026\\deploy\\phase1-9523dd9",
+  "deployment_id": "dpl_9X2jZZ2EGwJLyXifnBxufts26VFH",
+  "public_url": "https://cukier-w-biegu.vercel.app",
+  "files": [
+    {
+      "path": "src/app/api/health/route.ts",
+      "sha256": "43f2fed414873ba959031a123301e87f07d62f785109f9cf6438c52f0f717dc1"
+    },
+    {
+      "path": "src/app/brief/page.tsx",
+      "sha256": "c093c4465f7824d5ad535905a20ca783f174f84f9e35e94619d43cc5f9194d3c"
+    },
+    {
+      "path": "src/app/globals.css",
+      "sha256": "532ba1e2d2a89f460197a0be5f389a6665c987673418b7c49659740c61098ab8"
+    },
+    {
+      "path": "src/app/layout.tsx",
+      "sha256": "635c2e81b06bce138496dd548ddb5d7ebd7aed8f71d77bc9632d79cd7c1fa5f9"
+    },
+    {
+      "path": "src/app/page.tsx",
+      "sha256": "3804be1f96771cfe6ba5b7ab575e3c4cbfee5f23d46eb3912ce84e3198595f22"
+    },
+    {
+      "path": "src/app/runs/page.tsx",
+      "sha256": "e5567cd8cdb7b744a9abcc0a2104f175243179e085ac4379894b13d408ed8e74"
+    },
+    {
+      "path": "src/app/sources/page.tsx",
+      "sha256": "c2325b4a994dd1a2b1664c7f5f375df7abf5a266f163f34d0f3d6536434f61d4"
+    },
+    {
+      "path": "src/components/app-shell.tsx",
+      "sha256": "0db8c7c92a306dca742bfa61ecb3182000b2ef6394e3707a258d53b7353d12f6"
+    },
+    {
+      "path": "src/components/clinician-brief.tsx",
+      "sha256": "8d98a6c1f1208bf90c321735cca7fee03dab7982572521010f08b14edb458365"
+    },
+    {
+      "path": "src/components/demo-context.tsx",
+      "sha256": "0d2912ba8900f27b9c439b2e95873581087c831d71f5716eded4a6bc7961bbd1"
+    },
+    {
+      "path": "src/components/health-check.tsx",
+      "sha256": "1da4e0a37b1433db46107505ede19ce92ea3bac02f2ba53e5fc605b1274e292c"
+    },
+    {
+      "path": "src/components/icons.tsx",
+      "sha256": "a8ef6f67bd0b17bfca0e939940f0725dcbaec7122322980cfee28eef2351111c"
+    },
+    {
+      "path": "src/components/run-experience.tsx",
+      "sha256": "2f5dfb2fa838dfda7a531953573c93411fd09efab71405f78a690be2152f856c"
+    },
+    {
+      "path": "src/components/timeline.tsx",
+      "sha256": "12bbd1285dbd2b24533e72aa0170364bbb676c56c575758f728313c7d8711147"
+    },
+    {
+      "path": "src/lib/demo.ts",
+      "sha256": "b992a009e9be584817574aceeccf0b131b129105171346c4dd4ffa35175550bd"
+    },
+    {
+      "path": "public/demo-glucose.csv",
+      "sha256": "2fd8916165fae33cbe94a58dc298955218db96c31708541dee39c52ff1aa8470"
+    },
+    {
+      "path": "data/demo-run.json",
+      "sha256": "175e7c5f3988ca50fd5ada5e7f595a2b9b5d7a761ec125ebeeb8466bfb7af54c"
+    },
+    {
+      "path": "data/example.json",
+      "sha256": "757d0998c3320edbf61419b489177a7187d30ab70cd1144e87a30a0696779999"
+    },
+    {
+      "path": "data/README.md",
+      "sha256": "746cacb23eb8933489b3870bdd46da7d2b6053f7d8a3b69025e6c14d197e8119"
+    },
+    {
+      "path": "package.json",
+      "sha256": "f028e502f796352143a8cfe13e72f16c5c76e5f046856bae9039c7e323f23f08"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "fb8fa6eb950f1701d42b133d15f27465c54c76a8a389909b92f0f9254ca1c386"
+    },
+    {
+      "path": "next.config.ts",
+      "sha256": "c88af8a6fc9fbf79ba8fffbe410f87624654672b5672fe7cf219e6017ee0a2d9"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "1eda732f02b4ff8808c5a830762604488593ee3b4e40fb68feb5e179505e0edb"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "ffb5108016794e1e4286a5d226c470fe9ca27f55e5eeaa06721f2cdfc9b2e46c"
+    },
+    {
+      "path": ".vercelignore",
+      "sha256": "74a32d731ce875e366296d5f4cd81fcef5c8b87585a1892115b57fd4afa90cf3"
+    }
+  ]
+}

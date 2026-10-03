@@ -37,3 +37,41 @@ For deployment, connect only this repository to Vercel when needed. GitHub acces
 has not been granted to the new Vercel account. Add required credentials through
 local environment files and deployment settings, never Git or client source.
 Record new resources and any imported UltraSoul elements in their registers.
+
+## Phase 1 deployment — 2026-10-03
+
+Project: `cukier-w-biegu`, Vercel Hobby workspace `hack-yeah1`.
+Public address: https://cukier-w-biegu.vercel.app
+First production deployment: https://cukier-w-biegu-l5444hebk-hack-yeah1.vercel.app
+Inspector: https://vercel.com/hack-yeah1/cukier-w-biegu/8jt5FzbNUk5G52wWh2WVr8NQk5dw
+
+Vercel CLI authenticated to the owner-requested account. Deployment finished READY.
+The project was linked through the CLI. Automatic GitHub linking failed because a
+GitHub Login Connection is missing on the Vercel account; it is not required for
+manual CLI deployment and was not added. No new GitHub grant or paid upgrade.
+
+Runtime uses only synthetic fixture data. No environment secrets, patient database,
+Garmin connection or application model. Python engine is excluded from deployment.
+The previously prepared Supabase project is unchanged and remains unconnected.
+
+Follow-up mobile chart polish is deployed to the same public alias; exact final
+deployment and checks are recorded in VERIFICATION.md.
+
+### Manual review package and deployment metadata
+
+The first deployment succeeded, but Vercel blocked the later Git-associated
+deployment `J1WrAi25Wm7TGY6TcHNhWiQRgKwx`: commit author `szmefo` is not linked to
+the Vercel Hobby account. No project/security permission was weakened and no author
+was impersonated or rewritten.
+
+The updated web artifact was submitted through the authenticated owner's normal
+non-Git CLI deployment flow. Package location:
+`C:/_HackYeah2026/deploy/phase1-9523dd9`, copied from source revision `9523dd9`.
+It contains only `src`, `data`, `public`, package manifest/lockfile, Next/TypeScript
+configuration, ignores and the existing project link. No `.git`, Python engine,
+credentials or UltraSoul source files. Future releases can use this explicit
+artifact flow or, after the owner's account setup, ordinary Git deployment.
+
+Updated deployment inspector:
+https://vercel.com/hack-yeah1/cukier-w-biegu/9X2jZZ2EGwJLyXifnBxufts26VFH
+This is artifact deployment, not automatic synchronization with GitHub.

@@ -28,4 +28,15 @@ here. Never include credentials or personal health data in that export.
 | Added at | Provider / model version | Purpose / endpoint | Data sent | Cost / limits | Relevant rules / notes |
 | --- | --- | --- | --- | --- | --- |
 
-Empty: no model SDK, API key or live model call in this starter.
+Empty: no model SDK, API key or live model call in either the starter or phase-1 demo.
+Owner's revised target role is documented in [docs/AI_INTERPRETATION.md](docs/AI_INTERPRETATION.md):
+AI analysis of patterns/alternatives, synthesis, separate AI review and deterministic checks.
+Provider/version and data payload have not yet been selected.
+
+## Phase 1 verification closure
+
+2026-10-03T13:42:19+02:00: current Codex session produced the Opowieść implementation,
+synthetic Python facts, provenance records, tests and manual Vercel artifact deployment.
+Checks and limits: [docs/PHASE_1_REVIEW.md](docs/PHASE_1_REVIEW.md).
+Source UI release: `9523dd9`; artifact deployment retains honest Git authorship.
+Greg reviews the live direction before real-data/model integration.
