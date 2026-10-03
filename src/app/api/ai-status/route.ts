@@ -4,7 +4,12 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   const config = getAIConfig();
   return NextResponse.json(
-    { configured: config.configured, provider: config.provider },
+    // Name a provider only when one is configured; an unconfigured server
+    // must not suggest where data would go.
+    {
+      configured: config.configured,
+      provider: config.configured ? config.provider : null,
+    },
     { headers: { "Cache-Control": "no-store" } },
   );
 }

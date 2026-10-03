@@ -160,13 +160,23 @@ export async function POST(request: Request) {
     forwarded.set("timezone", timezone);
     forwarded.set("consent", "true");
     forwarded.set("synthetic", known ? "true" : "false");
-    const response = await fetch(`${engine.replace(/\/$/, "")}/analyze`, {
-      method: "POST",
-      headers: { "X-Engine-Secret": secret },
-      body: forwarded,
-      cache: "no-store",
-      signal: AbortSignal.timeout(45000),
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${engine.replace(/\/$/, "")}/analyze`, {
+        method: "POST",
+        headers: { "X-Engine-Secret": secret },
+        body: forwarded,
+        cache: "no-store",
+        signal: AbortSignal.timeout(45000),
+      });
+    } catch {
+      // Unreachable or timed-out engine: say so; the example run still works.
+      return fail(
+        503,
+        "engine_unavailable",
+        "Serwer analizy jest chwilowo niedostępny. Spróbuj ponownie za chwilę albo otwórz przykładowy bieg na stronie głównej.",
+      );
+    }
     if (!response.ok) {
       const result = await response.json().catch(() => null);
       return fail(

@@ -236,6 +236,7 @@ test("AI requires separate literal consent and returns safe fallback", async () 
   assert.equal(status.status, 200);
   const config = await status.json();
   assert.equal(typeof config.configured, "boolean");
+  if (!config.configured) assert.equal(config.provider, null);
   assert.ok(!JSON.stringify(config).includes("API_KEY"));
   const denied = await fetch(`${base}/api/interpret`, {
     method: "POST",
