@@ -69,3 +69,5 @@ the lower intermediate reading despite higher endpoints, pace/HR changes, compet
 terrain context and unresolved causality. Final presentation strips redundant internal
 separation-flag annotations; 29 Node tests cover transport/guards/presentation.
 No personal health records were used for provider verification.
+
+Final public synthetic application-model check: 2026-10-03T15:43:09.4279041+02:00; source 9344056; Anthropic claude-sonnet-4-6; selected facts and no runner notes; UI and brief reviewed manually.

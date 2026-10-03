@@ -49,3 +49,16 @@ Long notes/model results can require more than one page. Rate limits are per ins
 See phase-2-deployment.json for exact source and deployment artifact hashes.
 
 Recorded at 2026-10-03T15:39:05.9263158+02:00. Human product review pending; final web runtime source 9344056.
+
+## Final public review closure — 2026-10-03T15:43:09.4279041+02:00
+
+Final source 9344056, deployment dpl_EL2QygWeFt71EG9XUHZG2qB662GW READY.
+On the final release in Brave, the sample FIT/CSV import completed, Claude Sonnet 4.6
+interpretation and separate review completed, and /brief retained the imported title,
+80-minute selection, computed measurements and the AI section across navigation.
+Internal separation flags were absent. Returned to the run and left the live tab open.
+
+Evidence: C:/_HackYeah2026/review/phase-2/run.jpg, anthropic-live.jpg, brief.jpg, phone.jpg.
+The phone screenshot was captured on the same UI before the last server-only guard changes.
+Code rejects digit numerals; written-out number words are not exhaustively validated.
+The observed verbal values matched facts, but model prose still needs human review.
