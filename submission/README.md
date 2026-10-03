@@ -4,26 +4,31 @@
 
 ## Najszybsza ścieżka demo
 
-1. Otwórz **Źródła** i kliknij **Wybierz przykładową parę**.
+1. Otwórz **Źródła**. W sekcji **Scenariusze demo** kliknij **Wczytaj scenariusz**
+   na jednej z czterech kart (albo **Wybierz przykładową parę** niżej na stronie).
 2. Zaznacz zgodę na przetwarzanie i kliknij **Połącz pliki i zobacz bieg**.
-3. Porównaj momenty biegu, w tym lukę w danych. Dodaj obserwację.
+3. Tytuł biegu pokazuje wybrany scenariusz, a ekran ma oznaczenie **Dane syntetyczne**.
+   Porównaj momenty biegu, w tym luki w danych. Dodaj obserwację.
 4. Otwórz **Brief dla lekarza**. Opcjonalna analiza Anthropic wymaga osobnej zgody.
 
-## Cztery dodatkowe scenariusze syntetyczne
+## Cztery scenariusze syntetyczne
 
-Na komputerze prezentacyjnym: **`C:\_HackYeah2026\tmp\synthetic-scenarios`**
-(lokalnie: `tmp\synthetic-scenarios`).
+Każdy jest dostępny jednym kliknięciem na stronie **Źródła**:
 
-W repozytorium, dla sędziów na innym komputerze:
+1. **Niski cukier na płaskim** — zwolnienie na płaskim odcinku w tym samym czasie
+   co niższy odczyt glukozy.
+2. **Podbieg, cukier w normie** — zwolnienie na podbiegu przy stabilnej glukozie.
+3. **Podbieg i niski cukier naraz** — oba sygnały w jednym oknie; dane nie
+   rozdzielają ich wpływu.
+4. **Luka w danych sensora** — brak odczytów w drugiej części biegu, pokazany
+   jako luka, bez uzupełniania.
+
+Karty mają też linki do pobrania pliku FIT i CSV. Te same pary są w repozytorium:
 [**demos/synthetic-scenarios**](../demos/synthetic-scenarios/README.md).
-Lokalny folder `tmp` nie jest dostępny na GitHubie; jego poprawione pary są
-zapisane w katalogu `demos`.
-
-Wybierz `bieg.fit` i `glukoza.csv` z jednego scenariusza, ustaw **Europe/Warsaw**,
-zaznacz zgodę na przetwarzanie. Checkbox „Używam pobranej poniżej pary…” pozostaw
-odznaczony — służy wyłącznie do wbudowanej pary ze strony.
-Wszystkie cztery pary są syntetyczne, choć zwykła ścieżka importu oznacza je jako
-dane wgrane. Żaden z tych zestawów nie pochodzi od pacjenta.
+Wszystkie pięć par (cztery scenariusze i para wbudowana) aplikacja oznacza jako
+**Dane syntetyczne** po bajtowym porównaniu z plikami na serwerze, również przy
+ręcznym wgraniu pobranych plików. Każdy inny plik jest oznaczany jako dane wgrane.
+Żaden z tych zestawów nie pochodzi od pacjenta.
 
 Odświeżenie strony usuwa wgrany wynik i obserwacje z pamięci karty.
 

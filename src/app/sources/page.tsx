@@ -2,10 +2,12 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { AppShell, DataBadge } from "@/components/app-shell";
+import { AppShell, DataBadge, SyntheticBadge } from "@/components/app-shell";
 import { Icon } from "@/components/icons";
 import { useDemo } from "@/components/demo-context";
 import type { RunStory } from "@/lib/run-story";
+import { builtInPair, demoScenarios, type SyntheticPair } from "@/lib/demo";
+import "../scenarios.css";
 export default function Sources() {
   const router = useRouter();
   const { currentRun, loadRun, resetRun, revision } = useDemo();
@@ -13,18 +15,28 @@ export default function Sources() {
   const [glucose, setGlucose] = useState<File | null>(null);
   const [timezone, setTimezone] = useState("Europe/Warsaw");
   const [consent, setConsent] = useState(false);
-  const [synthetic, setSynthetic] = useState(false);
+  // A demo pair chosen with one click; the server re-checks its bytes.
+  const [chosenPair, setChosenPair] = useState<SyntheticPair | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const inflight = useRef<AbortController | null>(null);
   const form = useRef<HTMLFormElement>(null);
+  const consentBox = useRef<HTMLInputElement>(null);
+  // After a one-click pair load, move focus to the next required step.
+  const focusConsent = useRef(false);
   useEffect(() => () => inflight.current?.abort(), [revision]);
+  useEffect(() => {
+    if (loading || !focusConsent.current) return;
+    focusConsent.current = false;
+    consentBox.current?.scrollIntoView({ block: "center" });
+    consentBox.current?.focus({ preventScroll: true });
+  }, [loading]);
   function cancel() {
     inflight.current?.abort();
     inflight.current = null;
     setLoading(false);
   }
-  async function demoPair() {
+  async function loadPair(pair: SyntheticPair) {
     cancel();
     const controller = new AbortController();
     inflight.current = controller;
@@ -32,8 +44,8 @@ export default function Sources() {
     setError("");
     try {
       const responses = await Promise.all([
-        fetch("/demo-run.fit", { signal: controller.signal }),
-        fetch("/demo-glucose.csv", { signal: controller.signal }),
+        fetch(`/${pair.fit}`, { signal: controller.signal }),
+        fetch(`/${pair.csv}`, { signal: controller.signal }),
       ]);
       if (responses.some((r) => !r.ok))
         throw new Error("Nie udało się pobrać przykładowych plików.");
@@ -42,10 +54,11 @@ export default function Sources() {
       );
       if (controller.signal.aborted) return;
       form.current?.reset();
-      setFit(new File([fitData], "demo-run.fit"));
-      setGlucose(new File([csvData], "demo-glucose.csv"));
-      setSynthetic(true);
+      setFit(new File([fitData], pair.fit.split("/").pop()!));
+      setGlucose(new File([csvData], pair.csv.split("/").pop()!));
+      setChosenPair(pair);
       setTimezone("Europe/Warsaw");
+      focusConsent.current = true;
     } catch (e) {
       if (!controller.signal.aborted)
         setError(
@@ -76,7 +89,7 @@ export default function Sources() {
     body.set("glucose", glucose);
     body.set("timezone", timezone);
     body.set("consent", "true");
-    body.set("synthetic", String(synthetic));
+    body.set("synthetic", chosenPair ? "true" : "false");
     try {
       const response = await fetch("/api/import", {
         method: "POST",
@@ -115,7 +128,7 @@ export default function Sources() {
     setFit(null);
     setGlucose(null);
     setConsent(false);
-    setSynthetic(false);
+    setChosenPair(null);
     setError("");
     form.current?.reset();
   }
@@ -133,6 +146,62 @@ export default function Sources() {
           wspólny przebieg, wraz z brakami danych.
         </p>
       </div>
+      <section className="demo-scenarios" aria-labelledby="scenarios-title">
+        <div className="demo-scenarios-head">
+          <span className="eyebrow">Wypróbuj jednym kliknięciem</span>
+          <h2 id="scenarios-title">Scenariusze demo</h2>
+          <p>
+            Cztery pary plików FIT i CSV wygenerowane skryptem. Żadna nie
+            pochodzi od pacjenta. Kliknięcie wczytuje parę do formularza
+            poniżej. Potem zaznacz zgodę i połącz pliki.
+          </p>
+          <SyntheticBadge />
+        </div>
+        <ul className="scenario-grid">
+          {demoScenarios.map((pair) => {
+            const active = chosenPair?.id === pair.id;
+            return (
+              <li
+                key={pair.id}
+                className={`scenario-card${active ? " is-active" : ""}`}
+              >
+                <span className="eyebrow">Scenariusz {pair.number}</span>
+                <h3>{pair.name}</h3>
+                <p>{pair.hint}</p>
+                <button
+                  type="button"
+                  className="button secondary"
+                  onClick={() => loadPair(pair)}
+                  disabled={loading}
+                  aria-pressed={active}
+                  aria-label={`Wczytaj scenariusz ${pair.number}: ${pair.name}`}
+                >
+                  {active ? "Wczytany" : "Wczytaj scenariusz"}
+                  <Icon name={active ? "check" : "arrow"} />
+                </button>
+                <div className="scenario-downloads">
+                  <a
+                    className="text-link"
+                    href={`/${pair.fit}`}
+                    download={`${pair.id}-bieg.fit`}
+                    aria-label={`Pobierz plik FIT, scenariusz ${pair.number}`}
+                  >
+                    Pobierz FIT
+                  </a>
+                  <a
+                    className="text-link"
+                    href={`/${pair.csv}`}
+                    download={`${pair.id}-glukoza.csv`}
+                    aria-label={`Pobierz plik CSV, scenariusz ${pair.number}`}
+                  >
+                    Pobierz CSV
+                  </a>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
       <form ref={form} className="upload-form" onSubmit={submit}>
         <div className="sources-grid">
           <article className="source-card">
@@ -150,7 +219,7 @@ export default function Sources() {
                 disabled={loading}
                 onChange={(e) => {
                   setFit(e.target.files?.[0] ?? null);
-                  setSynthetic(false);
+                  setChosenPair(null);
                   setError("");
                 }}
               />
@@ -175,7 +244,7 @@ export default function Sources() {
                 disabled={loading}
                 onChange={(e) => {
                   setGlucose(e.target.files?.[0] ?? null);
-                  setSynthetic(false);
+                  setChosenPair(null);
                   setError("");
                 }}
               />
@@ -208,20 +277,30 @@ export default function Sources() {
             dopasujemy do niej.
           </p>
         </div>
+        <p className="chosen-pair" role="status">
+          {chosenPair ? (
+            <>
+              <SyntheticBadge />
+              <span>
+                Wczytano:{" "}
+                <strong>
+                  {chosenPair.number
+                    ? chosenPair.runTitle
+                    : "przykładową parę plików"}
+                </strong>
+                . Zaznacz zgodę i połącz pliki.
+              </span>
+            </>
+          ) : (
+            <span>
+              Własne pliki zostaną oznaczone jako wgrane dane. Niezmienione
+              pliki demo z tej strony oznaczymy jako dane syntetyczne.
+            </span>
+          )}
+        </p>
         <label className="consent-label">
           <input
-            type="checkbox"
-            checked={synthetic}
-            disabled={loading}
-            onChange={(e) => setSynthetic(e.target.checked)}
-          />
-          <span>
-            Używam pobranej poniżej pary przykładowych plików. Oznacz ją jako
-            dane syntetyczne.
-          </span>
-        </label>
-        <label className="consent-label">
-          <input
+            ref={consentBox}
             type="checkbox"
             checked={consent}
             disabled={loading}
@@ -272,16 +351,17 @@ export default function Sources() {
         <div className="sample-actions">
           <button
             className="button secondary"
-            onClick={demoPair}
+            type="button"
+            onClick={() => loadPair(builtInPair)}
             disabled={loading}
           >
             Wybierz przykładową parę
             <Icon name="arrow" />
           </button>
-          <a className="text-link" href="/demo-run.fit" download>
+          <a className="text-link" href={`/${builtInPair.fit}`} download>
             Pobierz FIT
           </a>
-          <a className="text-link" href="/demo-glucose.csv" download>
+          <a className="text-link" href={`/${builtInPair.csv}`} download>
             Pobierz CSV
           </a>
         </div>

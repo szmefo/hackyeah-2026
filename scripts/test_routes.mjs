@@ -1,5 +1,5 @@
 // Integration tests against the real local Next proxy and Python engine.
-// Uses only the public synthetic pair. Does not read credentials or call AI.
+// Uses only the public synthetic pairs. Does not read credentials or call AI.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
@@ -9,6 +9,22 @@ const fit = await readFile(new URL("../public/demo-run.fit", import.meta.url));
 const glucose = await readFile(
   new URL("../public/demo-glucose.csv", import.meta.url),
 );
+const scenarios = [
+  ["01-niski-cukier-na-plaskim", "Scenariusz 1: Niski cukier na płaskim"],
+  ["02-podbieg-cukier-w-normie", "Scenariusz 2: Podbieg, cukier w normie"],
+  ["03-podbieg-i-niski-cukier", "Scenariusz 3: Podbieg i niski cukier naraz"],
+  ["04-luka-w-danych", "Scenariusz 4: Luka w danych sensora"],
+];
+const scenarioFiles = {};
+for (const [slug] of scenarios)
+  scenarioFiles[slug] = {
+    fit: await readFile(
+      new URL(`../public/scenarios/${slug}/bieg.fit`, import.meta.url),
+    ),
+    csv: await readFile(
+      new URL(`../public/scenarios/${slug}/glukoza.csv`, import.meta.url),
+    ),
+  };
 let imported;
 
 function form({
@@ -71,11 +87,73 @@ test("actual Next-to-Python synthetic golden path returns computed signed facts"
   );
 });
 
-test("ordinary upload is labelled uploaded without synthetic checkbox", async () => {
-  const { response, body } = await upload();
-  assert.equal(response.status, 200);
+test("each synthetic scenario is served and imported as synthetic with its title", async () => {
+  for (const [slug, title] of scenarios) {
+    const { fit: fitBytes, csv: csvBytes } = scenarioFiles[slug];
+    for (const [path, expected] of [
+      [`scenarios/${slug}/bieg.fit`, fitBytes],
+      [`scenarios/${slug}/glukoza.csv`, csvBytes],
+    ]) {
+      const file = await fetch(`${base}/${path}`);
+      assert.equal(file.status, 200, path);
+      assert.deepEqual(Buffer.from(await file.arrayBuffer()), expected);
+    }
+    const { response, body } = await upload({
+      synthetic: "true",
+      fitBytes,
+      csvBytes,
+    });
+    assert.equal(response.status, 200, `${slug}: ${JSON.stringify(body)}`);
+    assert.equal(body.run.synthetic, true, slug);
+    assert.equal(body.run.provenance.kind, "synthetic", slug);
+    assert.equal(body.run.title, title);
+    assert.match(body.run.analysisToken, /^[a-f0-9]{64}$/);
+  }
+});
+
+test("known pair uploaded without the flag is still labelled synthetic", async () => {
+  const { fit: fitBytes, csv: csvBytes } = scenarioFiles["04-luka-w-danych"];
+  const { response, body } = await upload({ fitBytes, csvBytes });
+  assert.equal(response.status, 200, JSON.stringify(body));
+  assert.equal(body.run.synthetic, true);
+  assert.equal(body.run.title, "Scenariusz 4: Luka w danych sensora");
+  const builtIn = await upload();
+  assert.equal(builtIn.response.status, 200);
+  assert.equal(builtIn.body.run.synthetic, true);
+  assert.equal(builtIn.body.run.title, "Bieg demonstracyjny");
+});
+
+test("ordinary upload without the flag is labelled uploaded", async () => {
+  // One extra byte makes this an arbitrary pair, not a known demo pair.
+  const { response, body } = await upload({
+    csvBytes: Buffer.concat([glucose, Buffer.from("\n")]),
+  });
+  assert.equal(response.status, 200, JSON.stringify(body));
   assert.equal(body.run.synthetic, false);
   assert.equal(body.run.provenance.kind, "uploaded");
+  assert.equal(body.run.title, "Twój wgrany bieg");
+});
+
+test("known FIT with another scenario's CSV cannot claim synthetic", async () => {
+  for (const [fitSlug, csvSlug] of [
+    ["01-niski-cukier-na-plaskim", "02-podbieg-cukier-w-normie"],
+    ["03-podbieg-i-niski-cukier", "04-luka-w-danych"],
+  ]) {
+    const { response, body } = await upload({
+      synthetic: "true",
+      fitBytes: scenarioFiles[fitSlug].fit,
+      csvBytes: scenarioFiles[csvSlug].csv,
+    });
+    assert.equal(response.status, 422, JSON.stringify(body));
+    assert.equal(body.code, "synthetic_mismatch");
+  }
+  const mixed = await upload({
+    synthetic: "true",
+    fitBytes: fit,
+    csvBytes: scenarioFiles["01-niski-cukier-na-plaskim"].csv,
+  });
+  assert.equal(mixed.response.status, 422);
+  assert.equal(mixed.body.code, "synthetic_mismatch");
 });
 
 test("upload without literal processing consent is rejected", async () => {

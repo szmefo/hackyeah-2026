@@ -1,0 +1,89 @@
+/* One-click synthetic demo scenarios on the sources page. Uses the shared tokens. */
+.demo-scenarios {
+  margin: 0 0 48px;
+}
+.demo-scenarios-head {
+  max-width: 720px;
+  margin-bottom: 24px;
+}
+.demo-scenarios-head h2 {
+  font-family: var(--serif);
+  font-size: 29px;
+  font-weight: 400;
+  color: var(--cream);
+  margin: 12px 0;
+}
+.demo-scenarios-head p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+  margin: 0 0 14px;
+}
+.scenario-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+.scenario-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 24px;
+  border: 2px solid transparent;
+  border-radius: 22px;
+  background: var(--panel);
+}
+.scenario-card.is-active {
+  border-color: var(--accent);
+}
+.scenario-card h3 {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--cream);
+  margin: 0;
+}
+.scenario-card p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0 0 6px;
+  flex: 1;
+}
+.scenario-card .button {
+  align-self: flex-start;
+}
+.scenario-downloads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+}
+.chosen-pair {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 24px 0 8px;
+}
+.chosen-pair strong {
+  color: var(--cream);
+}
+@media (max-width: 1100px) {
+  .scenario-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .scenario-grid {
+    grid-template-columns: 1fr;
+  }
+  .scenario-card {
+    padding: 20px;
+  }
+}

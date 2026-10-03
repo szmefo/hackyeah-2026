@@ -144,3 +144,68 @@ export function factReferenceLabel(run: RunStory, ids: string[]) {
     .filter((value, index, all) => all.indexOf(value) === index)
     .join(" · ");
 }
+
+/**
+ * Every pair of public files that the app may label as synthetic.
+ * Paths are fixed and relative to `public/`; the import route compares
+ * uploaded bytes against these files and never accepts a path from the user.
+ */
+export type SyntheticPair = {
+  id: string;
+  number: number | null;
+  name: string;
+  runTitle: string;
+  hint: string;
+  fit: string;
+  csv: string;
+};
+export const builtInPair: SyntheticPair = {
+  id: "przyklad",
+  number: null,
+  name: "Przykładowa para",
+  runTitle: "Bieg demonstracyjny",
+  hint: "Spokojny bieg z niższym odczytem i luką w danych.",
+  fit: "demo-run.fit",
+  csv: "demo-glucose.csv",
+};
+const scenario = (
+  number: number,
+  slug: string,
+  name: string,
+  hint: string,
+): SyntheticPair => ({
+  id: slug,
+  number,
+  name,
+  runTitle: `Scenariusz ${number}: ${name}`,
+  hint,
+  fit: `scenarios/${slug}/bieg.fit`,
+  csv: `scenarios/${slug}/glukoza.csv`,
+});
+export const demoScenarios: SyntheticPair[] = [
+  scenario(
+    1,
+    "01-niski-cukier-na-plaskim",
+    "Niski cukier na płaskim",
+    "Zobacz, jak zwolnienie na płaskim odcinku zbiega się w czasie z niższym odczytem glukozy.",
+  ),
+  scenario(
+    2,
+    "02-podbieg-cukier-w-normie",
+    "Podbieg, cukier w normie",
+    "Zobacz zwolnienie na podbiegu przy odczytach glukozy stabilnych przez cały bieg.",
+  ),
+  scenario(
+    3,
+    "03-podbieg-i-niski-cukier",
+    "Podbieg i niski cukier naraz",
+    "Zobacz podbieg i niższy odczyt w tym samym oknie. Dane nie rozdzielają ich wpływu.",
+  ),
+  scenario(
+    4,
+    "04-luka-w-danych",
+    "Luka w danych sensora",
+    "Zobacz, jak brak odczytów w drugiej części biegu zostaje pokazany jako luka, bez uzupełniania.",
+  ),
+];
+export const syntheticPairs: SyntheticPair[] = [builtInPair, ...demoScenarios];

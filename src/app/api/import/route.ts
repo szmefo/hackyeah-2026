@@ -2,12 +2,85 @@ import { NextResponse } from "next/server";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { signRun } from "@/lib/server/run-integrity";
+import { syntheticPairs, type SyntheticPair } from "@/lib/demo";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 const MAX_FILE = 2 * 1024 * 1024;
 const MAX_BODY = 4 * 1024 * 1024 + 32 * 1024;
 const headers = { "Cache-Control": "no-store" };
+// Fixed files under public/ only; never a path taken from the request.
+// Literal paths keep them in the traced serverless bundle.
+const root = process.cwd();
+const knownFiles: Record<string, [string, string]> = {
+  przyklad: [
+    join(root, "public", "demo-run.fit"),
+    join(root, "public", "demo-glucose.csv"),
+  ],
+  "01-niski-cukier-na-plaskim": [
+    join(root, "public", "scenarios", "01-niski-cukier-na-plaskim", "bieg.fit"),
+    join(
+      root,
+      "public",
+      "scenarios",
+      "01-niski-cukier-na-plaskim",
+      "glukoza.csv",
+    ),
+  ],
+  "02-podbieg-cukier-w-normie": [
+    join(root, "public", "scenarios", "02-podbieg-cukier-w-normie", "bieg.fit"),
+    join(
+      root,
+      "public",
+      "scenarios",
+      "02-podbieg-cukier-w-normie",
+      "glukoza.csv",
+    ),
+  ],
+  "03-podbieg-i-niski-cukier": [
+    join(root, "public", "scenarios", "03-podbieg-i-niski-cukier", "bieg.fit"),
+    join(
+      root,
+      "public",
+      "scenarios",
+      "03-podbieg-i-niski-cukier",
+      "glukoza.csv",
+    ),
+  ],
+  "04-luka-w-danych": [
+    join(root, "public", "scenarios", "04-luka-w-danych", "bieg.fit"),
+    join(root, "public", "scenarios", "04-luka-w-danych", "glukoza.csv"),
+  ],
+};
+type KnownPair = { pair: SyntheticPair; fit: Buffer; csv: Buffer };
+let knownPairs: Promise<KnownPair[]> | null = null;
+function loadKnownPairs() {
+  knownPairs ??= Promise.all(
+    syntheticPairs.map(async (pair) => {
+      const [fit, csv] = await Promise.all(
+        knownFiles[pair.id].map((path) => readFile(path)),
+      );
+      return { pair, fit, csv };
+    }),
+  ).catch((error) => {
+    knownPairs = null;
+    throw error;
+  });
+  return knownPairs;
+}
+/** Exact byte match against the known pairs; null when nothing matches. */
+async function matchSyntheticPair(fit: Buffer, csv: Buffer) {
+  try {
+    const pairs = await loadKnownPairs();
+    return (
+      pairs.find((known) => known.fit.equals(fit) && known.csv.equals(csv))
+        ?.pair ?? null
+    );
+  } catch {
+    // Unreadable reference files: never label anything synthetic.
+    return null;
+  }
+}
 function fail(status: number, code: string, error: string) {
   return NextResponse.json({ code, error }, { status, headers });
 }
@@ -67,34 +140,26 @@ export async function POST(request: Request) {
     const timezone = String(form.get("timezone") ?? "Europe/Warsaw");
     if (timezone.length > 64)
       return fail(422, "timezone_invalid", "Sprawdź strefę czasową.");
-    if (form.get("synthetic") === "true") {
-      const [knownFit, knownCsv] = await Promise.all([
-        readFile(join(process.cwd(), "public", "demo-run.fit")),
-        readFile(join(process.cwd(), "public", "demo-glucose.csv")),
-      ]);
-      const fitBytes = Buffer.from(
-        await (form.get("fit") as File).arrayBuffer(),
+    const fitBytes = Buffer.from(await (form.get("fit") as File).arrayBuffer());
+    const csvBytes = Buffer.from(
+      await (form.get("glucose") as File).arrayBuffer(),
+    );
+    // Known pairs are labelled synthetic by exact byte match only, with or
+    // without the client's flag. A synthetic claim for any other bytes fails.
+    const known = await matchSyntheticPair(fitBytes, csvBytes);
+    if (form.get("synthetic") === "true" && !known)
+      return fail(
+        422,
+        "synthetic_mismatch",
+        "Oznaczenie danych syntetycznych dotyczy wyłącznie niezmienionych par plików demo z tej strony.",
       );
-      const csvBytes = Buffer.from(
-        await (form.get("glucose") as File).arrayBuffer(),
-      );
-      if (!knownFit.equals(fitBytes) || !knownCsv.equals(csvBytes))
-        return fail(
-          422,
-          "synthetic_mismatch",
-          "Opcja danych syntetycznych dotyczy wyłącznie pobranej pary przykładowych plików.",
-        );
-    }
     const forwarded = new FormData();
     // Generic names avoid transmitting the owner's original filenames.
     forwarded.set("fit", form.get("fit") as File, "run.fit");
     forwarded.set("glucose", form.get("glucose") as File, "glucose.csv");
     forwarded.set("timezone", timezone);
     forwarded.set("consent", "true");
-    forwarded.set(
-      "synthetic",
-      form.get("synthetic") === "true" ? "true" : "false",
-    );
+    forwarded.set("synthetic", known ? "true" : "false");
     const response = await fetch(`${engine.replace(/\/$/, "")}/analyze`, {
       method: "POST",
       headers: { "X-Engine-Secret": secret },
@@ -123,6 +188,11 @@ export async function POST(request: Request) {
         "invalid_result",
         "Nie udało się przygotować historii biegu.",
       );
+    if (known) {
+      // Set before signing so the scenario name is covered by the token.
+      result.run.synthetic = true;
+      result.run.title = known.runTitle;
+    }
     result.run.analysisToken = signRun(result.run, secret);
     return NextResponse.json(result, { headers });
   } catch {
