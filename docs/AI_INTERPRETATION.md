@@ -97,3 +97,9 @@ never model text, notes, measurements or secrets.
 Final latency adjustment: each request has at most 22 seconds and receives only the
 remaining time in a shared 54-second budget. At most one correction and one review.
 This replaces the initial 16-second cap; timeouts have a safe distinct diagnostic code.
+
+Synthetic live semantic regression: a draft passed AI review but incorrectly asserted
+that readings stayed above the threshold from two higher endpoint values, ignoring
+the lower measured minimum. Manual review caught this. A specific contradiction guard,
+regression test and explicit minimum-versus-endpoints reviewer instruction were added.
+This demonstrates why valid citations and a second model call are not clinical proof.

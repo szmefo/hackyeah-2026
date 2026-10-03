@@ -63,6 +63,9 @@ wyjaśnienia, współwystępujące czynniki i ograniczenia danych; przygotuj pyt
 Nie powtarzaj mechanicznie gotowego szablonu. Nie diagnozuj, nie doradzaj leczenia ani jedzenia.
 Nigdy nie przypisuj przyczynowości glukozie ani terenowi. Współwystępowanie nie rozstrzyga wpływu.
 CGM to odczyty punktowe w oknie, nie dokładny obraz krwi w tej samej sekundzie.
+Minimum w oknie jest nadrzędne wobec pierwszego i ostatniego odczytu. Pierwszy i ostatni
+odczyt mogą być powyżej progu, gdy odczyt pomiędzy nimi był niższy. Nie twierdź,
+że odczyty pozostawały powyżej progu, jeśli minGlucose jest poniżej progu.
 Nie orzekaj hipoglikemii z jednego pomiaru. Brak pomiaru nie jest prawidłowym pomiarem.
 Teksty wyłącznie po polsku, krótkie i zrozumiałe. W text/unknowns/questions NIE umieszczaj
 żadnych cyfr ani liczebników przedstawiających pomiary: liczby już pokazuje interfejs z faktów.
@@ -126,6 +129,14 @@ export function validateAnalysis(
       )
         return reject("claim_text_or_reference");
       const linked = item.factIds.map((id) => context.facts[id]);
+      if (
+        context.moment.minGlucose !== null &&
+        context.moment.minGlucose < 70 &&
+        /(?:utrzymywa|pozostawa|wszystk|cał[\p{L}]* okn|zarejestrowan)[\s\S]*powyżej (?:progu|zakresu)|(?:nie było|nie odnotowano|brak)[\s\S]*(?:niższ|nisk|poniżej)/iu.test(
+          item.text,
+        )
+      )
+        return reject("glucose_threshold_contradiction");
       // A claim mentioning a glucose/terrain measurement must cite that kind of fact,
       // not merely a valid but unrelated run distance or time identifier.
       if (
@@ -249,7 +260,11 @@ powiązania factIds, ukrytą przyczynowość, diagnozy, porady żywieniowe i lek
 konkurujące czynniki i brakujące dane. Sprawdź, czy wnioski odnoszą się do wybranego momentu,
 a nie do innego odcinka. Alternatywy mają wynikać z faktów lub wskazywać nieznaną przyczynę,
 nie wymyślać faktów. Zatwierdź wyłącznie ostrożną, spójną interpretację. Nie traktuj tego
-przeglądu jako weryfikacji medycznej. Zwróć passed oraz listę issues.`,
+Minimum minGlucose w oknie musi być uwzględnione: dwa wyższe odczyty na końcach okna
+nie dowodzą braku niższych odczytów pośrodku. Odrzuć twierdzenie, że odczyty pozostawały
+powyżej progu, gdy minimum w oknie jest niższe. Nie uznawaj zmęczenia za stwierdzony fakt,
+jeśli brak obserwacji biegacza o zmęczeniu.
+Nie traktuj tego przeglądu jako weryfikacji medycznej. Zwróć passed oraz listę issues.`,
     { context, analysis },
     reviewSchema,
     "run_review",
@@ -272,3 +287,4 @@ przeglądu jako weryfikacji medycznej. Zwróć passed oraz listę issues.`,
     model,
   };
 }
+

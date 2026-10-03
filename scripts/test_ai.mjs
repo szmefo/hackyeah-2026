@@ -273,3 +273,14 @@ test("repeated invalid evidence is rejected without unbounded retry or review", 
     globalThis.fetch = original;
   }
 });
+
+test("higher glucose endpoints cannot establish that every reading stayed above threshold", () => {
+  const a = valid();
+  a.claims[0] = {
+    text: "Odczyty glukozy zarejestrowane przez sensor w oknie utrzymywały się powyżej progu.",
+    factIds: ["m.glucose.minimum"],
+  };
+  assert.equal(validateAnalysis(a, context), false);
+  a.claims[0].text = "W oknie nie odnotowano niskich odczytów glukozy.";
+  assert.equal(validateAnalysis(a, context), false);
+});
