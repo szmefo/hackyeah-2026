@@ -51,3 +51,21 @@ existing snapshot. Record its SHA here if a component is later imported.
 
 These records document provenance. They do not establish eligibility, an IP
 exemption or organizer acceptance; check the actual task rules after reveal.
+
+## Approved import at implementation start
+
+Greg approved these six files in the final product plan and authorized phase 1.
+Source revision is recorded rather than inventing a pre-event tag; UltraSoul remains untouched.
+
+| Component / destination | Source revision | Existing before HackYeah | Added at | Notes / modifications |
+| --- | --- | --- | --- | --- |
+| `engine/app/services/run_signal_extractor.py` | `szmefo/UltraSoulAI:backend/app/services/run_signal_extractor.py` at `3c3f49d184d1fabd4997daabd88248b4f08382e4` | Yes; last source change `b36bba6e 2026-07-04T19:37:07Z` | 2026-10-03T13:02:36+02:00 | Byte-exact import; SHA-256 `1d2755c437851c80697a184afc2fab044901c43504418a7b78f7f270ba072078`; no modifications. Parser/signals/tests groundwork for later real import, not called by phase-1 UI. |
+| `engine/app/services/fit_parser.py` | `szmefo/UltraSoulAI:backend/app/services/fit_parser.py` at `3c3f49d184d1fabd4997daabd88248b4f08382e4` | Yes; last source change `a274f8f0 2026-09-13T09:26:48+02:00` | 2026-10-03T13:02:36+02:00 | Byte-exact import; SHA-256 `b6be18517f3623d3ddd393c4881063a5be3c1acc1c5d0795243a7ee1729b76a9`; no modifications. Parser/signals/tests groundwork for later real import, not called by phase-1 UI. |
+| `engine/app/services/fit_adapter.py` | `szmefo/UltraSoulAI:backend/app/services/fit_adapter.py` at `3c3f49d184d1fabd4997daabd88248b4f08382e4` | Yes; last source change `a4318276 2026-09-12T05:23:11Z` | 2026-10-03T13:02:36+02:00 | Byte-exact import; SHA-256 `1f15f6377fa6e0185f869113e6844761671c5f69c85465dce0bf14d35e0fb35a`; no modifications. Parser/signals/tests groundwork for later real import, not called by phase-1 UI. |
+| `engine/tests/test_run_signal_extractor.py` | `szmefo/UltraSoulAI:backend/tests/test_run_signal_extractor.py` at `3c3f49d184d1fabd4997daabd88248b4f08382e4` | Yes; last source change `10c5d221 2026-07-03T07:14:19+02:00` | 2026-10-03T13:02:36+02:00 | Byte-exact import; SHA-256 `f76871b9cbc4629b889af4e61a756b969a4453465aa9ec505202d46893d73ae1`; no modifications. Parser/signals/tests groundwork for later real import, not called by phase-1 UI. |
+| `engine/tests/test_fit_parser_alignment.py` | `szmefo/UltraSoulAI:backend/tests/test_fit_parser_alignment.py` at `3c3f49d184d1fabd4997daabd88248b4f08382e4` | Yes; last source change `a4318276 2026-09-12T05:23:11Z` | 2026-10-03T13:02:36+02:00 | Byte-exact import; SHA-256 `a9b212b1434ff3755e3e2ffad0d40b7c3241454cd0a07b86220ce47cd2bd8703`; no modifications. Parser/signals/tests groundwork for later real import, not called by phase-1 UI. |
+| `engine/tests/fit_fixtures.py` | `szmefo/UltraSoulAI:backend/tests/fit_fixtures.py` at `3c3f49d184d1fabd4997daabd88248b4f08382e4` | Yes; last source change `081f95b8 2026-09-13T06:52:08+02:00` | 2026-10-03T13:02:36+02:00 | Byte-exact import; SHA-256 `6204a0d00b160f77a1e61d02941920253b83bb8ecda2377f368dbef23b561937`; no modifications. Parser/signals/tests groundwork for later real import, not called by phase-1 UI. |
+
+Import commit: `import(background-ip): preserve approved UltraSoul parsers and signal extractor`.
+SHA-256 hashes refer to bytes from the committed source revision and byte-identical imported files.
+Any later adaptation must have its own commit and modification record.
