@@ -1,0 +1,927 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "seed": 20261003,
+  "title": "Bieg nad Wisłą",
+  "date": "2026-10-03",
+  "start": "2026-10-03T08:30:00+02:00",
+  "timezone": "Europe/Warsaw",
+  "durationMinutes": 94,
+  "distanceKm": 16.7,
+  "samples": [
+    {
+      "minute": 0,
+      "pace": 5.454,
+      "hr": 120,
+      "altitude": 205,
+      "distanceKm": 0
+    },
+    {
+      "minute": 1,
+      "pace": 5.537,
+      "hr": 117,
+      "altitude": 205,
+      "distanceKm": 0.181
+    },
+    {
+      "minute": 2,
+      "pace": 5.594,
+      "hr": 119,
+      "altitude": 206,
+      "distanceKm": 0.359
+    },
+    {
+      "minute": 3,
+      "pace": 5.638,
+      "hr": 119,
+      "altitude": 206,
+      "distanceKm": 0.537
+    },
+    {
+      "minute": 4,
+      "pace": 5.574,
+      "hr": 120,
+      "altitude": 206,
+      "distanceKm": 0.716
+    },
+    {
+      "minute": 5,
+      "pace": 5.622,
+      "hr": 121,
+      "altitude": 207,
+      "distanceKm": 0.894
+    },
+    {
+      "minute": 6,
+      "pace": 5.648,
+      "hr": 122,
+      "altitude": 207,
+      "distanceKm": 1.071
+    },
+    {
+      "minute": 7,
+      "pace": 5.653,
+      "hr": 121,
+      "altitude": 207,
+      "distanceKm": 1.248
+    },
+    {
+      "minute": 8,
+      "pace": 5.599,
+      "hr": 122,
+      "altitude": 208,
+      "distanceKm": 1.427
+    },
+    {
+      "minute": 9,
+      "pace": 5.536,
+      "hr": 121,
+      "altitude": 208,
+      "distanceKm": 1.607
+    },
+    {
+      "minute": 10,
+      "pace": 5.475,
+      "hr": 122,
+      "altitude": 208,
+      "distanceKm": 1.79
+    },
+    {
+      "minute": 11,
+      "pace": 5.425,
+      "hr": 123,
+      "altitude": 208,
+      "distanceKm": 1.974
+    },
+    {
+      "minute": 12,
+      "pace": 5.456,
+      "hr": 121,
+      "altitude": 208,
+      "distanceKm": 2.157
+    },
+    {
+      "minute": 13,
+      "pace": 5.402,
+      "hr": 122,
+      "altitude": 208,
+      "distanceKm": 2.343
+    },
+    {
+      "minute": 14,
+      "pace": 5.357,
+      "hr": 125,
+      "altitude": 208,
+      "distanceKm": 2.529
+    },
+    {
+      "minute": 15,
+      "pace": 5.38,
+      "hr": 125,
+      "altitude": 208,
+      "distanceKm": 2.715
+    },
+    {
+      "minute": 16,
+      "pace": 5.467,
+      "hr": 124,
+      "altitude": 208,
+      "distanceKm": 2.898
+    },
+    {
+      "minute": 17,
+      "pace": 5.411,
+      "hr": 124,
+      "altitude": 208,
+      "distanceKm": 3.083
+    },
+    {
+      "minute": 18,
+      "pace": 5.46,
+      "hr": 126,
+      "altitude": 207,
+      "distanceKm": 3.266
+    },
+    {
+      "minute": 19,
+      "pace": 5.595,
+      "hr": 126,
+      "altitude": 207,
+      "distanceKm": 3.445
+    },
+    {
+      "minute": 20,
+      "pace": 5.539,
+      "hr": 125,
+      "altitude": 207,
+      "distanceKm": 3.625
+    },
+    {
+      "minute": 21,
+      "pace": 5.546,
+      "hr": 128,
+      "altitude": 206,
+      "distanceKm": 3.806
+    },
+    {
+      "minute": 22,
+      "pace": 5.559,
+      "hr": 126,
+      "altitude": 206,
+      "distanceKm": 3.985
+    },
+    {
+      "minute": 23,
+      "pace": 5.673,
+      "hr": 128,
+      "altitude": 206,
+      "distanceKm": 4.162
+    },
+    {
+      "minute": 24,
+      "pace": 5.612,
+      "hr": 130,
+      "altitude": 205,
+      "distanceKm": 4.34
+    },
+    {
+      "minute": 25,
+      "pace": 5.561,
+      "hr": 130,
+      "altitude": 205,
+      "distanceKm": 4.52
+    },
+    {
+      "minute": 26,
+      "pace": 5.566,
+      "hr": 131,
+      "altitude": 205,
+      "distanceKm": 4.699
+    },
+    {
+      "minute": 27,
+      "pace": 5.601,
+      "hr": 131,
+      "altitude": 204,
+      "distanceKm": 4.878
+    },
+    {
+      "minute": 28,
+      "pace": 5.552,
+      "hr": 131,
+      "altitude": 204,
+      "distanceKm": 5.058
+    },
+    {
+      "minute": 29,
+      "pace": 5.526,
+      "hr": 132,
+      "altitude": 204,
+      "distanceKm": 5.239
+    },
+    {
+      "minute": 30,
+      "pace": 5.455,
+      "hr": 132,
+      "altitude": 203,
+      "distanceKm": 5.422
+    },
+    {
+      "minute": 31,
+      "pace": 5.486,
+      "hr": 131,
+      "altitude": 203,
+      "distanceKm": 5.605
+    },
+    {
+      "minute": 32,
+      "pace": 5.419,
+      "hr": 131,
+      "altitude": 203,
+      "distanceKm": 5.789
+    },
+    {
+      "minute": 33,
+      "pace": 5.343,
+      "hr": 130,
+      "altitude": 203,
+      "distanceKm": 5.976
+    },
+    {
+      "minute": 34,
+      "pace": 5.382,
+      "hr": 133,
+      "altitude": 202,
+      "distanceKm": 6.162
+    },
+    {
+      "minute": 35,
+      "pace": 5.426,
+      "hr": 133,
+      "altitude": 202,
+      "distanceKm": 6.346
+    },
+    {
+      "minute": 36,
+      "pace": 5.411,
+      "hr": 133,
+      "altitude": 202,
+      "distanceKm": 6.531
+    },
+    {
+      "minute": 37,
+      "pace": 5.491,
+      "hr": 133,
+      "altitude": 202,
+      "distanceKm": 6.713
+    },
+    {
+      "minute": 38,
+      "pace": 5.521,
+      "hr": 134,
+      "altitude": 202,
+      "distanceKm": 6.894
+    },
+    {
+      "minute": 39,
+      "pace": 5.639,
+      "hr": 136,
+      "altitude": 202,
+      "distanceKm": 7.072
+    },
+    {
+      "minute": 40,
+      "pace": 5.63,
+      "hr": 137,
+      "altitude": 202,
+      "distanceKm": 7.249
+    },
+    {
+      "minute": 41,
+      "pace": 5.674,
+      "hr": 135,
+      "altitude": 202,
+      "distanceKm": 7.426
+    },
+    {
+      "minute": 42,
+      "pace": 5.708,
+      "hr": 138,
+      "altitude": 202,
+      "distanceKm": 7.601
+    },
+    {
+      "minute": 43,
+      "pace": 5.66,
+      "hr": 138,
+      "altitude": 203,
+      "distanceKm": 7.778
+    },
+    {
+      "minute": 44,
+      "pace": 5.643,
+      "hr": 138,
+      "altitude": 203,
+      "distanceKm": 7.955
+    },
+    {
+      "minute": 45,
+      "pace": 5.577,
+      "hr": 136,
+      "altitude": 203,
+      "distanceKm": 8.134
+    },
+    {
+      "minute": 46,
+      "pace": 5.614,
+      "hr": 137,
+      "altitude": 203,
+      "distanceKm": 8.312
+    },
+    {
+      "minute": 47,
+      "pace": 5.495,
+      "hr": 140,
+      "altitude": 204,
+      "distanceKm": 8.494
+    },
+    {
+      "minute": 48,
+      "pace": 5.554,
+      "hr": 137,
+      "altitude": 204,
+      "distanceKm": 8.674
+    },
+    {
+      "minute": 49,
+      "pace": 5.482,
+      "hr": 141,
+      "altitude": 205,
+      "distanceKm": 8.857
+    },
+    {
+      "minute": 50,
+      "pace": 5.355,
+      "hr": 138,
+      "altitude": 205,
+      "distanceKm": 9.043
+    },
+    {
+      "minute": 51,
+      "pace": 5.336,
+      "hr": 139,
+      "altitude": 205,
+      "distanceKm": 9.231
+    },
+    {
+      "minute": 52,
+      "pace": 5.36,
+      "hr": 141,
+      "altitude": 206,
+      "distanceKm": 9.417
+    },
+    {
+      "minute": 53,
+      "pace": 5.371,
+      "hr": 142,
+      "altitude": 206,
+      "distanceKm": 9.604
+    },
+    {
+      "minute": 54,
+      "pace": 5.371,
+      "hr": 140,
+      "altitude": 206,
+      "distanceKm": 9.79
+    },
+    {
+      "minute": 55,
+      "pace": 5.464,
+      "hr": 144,
+      "altitude": 207,
+      "distanceKm": 9.973
+    },
+    {
+      "minute": 56,
+      "pace": 5.448,
+      "hr": 143,
+      "altitude": 207,
+      "distanceKm": 10.156
+    },
+    {
+      "minute": 57,
+      "pace": 5.599,
+      "hr": 144,
+      "altitude": 207,
+      "distanceKm": 10.335
+    },
+    {
+      "minute": 58,
+      "pace": 5.582,
+      "hr": 143,
+      "altitude": 207,
+      "distanceKm": 10.514
+    },
+    {
+      "minute": 59,
+      "pace": 5.568,
+      "hr": 143,
+      "altitude": 208,
+      "distanceKm": 10.694
+    },
+    {
+      "minute": 60,
+      "pace": 5.656,
+      "hr": 144,
+      "altitude": 208,
+      "distanceKm": 10.87
+    },
+    {
+      "minute": 61,
+      "pace": 5.674,
+      "hr": 144,
+      "altitude": 208,
+      "distanceKm": 11.047
+    },
+    {
+      "minute": 62,
+      "pace": 5.668,
+      "hr": 146,
+      "altitude": 208,
+      "distanceKm": 11.223
+    },
+    {
+      "minute": 63,
+      "pace": 5.552,
+      "hr": 144,
+      "altitude": 208,
+      "distanceKm": 11.403
+    },
+    {
+      "minute": 64,
+      "pace": 5.611,
+      "hr": 145,
+      "altitude": 208,
+      "distanceKm": 11.581
+    },
+    {
+      "minute": 65,
+      "pace": 5.583,
+      "hr": 146,
+      "altitude": 208,
+      "distanceKm": 11.761
+    },
+    {
+      "minute": 66,
+      "pace": 5.537,
+      "hr": 146,
+      "altitude": 208,
+      "distanceKm": 11.941
+    },
+    {
+      "minute": 67,
+      "pace": 5.536,
+      "hr": 148,
+      "altitude": 208,
+      "distanceKm": 12.122
+    },
+    {
+      "minute": 68,
+      "pace": 5.514,
+      "hr": 148,
+      "altitude": 207,
+      "distanceKm": 12.303
+    },
+    {
+      "minute": 69,
+      "pace": 5.407,
+      "hr": 149,
+      "altitude": 207,
+      "distanceKm": 12.488
+    },
+    {
+      "minute": 70,
+      "pace": 5.342,
+      "hr": 149,
+      "altitude": 207,
+      "distanceKm": 12.675
+    },
+    {
+      "minute": 71,
+      "pace": 5.433,
+      "hr": 150,
+      "altitude": 207,
+      "distanceKm": 12.859
+    },
+    {
+      "minute": 72,
+      "pace": 5.467,
+      "hr": 149,
+      "altitude": 206,
+      "distanceKm": 13.042
+    },
+    {
+      "minute": 73,
+      "pace": 5.482,
+      "hr": 149,
+      "altitude": 206,
+      "distanceKm": 13.225
+    },
+    {
+      "minute": 74,
+      "pace": 5.468,
+      "hr": 150,
+      "altitude": 206,
+      "distanceKm": 13.408
+    },
+    {
+      "minute": 75,
+      "pace": 5.608,
+      "hr": 150,
+      "altitude": 207,
+      "distanceKm": 13.586
+    },
+    {
+      "minute": 76,
+      "pace": 5.745,
+      "hr": 150,
+      "altitude": 208,
+      "distanceKm": 13.76
+    },
+    {
+      "minute": 77,
+      "pace": 5.85,
+      "hr": 153,
+      "altitude": 212,
+      "distanceKm": 13.931
+    },
+    {
+      "minute": 78,
+      "pace": 6.116,
+      "hr": 153,
+      "altitude": 218,
+      "distanceKm": 14.094
+    },
+    {
+      "minute": 79,
+      "pace": 6.437,
+      "hr": 159,
+      "altitude": 227,
+      "distanceKm": 14.25
+    },
+    {
+      "minute": 80,
+      "pace": 6.855,
+      "hr": 158,
+      "altitude": 236,
+      "distanceKm": 14.396
+    },
+    {
+      "minute": 81,
+      "pace": 7.076,
+      "hr": 162,
+      "altitude": 243,
+      "distanceKm": 14.537
+    },
+    {
+      "minute": 82,
+      "pace": 7.216,
+      "hr": 163,
+      "altitude": 246,
+      "distanceKm": 14.676
+    },
+    {
+      "minute": 83,
+      "pace": 7.058,
+      "hr": 165,
+      "altitude": 243,
+      "distanceKm": 14.817
+    },
+    {
+      "minute": 84,
+      "pace": 6.788,
+      "hr": 163,
+      "altitude": 235,
+      "distanceKm": 14.965
+    },
+    {
+      "minute": 85,
+      "pace": 6.32,
+      "hr": 159,
+      "altitude": 225,
+      "distanceKm": 15.123
+    },
+    {
+      "minute": 86,
+      "pace": 6.071,
+      "hr": 158,
+      "altitude": 216,
+      "distanceKm": 15.288
+    },
+    {
+      "minute": 87,
+      "pace": 5.656,
+      "hr": 156,
+      "altitude": 210,
+      "distanceKm": 15.464
+    },
+    {
+      "minute": 88,
+      "pace": 5.561,
+      "hr": 157,
+      "altitude": 206,
+      "distanceKm": 15.644
+    },
+    {
+      "minute": 89,
+      "pace": 5.512,
+      "hr": 155,
+      "altitude": 203,
+      "distanceKm": 15.826
+    },
+    {
+      "minute": 90,
+      "pace": 5.419,
+      "hr": 158,
+      "altitude": 203,
+      "distanceKm": 16.01
+    },
+    {
+      "minute": 91,
+      "pace": 5.48,
+      "hr": 156,
+      "altitude": 202,
+      "distanceKm": 16.193
+    },
+    {
+      "minute": 92,
+      "pace": 5.433,
+      "hr": 158,
+      "altitude": 202,
+      "distanceKm": 16.377
+    },
+    {
+      "minute": 93,
+      "pace": 5.468,
+      "hr": 159,
+      "altitude": 203,
+      "distanceKm": 16.56
+    },
+    {
+      "minute": 94,
+      "pace": 5.525,
+      "hr": 156,
+      "altitude": 203,
+      "distanceKm": 16.741
+    }
+  ],
+  "glucose": [
+    {
+      "minute": 0,
+      "value": 137
+    },
+    {
+      "minute": 5,
+      "value": 143
+    },
+    {
+      "minute": 10,
+      "value": 153
+    },
+    {
+      "minute": 15,
+      "value": 138
+    },
+    {
+      "minute": 20,
+      "value": 119
+    },
+    {
+      "minute": 25,
+      "value": 110
+    },
+    {
+      "minute": 50,
+      "value": 114
+    },
+    {
+      "minute": 55,
+      "value": 121
+    },
+    {
+      "minute": 60,
+      "value": 128
+    },
+    {
+      "minute": 65,
+      "value": 131
+    },
+    {
+      "minute": 70,
+      "value": 112
+    },
+    {
+      "minute": 75,
+      "value": 84
+    },
+    {
+      "minute": 80,
+      "value": 65
+    },
+    {
+      "minute": 85,
+      "value": 68
+    },
+    {
+      "minute": 90,
+      "value": 106
+    },
+    {
+      "minute": 94,
+      "value": 111
+    }
+  ],
+  "glucoseSegments": [
+    [
+      {
+        "minute": 0,
+        "value": 137
+      },
+      {
+        "minute": 5,
+        "value": 143
+      },
+      {
+        "minute": 10,
+        "value": 153
+      },
+      {
+        "minute": 15,
+        "value": 138
+      },
+      {
+        "minute": 20,
+        "value": 119
+      },
+      {
+        "minute": 25,
+        "value": 110
+      }
+    ],
+    [
+      {
+        "minute": 50,
+        "value": 114
+      },
+      {
+        "minute": 55,
+        "value": 121
+      },
+      {
+        "minute": 60,
+        "value": 128
+      },
+      {
+        "minute": 65,
+        "value": 131
+      },
+      {
+        "minute": 70,
+        "value": 112
+      },
+      {
+        "minute": 75,
+        "value": 84
+      },
+      {
+        "minute": 80,
+        "value": 65
+      },
+      {
+        "minute": 85,
+        "value": 68
+      },
+      {
+        "minute": 90,
+        "value": 106
+      },
+      {
+        "minute": 94,
+        "value": 111
+      }
+    ]
+  ],
+  "gaps": [
+    {
+      "start": 25,
+      "end": 50
+    }
+  ],
+  "moments": [
+    {
+      "id": "gap",
+      "minute": 37,
+      "label": "Luka w danych",
+      "title": "Tutaj historia jest niepełna.",
+      "distanceKm": 6.7,
+      "windowStart": 27,
+      "windowEnd": 47,
+      "minGlucose": null,
+      "readingCount": 0,
+      "pace": 5.491,
+      "hr": 133,
+      "altitudeChange": -1,
+      "factors": [
+        {
+          "id": "no_glucose_data",
+          "label": "Brak odczytów glukozy",
+          "evidence": "W całym wybranym oknie nie ma odczytów.",
+          "factId": "gap.glucose.count"
+        }
+      ],
+      "narrative": "W tym miejscu nie ma odczytu glukozy. Nie możemy porównać go z przebiegiem biegu.",
+      "unknowns": [
+        "Brak odczytów glukozy w wybranym oknie.",
+        "Brak informacji o posiłku.",
+        "Nie zapisano odczuć biegacza."
+      ],
+      "question": "Jak przygotować pełniejsze dane z kolejnego biegu?",
+      "separable": true
+    },
+    {
+      "id": "steady",
+      "minute": 58,
+      "label": "Spokojny odcinek",
+      "title": "Ten odcinek widać w obu źródłach.",
+      "distanceKm": 10.5,
+      "windowStart": 48,
+      "windowEnd": 68,
+      "minGlucose": 114,
+      "readingCount": 4,
+      "pace": 5.582,
+      "hr": 143,
+      "altitudeChange": 1,
+      "factors": [],
+      "narrative": "Tempo i tętno są względnie równe, a odczyty glukozy są dostępne. To obserwacja z tego odcinka.",
+      "unknowns": [
+        "Odczyt sensora i zmiana tempa nie dowodzą przyczyny.",
+        "Brak informacji o posiłku.",
+        "Nie zapisano odczuć biegacza."
+      ],
+      "question": "Jak omówić te odczyty w kontekście wysiłku?",
+      "separable": true
+    },
+    {
+      "id": "together",
+      "minute": 82,
+      "label": "Dwa sygnały",
+      "title": "Spadek tempa zbiegł się z dwoma sygnałami.",
+      "distanceKm": 14.7,
+      "windowStart": 72,
+      "windowEnd": 92,
+      "minGlucose": 65,
+      "readingCount": 4,
+      "pace": 7.216,
+      "hr": 163,
+      "altitudeChange": 34,
+      "factors": [
+        {
+          "id": "low_glucose_nearby",
+          "label": "Niski odczyt glukozy",
+          "evidence": "Najniższy odczyt w oknie: 65 mg/dL.",
+          "factId": "together.glucose.minimum"
+        },
+        {
+          "id": "uphill",
+          "label": "Podbieg",
+          "evidence": "W tym samym oknie wzrasta wysokość trasy.",
+          "factId": "together.altitude.change"
+        }
+      ],
+      "narrative": "Na tym odcinku wystąpił też podbieg. Te dane nie pozwalają rozdzielić ich wpływu.",
+      "unknowns": [
+        "Odczyt sensora i zmiana tempa nie dowodzą przyczyny.",
+        "Brak informacji o posiłku.",
+        "Nie zapisano odczuć biegacza."
+      ],
+      "question": "Jak omówić te odczyty w kontekście wysiłku?",
+      "separable": false
+    }
+  ],
+  "facts": {
+    "coveragePct": 73,
+    "coveredMinutes": 69,
+    "minGlucose": 65,
+    "below70Count": 2,
+    "below54Count": 0,
+    "readingCount": 16,
+    "averagePace": 5.615,
+    "basis": "Odczyty punktowe; pokrycie liczone tylko między odczytami oddalonymi o najwyżej 10 minut. Bez uzupełniania luki i bez wyliczania czasu poniżej progu."
+  },
+  "provenance": {
+    "kind": "synthetic",
+    "generator": "scripts/build_demo.py",
+    "engineUsed": false,
+    "clinicalValidation": false
+  }
+}
