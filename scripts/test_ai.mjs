@@ -311,3 +311,11 @@ test("individual sensor measurement is not medication units", () => {
   a.claims[0].text = "Przyjmij jednostkę leku.";
   assert.equal(validateAnalysis(a, context), false);
 });
+
+test("Polish conditional word is not a gel recommendation", () => {
+  const a = valid();
+  a.questions = ["Jeżeli taki przebieg się powtórzy, jak opisać go lekarzowi?"];
+  assert.equal(validateAnalysis(a, context), true);
+  a.claims[0].text = "Żel może rozwiązać problem w czasie biegu.";
+  assert.equal(validateAnalysis(a, context), false);
+});
