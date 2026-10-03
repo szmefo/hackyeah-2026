@@ -237,7 +237,7 @@ export default function Sources() {
         <p className="privacy-note">
           Przetwarzanie odbywa się na serwerze aplikacji w Vercel. Odświeżenie
           strony usuwa wgrany wynik i obserwacje. Analiza AI wymaga osobnej
-          zgody — ten import nie wysyła danych do OpenAI.
+          zgody — ten import nie wysyła danych do dostawcy AI.
         </p>
         <div className="upload-actions">
           <button

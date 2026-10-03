@@ -111,7 +111,7 @@ export async function POST(request: Request) {
       .map(({ text, minute, kind }) => ({ text, minute, kind })),
   };
   // Construct a fixed, minimized payload from signed measurements. No chart streams,
-  // filenames, timestamps, GPS, device IDs, title or original uploads reach OpenAI.
+  // filenames, timestamps, GPS, device IDs, title or original uploads reach the AI provider.
   for (const [suffix, value, unit, description] of [
     [
       "glucose.minimum",

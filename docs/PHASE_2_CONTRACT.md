@@ -16,9 +16,9 @@ Do not cache responses. No files persist; browser run lives in React memory.
 
 Browser `POST /api/interpret`: JSON `{run, momentId, observations, consent:true}`.
 Separate explicit AI consent. Server sends only computed facts and selected-moment
-summaries plus consented observations to OpenAI, never original files/GPS/name.
+summaries plus consented observations to the configured provider, never original files/GPS/name.
 Success `{status:'ai', claims:[{text,factIds}], alternatives:[{text,factIds}],
-unknowns:string[], questions:string[], review:'passed', provider:'OpenAI', model:string}`.
+unknowns:string[], questions:string[], review:'passed', provider:'OpenAI'|'Anthropic', model:string}`.
 Unavailable/rejected response `{status:'fallback', reason:string}`; UI keeps facts/template.
 AI output is not independently medically verified. Model config stays server-only.
 
@@ -64,3 +64,4 @@ other owners' files; report cross-cutting needs. Import adaptation stays separat
 Provider update: Anthropic is the owner's current selection. `/api/ai-status` returns
 only configured/provider; `/api/interpret` requires provider-matching separate consent.
 Model transport/payload/retention: AI_INTERPRETATION.md. UI numbers remain Python facts.
+
