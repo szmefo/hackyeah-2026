@@ -82,3 +82,5 @@ Greg selected v3 concept 04 and requested implementation isolated from concurren
 2026-10-03T18:55:38+02:00 — Codex (GPT-6): updated README to match deployed cream/lavender UI, Anthropic provider, versioned synthetic scenarios, local commands and actual verification scope. Checked documentation against repository files and recorded release evidence; Greg requested README update.
 
 2026-10-03T18:58:57+02:00 — Codex (GPT-6): documented public app URL, local tmp/synthetic-scenarios path versus versioned demos copy, and short jury demo steps in README, submission/README and scenario README. Requested by Greg; checked file paths against repository.
+
+2026-10-03T19:12:39+02:00 — Codex (GPT-6): screened 35 reachable commits with Gitleaks and sensitive-path checks; completed user-requested public visibility via Brave after owner reauthentication; confirmed anonymous API/README access and updated visibility documentation. See docs/PUBLIC_REPO_REVIEW.md.

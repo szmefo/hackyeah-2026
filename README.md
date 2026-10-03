@@ -95,7 +95,7 @@ engine/.venv/Scripts/python.exe demos/synthetic-scenarios/generate.py
 
 ## Running locally
 Node **24.x**, npm, Python **3.12+**, Git and PowerShell **7**.
-Private repository: cloning requires GitHub access.
+Public repository: judges can read or clone it without signing in.
 
 ```powershell
 git clone https://github.com/szmefo/hackyeah-2026.git
