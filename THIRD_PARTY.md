@@ -67,3 +67,7 @@ eliminate default provider abuse-monitoring retention. Supabase remains unconnec
 | Resource | Version / source | License / terms | Purpose and data |
 | --- | --- | --- | --- |
 | Anthropic Messages API | Default claude-sonnet-4-6; configurable ANTHROPIC_MODEL | https://www.anthropic.com/legal/commercial-terms | Native server fetch; selected computed facts and separately consented nearby notes. Interpretation + separate review; no source files, GPS or keys sent as prompt data. Standard retention and exceptions disclosed in docs/AI_INTERPRETATION.md. |
+
+## Cream and lavender implementation — 2026-10-03T15:30:58+02:00
+
+Visual reference: owner-selected ImageGen mockup C:/_HackYeah2026/mockups/2026-10-03/ux-ui-v3/04-krem-i-lawenda.png, generated in the earlier design session. Implemented using existing system fonts and CSS; no new runtime packages, external font/image downloads, datasets or UltraSoul imports. The image is a design reference, not a data source or runtime asset. Detailed provenance and checks: docs/CREAM_LAVENDER_UI.md.

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./cream-lavender.css";
 import { DemoProvider } from "@/components/demo-context";
 
 export const metadata: Metadata = {

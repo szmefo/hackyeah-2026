@@ -121,22 +121,16 @@ export function RunExperience() {
     demo.moments.find((m) => m.id === selectedId) ?? demo.moments[0];
   return (
     <AppShell>
-      <div className="run-topbar">
-        <Link href="/runs" className="back-link">
-          <Icon name="back" size={16} />
-          Wróć do biegów
-        </Link>
-        <span>
-          {dateLabel(demo)} <span className="topbar-separator">/</span>{" "}
-          {demo.synthetic
-            ? "Analiza przykładowego biegu"
-            : "Analiza wgranego biegu"}
-        </span>
-      </div>
       <div className="run-layout">
         <section className="story-panel" aria-labelledby="story-title">
+          <div className="run-topbar">
+            <Link href="/runs" className="back-link">
+              <Icon name="back" size={16} />
+              Wróć do biegów
+            </Link>
+          </div>
           <div className="run-identity">
-            <p className="eyebrow">Twój bieg, opowiedziany razem</p>
+            <p className="run-date">{dateLabel(demo)}</p>
             <h2>{demo.title}</h2>
             <div className="run-stats">
               <span>
@@ -151,17 +145,16 @@ export function RunExperience() {
               </span>
             </div>
           </div>
-          <div className="selected-distance">
-            <span className="eyebrow">Wybrany moment</span>
-            <p>
-              {decimal(selected.distanceKm)}
-              <span>
-                {selected.distanceKm === null ? "brak dystansu" : "km"}
-              </span>
+          <div className="summary-heading">
+            <span className="eyebrow">Podsumowanie odcinka</span>
+            <p className="selected-moment" aria-live="polite">
+              <span aria-hidden="true" className="selected-moment-dot" />
+              {minuteLabel(selected.minute)}. minuta
+              <span aria-hidden="true">·</span>
+              {selected.distanceKm === null
+                ? "Dystans nieznany"
+                : `${decimal(selected.distanceKm)} km`}
             </p>
-            <small>
-              {minuteLabel(selected.minute)}. minuta <span>·</span> Okno ±10 min
-            </small>
           </div>
           <h1 id="story-title" aria-live="polite">
             {selected.title}
@@ -193,8 +186,8 @@ export function RunExperience() {
           <p className="story-context" aria-live="polite">
             {selected.narrative}
           </p>
+          <p className="story-footnote">Same dane nie rozstrzygają przyczyny.</p>
           <div className="story-actions">
-            <BriefLink />
             <button
               className="button secondary"
               onClick={() => setShowObservation(true)}
@@ -202,12 +195,8 @@ export function RunExperience() {
               <Icon name="pen" />
               Dodaj obserwację
             </button>
+            <BriefLink />
           </div>
-          <p className="story-footnote">
-            Współwystępowanie pokazuje kontekst.
-            <br />
-            Same dane nie rozstrzygają przyczyny.
-          </p>
         </section>
         <Timeline selected={selected} onSelect={setSelectedId} />
       </div>

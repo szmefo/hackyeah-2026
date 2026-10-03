@@ -71,3 +71,6 @@ separation-flag annotations; 29 Node tests cover transport/guards/presentation.
 No personal health records were used for provider verification.
 
 Final public synthetic application-model check: 2026-10-03T15:43:09.4279041+02:00; source 9344056; Anthropic claude-sonnet-4-6; selected facts and no runner notes; UI and brief reviewed manually.
+## Cream and lavender UI — 2026-10-03T15:30:58+02:00
+
+Greg selected v3 concept 04 and requested implementation isolated from concurrent agents. Codex implemented a new presentation stylesheet and small run-summary/timeline markup changes on codex/cream-lavender-ui, based on c40ebe9, in a separate managed worktree. No backend/model logic or shared checkout files changed. Built-in ImageGen had generated the reference in the earlier design session (model identifier unavailable). Build, typecheck/lint, 10 integration tests and desktop/mobile browser checks passed. See docs/CREAM_LAVENDER_UI.md for scope, evidence and integration boundaries.

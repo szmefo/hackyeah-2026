@@ -51,7 +51,7 @@ function Plot({
     serverViewport,
   );
   const W = compact ? 400 : 760,
-    H = compact ? 130 : 116,
+    H = compact ? 150 : 132,
     LEFT = 42,
     RIGHT = 14,
     TOP = 13,
@@ -88,9 +88,26 @@ function Plot({
       .join(" ");
   const ticks =
     kind === "glucose"
-      ? [min, 70, 180, max].filter((v, i, a) => a.indexOf(v) === i)
+      ? [
+          70,
+          180,
+          ...(Math.abs(y(min) - y(70)) >= 18 ? [min] : []),
+          ...(Math.abs(y(max) - y(180)) >= 18 ? [max] : []),
+        ]
       : [min, (min + max) / 2, max];
-  const timeTicks = Array.from({ length: 6 }, (_, i) => (duration * i) / 5);
+  // Round tick intervals keep labels scannable; positions still use elapsed time.
+  const tickStep =
+    [1 / 60, 5 / 60, 0.25, 0.5, 1, 2, 5, 10, 15, 20, 30, 60, 120, 240, 480, 1440]
+      .find((step) => step >= duration / (compact ? 3 : 5)) ?? duration / 5;
+  const timeTicks = Array.from(
+    { length: Math.floor(duration / tickStep) + 1 },
+    (_, i) => i * tickStep,
+  );
+  if (duration - timeTicks[timeTicks.length - 1] < tickStep * 0.4) {
+    timeTicks[timeTicks.length - 1] = duration;
+  } else {
+    timeTicks.push(duration);
+  }
   const label =
     kind === "glucose" ? "Glukoza" : kind === "pace" ? "Tempo" : "Tętno";
   const unit =
@@ -114,9 +131,7 @@ function Plot({
           {label}
           <small>{unit}</small>
         </span>
-        {kind === "glucose" ? (
-          <DataBadge synthetic={run.synthetic} />
-        ) : (
+        {kind !== "glucose" && (
           <span className="plot-detail">
             {kind === "pace" && heights.length
               ? "wysokość trasy w tle"
@@ -345,17 +360,13 @@ export function Timeline({
   return (
     <section className="timeline-section" aria-labelledby="timeline-title">
       <div className="section-label">
-        <h2 id="timeline-title">Przebieg biegu</h2>
-        <span>Wspólna oś czasu</span>
+        <div>
+          <h2 id="timeline-title">Analiza biegu</h2>
+          <p>Trzy wykresy, jedna oś czasu.</p>
+        </div>
+        <DataBadge synthetic={run.synthetic} />
       </div>
       <div className="chart-card">
-        <div className="chart-topline">
-          <span>
-            <span className="live-dot" /> Wybrany moment ·{" "}
-            {minuteLabel(selected.minute)}. minuta
-          </span>
-          <span>Okno ±10 min</span>
-        </div>
         <Plot kind="glucose" selected={selected} onSelect={onSelect} />
         <Plot kind="pace" selected={selected} onSelect={onSelect} />
         <Plot kind="hr" selected={selected} onSelect={onSelect} />
@@ -364,7 +375,10 @@ export function Timeline({
             <i className="legend-glucose" /> Glukoza
           </span>
           <span>
-            <i className="legend-neutral" /> Tempo i tętno
+            <i className="legend-pace" /> Tempo
+          </span>
+          <span>
+            <i className="legend-hr" /> Tętno
           </span>
           <span>
             <i className="legend-terrain" /> Teren
@@ -372,7 +386,7 @@ export function Timeline({
           <span>{durationLabel(run.durationMinutes)}</span>
         </div>
       </div>
-      <div className="moment-picker" aria-label="Wybierz moment biegu">
+      <div className="moment-picker" role="group" aria-label="Wybierz moment biegu">
         {run.moments.map((m, i) => (
           <button
             key={m.id}
@@ -395,17 +409,20 @@ export function Timeline({
         ))}
       </div>
       <p className="chart-note">
-        Wybierz moment poniżej lub kliknij wykres. Tempo w min/km: niżej na
+        Wybierz moment, aby zmienić podsumowanie. Możesz też kliknąć wykres.
+        Tempo w min/km: niżej na
         wykresie oznacza wolniej.{" "}
         {run.synthetic
           ? "Wszystkie przebiegi są przykładowe."
           : "Brakujących pomiarów nie uzupełniamy."}
       </p>
       <div className="moment-evidence" aria-live="polite">
-        <span className="eyebrow">W wybranym oknie</span>
+        <span className="eyebrow">
+          Wybrane okno · {minuteLabel(selected.windowStart)}–{minuteLabel(selected.windowEnd)} min
+        </span>
         <div>
           <span>
-            Glukoza{" "}
+            Najniższa glukoza w oknie{" "}
             <strong>
               {selected.minGlucose === null
                 ? "Brak danych"

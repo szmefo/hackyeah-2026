@@ -38,3 +38,4 @@ brief implemented. No additional Background IP imports/adaptations in this phase
 Public synthetic verification and release hashes: docs/PHASE_2_REVIEW.md.
 
 Recorded review handoff at 2026-10-03T15:39:05.9263158+02:00 (Europe/Warsaw); Greg reviews before further product scope.
+| 2026-10-03T15:30:58+02:00 | Implement approved v3 concept 04 in an isolated worktree, with a separate cream-lavender.css presentation layer | Greg requested the summary-first cream/lavender layout and protection from concurrent edits; retain current phase-2 import/AI behavior and existing print styles |
