@@ -41,17 +41,17 @@ rely on an additional hour. The internal readiness target should leave upload ti
 
 ## Actual reveal record
 
-- Actual task reveal timestamp (with timezone): TBD
-- Full task text / official URL and saved version: TBD
+- Actual task reveal timestamp (with timezone): **2026-10-03T11:00:00+02:00**, confirmed by Greg in this chat on October 3. This record is committed at the actual current time; no backdating.
+- Full task text / saved version: owner-supplied `C:/Users/szmef/Downloads/Details - SPORT & HEALTHCARE.pdf`; public viewer https://drive.google.com/file/d/1y62pvmn8k7O2wdknlWzSY7aTtDX6adn8/view. Product specification: owner-approved `PRODUCT_BRIEF.md`, version 2, 2026-10-03.
 - Main regulations URL / version / relevant clauses: TBD
-- Specific task regulations URL / version / relevant clauses: TBD
-- Confirmed coding and submission windows: TBD
-- Evaluation criteria and weights: TBD
-- Existing code / starter eligibility: TBD
-- AI assistance / application AI restrictions: TBD
+- Specific task regulations / saved version: owner-supplied `C:/Users/szmef/Downloads/Rules - SPORT & HEALTHCARE.pdf`, reviewed October 3. Clause 14 states awarded proprietary copyrights are not transferred to the sponsor.
+- Coding and submission windows: Greg confirms reveal at 11:00 October 3; internal submission target before 11:00 October 4. Task rules contain `11:00 PM` wording inconsistent with the supplied agenda; do not silently treat that wording as resolved. Main-rules review/organizer clarification remains pending.
+- Evaluation criteria and weights: Idea & Innovation 30%, Relation to Category 20%, Practical Applicability / Usability 20%, Design 20%, Completeness & Implementation Value 10%.
+- Existing code / starter eligibility: task Details permit properly cited existing resources and require distinguishing pre-existing work. Starter and approved imports remain separately disclosed.
+- AI assistance / application AI restrictions: task Details permit AI assistance, require disclosure of significant AI/resources, and leave responsibility and understanding with the team. Phase 1 uses development assistance, no application model calls.
 - Third-party resources / datasets restrictions: TBD
 - IP ownership / license / submission obligations: TBD
-- Required files, repository visibility, demo and pitch format: TBD
+- Required files and format: title, team name, members, description and a PDF of at most 10 slides; demo/repository/screenshots optional; Polish or English. No submission produced in phase 1.
 - Submission platform and confirmed deadline: TBD
 
 ## When Greg pastes the full task
@@ -85,3 +85,14 @@ rely on an additional hour. The internal readiness target should leave upload ti
    real. Compare baseline and final commits for the jury; disclose preparation/imports.
 
 No competition feature or final pitch is prepared before the full task is known.
+
+## Implementation baseline and phase 1
+
+The `task-reveal-2026` tag identifies the last state before application implementation,
+recorded now, not a claim that this commit existed at 11:00. Post-reveal product planning
+and ImageGen concept exploration occurred before this tag; they are disclosed in AI_USAGE.md.
+Greg selected visual concept 02 (Opowieść) and authorized a working site for review.
+Phase 1 is a synthetic single-run journey, clickable moments, in-memory demo observations
+and a printable clinician brief. Real FIT/CGM upload, health-data persistence, authentication
+and model narration remain later phases. Approved Python imports are provenance groundwork,
+not claimed as new hackathon logic or as already used by this UI demo.
