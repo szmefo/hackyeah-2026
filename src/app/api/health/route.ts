@@ -5,7 +5,8 @@ export function GET() {
     {
       status: "ok",
       service: "cukier-w-biegu",
-      phase: "phase-1-synthetic-demo",
+      phase: "phase-2-fit-cgm-import",
+      storage: "none",
     },
     { headers: { "Cache-Control": "no-store" } },
   );

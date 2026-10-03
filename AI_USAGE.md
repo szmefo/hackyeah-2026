@@ -28,10 +28,22 @@ here. Never include credentials or personal health data in that export.
 | Added at | Provider / model version | Purpose / endpoint | Data sent | Cost / limits | Relevant rules / notes |
 | --- | --- | --- | --- | --- | --- |
 
-Empty: no model SDK, API key or live model call in either the starter or phase-1 demo.
+Phase 1 record: no model SDK, API key or live model call in either the starter or phase-1 demo.
 Owner's revised target role is documented in [docs/AI_INTERPRETATION.md](docs/AI_INTERPRETATION.md):
 AI analysis of patterns/alternatives, synthesis, separate AI review and deterministic checks.
-Provider/version and data payload have not yet been selected.
+Provider/version and data payload were not selected in phase 1.
+
+## Phase 2 development session
+
+| Timestamp with timezone | Tool / model | Contribution | Paths / commits | Human decision and verification |
+| --- | --- | --- | --- | --- |
+| 2026-10-03T14:42:33+02:00 | Codex orchestrator plus engine, web and QA subagents; exact model deployment identifier unavailable | FIT/CSV alignment, measured facts, upload UI, AI interpretation/review prompts and guards, integration/deployment | engine/app/services/analysis.py and glucose.py, engine/main.py, src/, scripts/test_ai.mjs, scripts/test_routes.mjs, new engine tests; commits recorded in Git | Greg approved phase 2 and subagents, selected OpenAI; root inspected changes, independent QA exercised contrast scenarios and negative inputs; verification report records actual results |
+
+Application integration: OpenAI Responses, model default `gpt-4.1-2025-04-14`
+(override `OPENAI_MODEL` recorded with each displayed result). Two distinct model calls:
+pattern interpretation and adversarial quality review. No medical verification claimed.
+First live check uses only synthetic cases; health data requires separate UI consent.
+No SDK dependency: server uses fetch. No keys, original uploads or raw GPS in Git.
 
 ## Phase 1 verification closure
 

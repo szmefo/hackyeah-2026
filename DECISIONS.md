@@ -4,6 +4,12 @@ Use actual ISO 8601 timestamps with timezone. One short entry per meaningful dec
 
 | Timestamp | Decision | Reason |
 | --- | --- | --- |
+| 2026-10-03T14:42:33+02:00 | Orchestrator plus three independent workers, scoped file ownership, root-controlled review/commits/deployment | Owner requests parallel speed with verified quality |
+| 2026-10-03T14:42:33+02:00 | Phase 2: single FIT + Dexcom CSV, transient processing, no DB/auth/Garmin | Complete one golden path without storage/integration overhead |
+| 2026-10-03T14:42:33+02:00 | Separate FastAPI project on existing Vercel account, shared server secret | Official Python support allows upload MVP without another hosting account; Garmin MFA still needs a future long-lived service |
+| 2026-10-03T14:42:33+02:00 | OpenAI interpretation of window patterns plus separate AI review, signed facts and conservative guards | Owner requires intelligent interpretation; review alone cannot establish correctness |
+| 2026-10-03T14:42:33+02:00 | Accumulate positive changes between minute-median heights, keep net height change separately | A hill returning to its starting height must not disappear from the context |
+| 2026-10-03T14:42:33+02:00 | Synthetic checkbox accepted only for the exact supplied demo pair | Prevent ordinary uploads from being misrepresented as demo data |
 | 2026-10-03T13:33:16+02:00 | Phase 1: selected Opowieść design, one wholly synthetic run, three clickable moments and a printable clinician brief | Greg requests a live site for visual/journey review before the next phase |
 | 2026-10-03T13:33:16+02:00 | Byte-exact approved UltraSoul import, then HTTP adaptation in a separate commit | Preserve ownership and provenance; no UltraSoul repository changes |
 | 2026-10-03T13:33:16+02:00 | Generate demo facts in Python, render directly; no application AI or patient persistence in this phase | Review the UI without provider dependencies; synthetic claims remain reproducible and explicit |

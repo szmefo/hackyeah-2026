@@ -32,7 +32,7 @@ If the task requires a full license inventory, produce it from the final lockfil
 | Vercel | Hosting account / workspace | https://vercel.com/hack-yeah1 | 2026-10-02, Europe/Warsaw — before event | Prepared for later deployment | https://vercel.com/legal/terms | Hobby workspace verified; no deployment or GitHub connection |
 | Supabase | PostgreSQL database / GitHub association | https://supabase.com/dashboard/project/omutcnsoxmjzagfbzkwa | 2026-10-02, Europe/Warsaw — before event | Empty database prepared for later use | https://supabase.com/terms | Free project created; public schema empty; hackyeah-2026 repository linked with automatic DB deployment off; no application integration; see docs/CLOUD.md |
 
-No application APIs, LLMs, external datasets or external visual assets are connected.
+At the end of phase 1, no application APIs, LLMs, external datasets or external visual assets were connected.
 `data/example.json` is newly written synthetic preparation data. Fonts are the
 platform's system fonts. Cloud account preparation is recorded in
 [docs/CLOUD.md](docs/CLOUD.md). These sentences describe preparation; phase-1
@@ -43,3 +43,21 @@ When adding a resource, record exact version/model identifier or dataset revisio
 origin, license/terms link, attribution obligations and relevant restrictions.
 For external APIs, record whether any user data is sent and the demo dependency.
 Record AI-assisted development in `AI_USAGE.md` as well.
+
+## Phase 2 resources — 2026-10-03T14:42:33+02:00
+
+| Resource | Version / source | License / terms | Purpose and data |
+| --- | --- | --- | --- |
+| FastAPI | 0.142.2; https://github.com/fastapi/fastapi | MIT | Transient Python upload API; engine/requirements.txt |
+| Uvicorn | 0.54.0; https://github.com/Kludex/uvicorn | BSD-3-Clause | Local ASGI server, access logging disabled |
+| python-multipart | 0.0.32; https://github.com/Kludex/python-multipart | Apache-2.0 | Multipart parsing, accepted uploads kept below RAM spool threshold |
+| httpx | 0.28.1; https://github.com/encode/httpx | BSD-3-Clause | API test client |
+| tzdata | 2026.5; https://github.com/python/tzdata | Apache-2.0 package; IANA timezone data | ZoneInfo timezone conversion, including Windows |
+| Vercel Python service | cukier-w-biegu-engine; Python 3.12 | https://vercel.com/legal/terms | Separate transient FIT/CGM processor; no patient DB or file retention |
+| OpenAI Responses API | Configurable OPENAI_MODEL; default gpt-4.1-2025-04-14 | https://openai.com/policies/services-agreement/ | Interpretation and separate review; only selected computed facts, window summaries and consented nearby notes, never GPS or source files |
+| Synthetic FIT demo | Newly authored scripts/build_fit_demo.py + public/demo-run.fit | Project-generated synthetic data; Garmin SDK encoder terms apply | Same-time pair with public/demo-glucose.csv; no patient/device/private data |
+| Prettier | 3.9.1, ephemeral formatting invocation in phase 2 | MIT | Source formatting only, no runtime dependency |
+
+OpenAI disclosure and exact payload: docs/AI_INTERPRETATION.md. Integration is implemented;
+live provider verification depends on the owner's server key. `store:false` does not
+eliminate default provider abuse-monitoring retention. Supabase remains unconnected.
