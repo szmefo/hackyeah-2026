@@ -183,6 +183,7 @@ async function callModel(
   schema: object,
   name: string,
   provider: AIProvider,
+  deadline: number,
 ) {
   return callStructured(
     { provider, key, model, configured: Boolean(key) },
@@ -190,6 +191,7 @@ async function callModel(
     data,
     schema,
     name,
+    deadline - Date.now(),
   );
 }
 
@@ -199,6 +201,7 @@ export async function interpret(
   model: string,
   provider: AIProvider = "OpenAI",
 ) {
+  const deadline = Date.now() + 54000;
   let analysis = await callModel(
     key,
     model,
@@ -207,6 +210,7 @@ export async function interpret(
     analysisSchema,
     "run_interpretation",
     provider,
+    deadline,
   );
   let rejection = "";
   if (
@@ -227,6 +231,7 @@ Nie dodawaj liczb ani porad. Nie zmieniaj faktów, zachowaj ograniczenia i niepe
       analysisSchema,
       "run_interpretation",
       provider,
+      deadline,
     );
     if (
       !validateAnalysis(analysis, context, (code) =>
@@ -249,6 +254,7 @@ przeglądu jako weryfikacji medycznej. Zwróć passed oraz listę issues.`,
     reviewSchema,
     "run_review",
     provider,
+    deadline,
   );
   if (
     !review ||

@@ -25,6 +25,7 @@ export async function callStructured(
   data: unknown,
   schema: object,
   name: string,
+  timeoutMs = 22000,
 ): Promise<unknown> {
   const { provider, key, model } = config;
   const failure = (code: string, status?: number) =>
@@ -79,14 +80,19 @@ export async function callStructured(
                 max_output_tokens: 1800,
               },
         ),
-        signal: AbortSignal.timeout(16000),
+        signal: AbortSignal.timeout(Math.max(1, Math.min(22000, timeoutMs))),
         cache: "no-store",
       },
     );
-  } catch {
+  } catch (error) {
     // A thrown fetch error can include request details. Never carry its message,
     // stack, cause, headers or body into our public/safe diagnostic error.
-    throw failure("provider_unavailable");
+    throw failure(
+      error instanceof Error &&
+        ["TimeoutError", "AbortError"].includes(error.name)
+        ? "provider_timeout"
+        : "provider_unavailable",
+    );
   }
   if (!response.ok) throw failure("provider_unavailable", response.status);
   let output: unknown;

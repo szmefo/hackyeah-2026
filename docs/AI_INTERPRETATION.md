@@ -92,3 +92,8 @@ then the same code checks and separate AI review are required. Repeated failure 
 the deterministic fallback. Each call is limited to 16 seconds; at most three calls
 fit within the 60-second route budget. Logs contain only finite rejection labels,
 never model text, notes, measurements or secrets.
+
+
+Final latency adjustment: each request has at most 22 seconds and receives only the
+remaining time in a shared 54-second budget. At most one correction and one review.
+This replaces the initial 16-second cap; timeouts have a safe distinct diagnostic code.
