@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 
 export function GET() {
   return Response.json(
-    { status: "ok", service: "hackyeah-2026", phase: "pre-hackathon-starter" },
+    { status: "ok", service: "cukier-w-biegu", phase: "phase-1-synthetic-demo" },
     { headers: { "Cache-Control": "no-store" } },
   );
 }
