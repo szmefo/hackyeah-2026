@@ -383,7 +383,15 @@ def analyze_upload(fit_bytes: bytes, csv_bytes: bytes, timezone_name: str = "Eur
     nearby = [event for event in events if -10 <= event["minute"] <= duration + 10]
     in_run = [event for event in nearby if 0 <= event["minute"] <= duration]
     if not in_run:
-        raise AnalysisError("no_glucose_overlap", "Odczyty CSV nie pokrywają się z biegiem. Sprawdź datę i strefę czasową eksportu.")
+        # Name both time ranges so the user can see which export to pick.
+        fmt = "%d.%m.%Y %H:%M"
+        local = [reading.timestamp.astimezone(zone) for reading in readings]
+        span = (f" Bieg: {start.astimezone(zone).strftime(fmt)}–"
+                f"{(start + timedelta(minutes=duration)).astimezone(zone).strftime('%H:%M')}."
+                + (f" Odczyty w CSV: {min(local).strftime(fmt)}–{max(local).strftime(fmt)} ({timezone_name})."
+                   if local else ""))
+        raise AnalysisError("no_glucose_overlap", "Odczyty CSV nie pokrywają się z biegiem." + span +
+                            " Wyeksportuj CSV z dnia biegu albo sprawdź strefę czasową eksportu.")
     numeric = [event for event in in_run if event["value"] is not None]
     covered, gaps = _coverage(nearby, duration)
     # Internal max-HR default is demanded by imported API; omit zones/confidence.
