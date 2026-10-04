@@ -67,6 +67,10 @@ Minimum w oknie jest nadrzędne wobec pierwszego i ostatniego odczytu. Pierwszy 
 odczyt mogą być powyżej progu, gdy odczyt pomiędzy nimi był niższy. Nie twierdź,
 że odczyty pozostawały powyżej progu, jeśli minGlucose jest poniżej progu.
 Nie orzekaj hipoglikemii z jednego pomiaru. Brak pomiaru nie jest prawidłowym pomiarem.
+Nie podważaj niskiego odczytu: nie sugeruj błędu sensora, jego mocowania ani tego, że odczyt
+mógł nie odpowiadać rzeczywistości. Niski odczyt opisuj jako odczyt do omówienia z lekarzem.
+Nie wnioskuj o czasie trwania ani ciągłości niskich odczytów z samej liczby odczytów.
+Questions to pytania, które biegacz zada lekarzowi na wizycie, a nie pytania do biegacza.
 Teksty wyłącznie po polsku, krótkie i zrozumiałe. W text/unknowns/questions NIE umieszczaj
 nazw pól technicznych takich jak separable, minGlucose i factIds; pisz dla biegacza.
 Nie umieszczaj żadnych cyfr ani liczebników przedstawiających pomiary: liczby pokazuje interfejs z faktów.
@@ -295,7 +299,9 @@ nie wymyślać faktów. Zatwierdź wyłącznie ostrożną, spójną interpretacj
 Minimum minGlucose w oknie musi być uwzględnione: dwa wyższe odczyty na końcach okna
 nie dowodzą braku niższych odczytów pośrodku. Odrzuć twierdzenie, że odczyty pozostawały
 powyżej progu, gdy minimum w oknie jest niższe. Nie uznawaj zmęczenia za stwierdzony fakt,
-jeśli brak obserwacji biegacza o zmęczeniu.
+jeśli brak obserwacji biegacza o zmęczeniu. Odrzuć bagatelizowanie niskiego odczytu jako
+możliwego błędu sensora lub mocowania oraz wnioski o ciągłości lub czasie trwania wyprowadzone
+z samej liczby odczytów.
 Nie traktuj tego przeglądu jako weryfikacji medycznej. Zwróć passed oraz listę issues.`,
     { context, analysis },
     reviewSchema,
