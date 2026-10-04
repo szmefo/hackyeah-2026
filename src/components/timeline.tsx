@@ -200,7 +200,12 @@ function Plot({
   );
   const heights = terrain.flat().map((p) => p.value);
   const hMin = heights.reduce((lo, v) => Math.min(lo, v), heights[0] ?? 0) - 5;
-  const hMax = heights.reduce((hi, v) => Math.max(hi, v), heights[0] ?? 0) + 5;
+  // A minimum 60 m span keeps a few metres of altitude noise visually flat,
+  // so a flat run never draws as hills; real climbs still fill the chart.
+  const hMax = Math.max(
+    heights.reduce((hi, v) => Math.max(hi, v), heights[0] ?? 0) + 5,
+    hMin + 60,
+  );
   const plotMid = TOP + (H - TOP - BOTTOM) / 2;
   // Low/High flags: a marker for every flag, a text label only where it fits.
   const flagLabels: { minute: number; flag: string }[] = [];
