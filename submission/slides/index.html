@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glucose on the Run</title>
+<meta name="description" content="HackYeah 2026 SPORT &amp; HEALTHCARE slide deck: one run, one glucose export, one timeline and a one-page brief for the diabetologist.">
+<style>
+  :root {
+    --bg: #faf9f6;
+    --panel: #f0eef4;
+    --panel-2: #e6e1ee;
+    --ink: #302a40;
+    --text: #403b4d;
+    --muted: #625c6e;
+    --line: #dedbe4;
+    --accent: #665b80;
+    --accent-soft: #e9e4f1;
+    --glucose: #4f7377;
+    --pace: #827463;
+    --heart: #936c88;
+    --warm: #b98a6a;
+    --paper: #f4efe6;
+    --serif: Georgia, "Times New Roman", serif;
+    --sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #d9d5e0;
+    color: var(--text);
+    font-family: var(--sans);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .deck { display: flex; flex-direction: column; align-items: center; gap: 28px; padding: 28px 0; }
+  .slide {
+    position: relative;
+    width: 1280px;
+    height: 720px;
+    overflow: hidden;
+    background: var(--bg);
+    padding: 52px 64px 64px;
+    box-shadow: 0 6px 30px rgba(48, 42, 64, 0.16);
+  }
+  @media print {
+    @page { size: 1280px 720px; margin: 0; }
+    body { background: var(--bg); }
+    .deck { display: block; padding: 0; gap: 0; }
+    .slide { box-shadow: none; break-after: page; page-break-after: always; }
+    .slide:last-child { break-after: auto; page-break-after: auto; }
+  }
+  @media (max-width: 1300px) and (not print) {
+    .deck { zoom: 0.5; }
+  }
+
+  /* Typography */
+  .eyebrow {
+    font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; margin: 0 0 14px;
+  }
+  h1, h2, h3 { font-family: var(--serif); color: var(--ink); font-weight: 400; margin: 0; }
+  h1 { font-size: 64px; line-height: 1.04; letter-spacing: -0.01em; }
+  h2 { font-size: 42px; line-height: 1.1; letter-spacing: -0.005em; }
+  h3 { font-size: 22px; line-height: 1.2; }
+  p { margin: 0; font-size: 18px; line-height: 1.5; }
+  .lead { font-size: 21px; line-height: 1.5; color: var(--text); }
+  .muted { color: var(--muted); }
+  .small { font-size: 14px; line-height: 1.45; }
+  .pl { font-style: italic; color: var(--muted); }
+  ul.clean { list-style: none; padding: 0; margin: 0; }
+  ul.clean li { position: relative; padding-left: 20px; font-size: 17px; line-height: 1.45; margin-bottom: 9px; }
+  ul.clean li::before { content: ""; position: absolute; left: 2px; top: 10px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+
+  /* Chrome */
+  .foot {
+    position: absolute; left: 64px; right: 64px; bottom: 22px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    border-top: 1px solid var(--line); padding-top: 10px;
+  }
+  .badge {
+    display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 5px 12px;
+  }
+  .badge.syn { background: var(--panel-2); color: var(--ink); }
+
+  /* Shots */
+  .shot {
+    border-radius: 14px; overflow: hidden; background: #fff;
+    box-shadow: 0 2px 0 var(--line), 0 10px 28px rgba(48, 42, 64, 0.12);
+    border: 1px solid var(--line);
+  }
+  .shot img { display: block; width: 100%; height: auto; }
+  .phone { border-radius: 26px; border: 6px solid #2f2a3d; background: #2f2a3d; overflow: hidden; box-shadow: 0 10px 28px rgba(48,42,64,0.18); }
+  .phone img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 20px; }
+  .cap { font-size: 13px; color: var(--muted); line-height: 1.4; margin-top: 10px; }
+
+  /* Layout helpers */
+  .row { display: flex; gap: 40px; }
+  .col { display: flex; flex-direction: column; }
+  .card { background: var(--panel); border-radius: 16px; padding: 22px 24px; }
+  .card h3 { margin-bottom: 8px; }
+  .card p, .card li { font-size: 16px; }
+  .quote {
+    font-family: var(--serif); font-size: 22px; line-height: 1.35; color: var(--ink);
+    border-left: 3px solid var(--accent); padding: 2px 0 2px 18px;
+  }
+  .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 18px; margin: 4px 0 0; }
+  .fact { background: var(--panel); border-radius: 12px; padding: 10px 14px; }
+  .fact .k { font-size: 12.5px; color: var(--muted); letter-spacing: 0.02em; }
+  .fact .v { font-family: var(--serif); font-size: 26px; color: var(--ink); margin-top: 2px; }
+  .fact .v small { font-family: var(--sans); font-size: 14px; color: var(--muted); }
+
+  /* Slide 1 */
+  .s1 .title-block { width: 560px; }
+  .s1 .name { font-family: var(--serif); font-size: 26px; color: var(--accent); margin: 18px 0 30px; }
+  .s1 .twocharts { position: absolute; right: 64px; top: 76px; width: 560px; }
+  .appcard { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 16px 20px 12px; box-shadow: 0 8px 22px rgba(48,42,64,0.08); }
+  .appcard .lbl { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+  .appcard .lbl b { color: var(--ink); font-weight: 600; letter-spacing: 0.02em; text-transform: none; font-size: 16px; }
+  .between { text-align: center; font-family: var(--serif); font-style: italic; color: var(--accent); font-size: 18px; padding: 12px 0; }
+
+  .band { position: absolute; left: 64px; right: 64px; bottom: 74px; background: var(--panel); border-radius: 16px;
+    padding: 18px 26px; display: flex; gap: 14px; align-items: center; justify-content: center;
+    font-family: var(--serif); font-size: 22px; color: var(--ink); }
+  .band i { font-style: normal; color: var(--accent); }
+  .center { height: 606px; align-items: center; }
+
+  /* Flow (slide 3) */
+  .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 20px; }
+  .step { background: var(--panel); border-radius: 14px; padding: 16px 16px 14px; position: relative; }
+  .step .n { font-family: var(--serif); font-size: 15px; color: var(--accent); margin-bottom: 4px; }
+  .step h3 { font-size: 19px; margin-bottom: 6px; }
+  .step p { font-size: 14.5px; line-height: 1.42; color: var(--text); }
+  .step:not(:last-child)::after { content: "→"; position: absolute; right: -13px; top: 40%; color: var(--accent); font-size: 18px; }
+  .ailane { margin-top: 18px; display: grid; grid-template-columns: 540px 1fr; gap: 26px; align-items: start; }
+  .chain { display: flex; flex-direction: column; gap: 8px; }
+  .chain .c { display: flex; gap: 12px; align-items: baseline; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 7px 14px; font-size: 15px; line-height: 1.38; }
+  .chain .c b { color: var(--ink); min-width: 92px; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+  .crop { position: relative; overflow: hidden; border-radius: 12px; border: 1px solid var(--line); box-shadow: 0 8px 22px rgba(48,42,64,0.12); }
+  .crop img { position: absolute; display: block; }
+
+  /* Architecture (slide 8) */
+  .arch { display: grid; grid-template-columns: 1fr 34px 1fr 34px 1fr; align-items: stretch; margin-top: 22px; }
+  .node { background: var(--panel); border-radius: 14px; padding: 14px 16px; }
+  .node h3 { font-size: 18px; margin-bottom: 4px; }
+  .node .tech { font-size: 12.5px; color: var(--accent); letter-spacing: 0.04em; margin-bottom: 6px; }
+  .node ul { margin: 0; padding-left: 16px; }
+  .node li { font-size: 13.5px; line-height: 1.4; margin-bottom: 2px; }
+  .arrow { display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 20px; }
+  .ip { display: grid; grid-template-columns: 1fr 1.35fr; gap: 18px; margin-top: 18px; }
+  .ip .box { border-radius: 14px; padding: 14px 18px; }
+  .ip .bg { background: #fff; border: 1.5px dashed var(--pace); }
+  .ip .new { background: #fff; border: 1.5px solid var(--accent); }
+  .ip h3 { font-size: 18px; margin-bottom: 6px; }
+  .ip p, .ip li { font-size: 13.5px; line-height: 1.42; }
+  .ip ul { margin: 0; padding-left: 16px; }
+  code { font-family: Consolas, "Cascadia Mono", monospace; font-size: 0.92em; background: var(--panel); padding: 1px 5px; border-radius: 5px; }
+
+  .verify { margin-top: 18px; display: flex; gap: 20px; align-items: baseline; flex-wrap: wrap; font-size: 15px; color: var(--text);
+    background: var(--panel); border-radius: 14px; padding: 14px 18px; }
+  .verify b { font-family: var(--serif); font-size: 22px; color: var(--ink); font-weight: 400; margin-right: 3px; }
+  .verify .vk { font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+
+  /* Safety grid (slide 9) */
+  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 24px; }
+  .three .card { padding: 20px 22px; }
+  .three .card ul.clean li { font-size: 15.5px; margin-bottom: 8px; }
+
+  .payload { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .payload > div { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 18px 22px; }
+  .payload h3 { font-size: 19px; margin-bottom: 6px; }
+  .payload p { font-size: 15.5px; line-height: 1.45; }
+
+  /* Next steps (slide 10) */
+  .four { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 28px; }
+  .four .card { padding: 18px 20px; }
+  .four .card .n { font-family: var(--serif); color: var(--accent); font-size: 15px; margin-bottom: 6px; }
+  .four .card p { font-size: 15px; line-height: 1.45; }
+  .closing { margin-top: 34px; font-family: var(--serif); font-size: 30px; color: var(--accent); text-align: center; }
+  .links { margin-top: 26px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .links .card { background: #fff; border: 1px solid var(--line); }
+  .links a { color: var(--accent); text-decoration: none; font-weight: 600; }
+</style>
+</head>
+<body>
+<main class="deck">
+
+<!-- 1. Problem -->
+<section class="slide s1" aria-label="Slide 1: the problem">
+  <div class="title-block">
+    <p class="eyebrow">HackYeah 2026 · Sport &amp; Healthcare</p>
+    <h1>Glucose on the Run</h1>
+    <p class="name">Cukier w biegu</p>
+    <h2 style="font-size:36px; margin-bottom:18px;">Two charts that never meet.</h2>
+    <p class="lead">At kilometre 14 the pace falls apart. Was it the hill, the start, or glucose?
+      The running watch records one half of the run, the glucose sensor records the other.
+      Nobody puts them on the same clock.</p>
+    <p class="lead" style="margin-top:16px;">So the runner lines up timelines by hand, and at the clinic
+      “How is exercise going?” gets the answer “It depends.”</p>
+  </div>
+  <div class="twocharts" aria-hidden="true">
+    <div class="appcard">
+      <div class="lbl"><b>Running watch app</b><span>pace · heart rate · terrain</span></div>
+      <svg viewBox="0 0 520 120" width="520" height="120">
+        <path d="M0 110 L0 92 C60 88 90 70 140 80 S240 96 300 84 S380 40 420 50 S480 92 520 88 L520 110 Z" fill="#e8e4ec"/>
+        <path d="M0 40 C40 36 80 44 120 38 S200 34 240 40 S300 36 340 42 S380 46 400 62 S440 84 460 70 S500 44 520 46" fill="none" stroke="var(--pace)" stroke-width="2.6"/>
+        <path d="M0 74 C60 70 120 66 180 62 S300 56 360 50 S440 34 520 38" fill="none" stroke="var(--heart)" stroke-width="2.2"/>
+      </svg>
+    </div>
+    <div class="between">different app · different clock · different screen</div>
+    <div class="appcard">
+      <div class="lbl"><b>Glucose sensor app</b><span>CGM readings every 5 min</span></div>
+      <svg viewBox="0 0 520 120" width="520" height="120">
+        <rect x="0" y="22" width="520" height="66" fill="#eef1f1"/>
+        <line x1="0" y1="22" x2="520" y2="22" stroke="#c9d3d4" stroke-dasharray="4 4"/>
+        <line x1="0" y1="88" x2="520" y2="88" stroke="#c9d3d4" stroke-dasharray="4 4"/>
+        <g fill="var(--glucose)">
+          <circle cx="10" cy="44" r="3.4"/><circle cx="40" cy="42" r="3.4"/><circle cx="70" cy="40" r="3.4"/><circle cx="100" cy="43" r="3.4"/>
+          <circle cx="130" cy="47" r="3.4"/><circle cx="160" cy="50" r="3.4"/><circle cx="190" cy="52" r="3.4"/><circle cx="220" cy="56" r="3.4"/>
+          <circle cx="250" cy="60" r="3.4"/><circle cx="280" cy="63" r="3.4"/><circle cx="310" cy="68" r="3.4"/><circle cx="340" cy="74" r="3.4"/>
+          <circle cx="370" cy="82" r="3.4"/><circle cx="400" cy="92" r="3.4"/><circle cx="430" cy="96" r="3.4"/><circle cx="460" cy="90" r="3.4"/>
+          <circle cx="490" cy="84" r="3.4"/>
+        </g>
+      </svg>
+    </div>
+    <p class="cap">Schematic illustration, not data. The real app joins both on one timeline (next slides).</p>
+  </div>
+  <div class="band">
+    <span>One FIT file</span><i>+</i><span>one Dexcom Clarity CSV</span><i>→</i><span>one timeline</span><i>→</i><span>one moment</span><i>→</i><span>one page for the diabetologist</span>
+  </div>
+  <div class="foot"><span>Solo project · Grzegorz Walencik</span><span>1 / 10</span></div>
+</section>
+
+<!-- 2. Who & why -->
+<section class="slide" aria-label="Slide 2: who and why">
+  <div class="row" style="gap:48px;">
+    <div class="col" style="width:640px;">
+      <p class="eyebrow">Who it is for</p>
+      <h2>An adult runner with type 1 diabetes and a CGM.</h2>
+      <p class="lead" style="margin:18px 0 22px;">Both data streams already exist: a FIT file from the watch and a Dexcom Clarity export.
+        What is missing is one shared timeline and a way to bring it to the diabetologist.</p>
+      <ul class="clean">
+        <li><b>After a hard run:</b> was the slowdown the terrain, the pacing, or a low glucose reading? Two apps, two clocks, no answer.</li>
+        <li><b>At the clinic:</b> a short visit, a vague memory, no concrete moment to discuss.</li>
+        <li><b>What helps:</b> what the data show, what they cannot show, and one good question to ask.</li>
+      </ul>
+      <div class="card" style="margin-top:18px;">
+        <p style="font-size:16px;"><b>Deliberately narrow.</b> One person, one run, one CGM export. The goal is a better
+          conversation with a clinician, not a therapy tool: no doses, no food advice, no diagnosis.</p>
+      </div>
+    </div>
+    <div class="row" style="gap:22px; margin-top:4px;">
+      <div>
+        <div class="phone" style="width:248px; height:536px;"><img src="../screenshots/run-scenario-03-phone.png" alt="Phone view of the run summary for scenario 3"></div>
+        <p class="cap" style="width:248px;">Phone, 390 px: the selected moment first.</p>
+      </div>
+      <div>
+        <div class="phone" style="width:248px; height:536px;"><img src="../screenshots/charts-scenario-03-phone.png" alt="Phone view of three aligned charts: glucose, pace, heart rate"></div>
+        <p class="cap" style="width:248px;">Three charts, one time axis.</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Glucose on the Run · App language: Polish · Screenshots: synthetic data</span><span>2 / 10</span></div>
+</section>
+
+<!-- 3. How it works -->
+<section class="slide" aria-label="Slide 3: how it works">
+  <p class="eyebrow">How it works</p>
+  <h2 style="font-size:38px;">Code computes the facts. Claude only interprets them.</h2>
+  <p class="lead" style="margin-top:8px; font-size:19px;">No number appears on screen unless the engine computed it.</p>
+  <div class="flow">
+    <div class="step"><div class="n">01</div><h3>Two files</h3><p>One running FIT and one Dexcom Clarity CSV. The runner confirms the CSV time zone and gives processing consent.</p></div>
+    <div class="step"><div class="n">02</div><h3>One clock</h3><p>A Python engine parses both, aligns them and reads CGM in a ±10&nbsp;min window. Gaps stay gaps.</p></div>
+    <div class="step"><div class="n">03</div><h3>One moment</h3><p>For a selected moment: what the data show, what we do not know, what to ask the diabetologist.</p></div>
+    <div class="step"><div class="n">04</div><h3>One page</h3><p>A printable brief for the visit, built from the same computed facts.</p></div>
+  </div>
+  <div class="ailane">
+    <div>
+      <p class="small muted" style="margin-bottom:8px; letter-spacing:0.06em; text-transform:uppercase; font-weight:600;">Optional AI layer · separate consent</p>
+      <div class="chain">
+        <div class="c"><b>Interpret</b><span>Anthropic Claude compares co-occurring signals and alternatives. Every claim must cite computed fact IDs.</span></div>
+        <div class="c"><b>Review</b><span>A second, separate Claude call checks support, contradictions and missing alternatives.</span></div>
+        <div class="c"><b>Guard</b><span>Code checks schema, fact references, model-written numbers and safety rules.</span></div>
+        <div class="c"><b>Fallback</b><span>If anything fails, the deterministic facts, story and brief stay. AI never blocks the app.</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="crop" style="width:578px; height:222px;">
+        <img src="../screenshots/ai-analysis-production-2026-10-03.jpg" alt="Real production Claude analysis in the app, with each claim followed by its basis in computed facts" style="width:874px; left:-138px; top:-170px;">
+      </div>
+      <p class="cap">Real production Claude analysis of the synthetic sample pair, 3 Oct 2026 (earlier dark UI theme).
+        Each claim ends with “Podstawa” (basis): the computed facts it cites.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Glucose on the Run · AI output is a quality-reviewed interpretation, not medical validation</span><span>3 / 10</span></div>
+</section>
+
+<!-- 4. Scenario 03 -->
+<section class="slide" aria-label="Slide 4: scenario 3, hill and low glucose">
+  <div class="row center" style="gap:36px;">
+    <div class="col" style="width:376px;">
+      <p class="eyebrow">Scenario 03 · <span class="badge syn">synthetic data</span></p>
+      <h2 style="font-size:38px;">A hill and a low reading, in the same window.</h2>
+      <div class="facts" style="margin-top:18px;">
+        <div class="fact"><div class="k">Lowest glucose, window</div><div class="v">62 <small>mg/dL</small></div></div>
+        <div class="fact"><div class="k">Measured ascent</div><div class="v">40 <small>m</small></div></div>
+        <div class="fact"><div class="k">Pace at the moment</div><div class="v">6:19 <small>min/km</small></div></div>
+        <div class="fact"><div class="k">Heart rate</div><div class="v">159 <small>bpm</small></div></div>
+      </div>
+      <p class="small muted" style="margin-top:8px;">Window 75–94 min, around minute 85 (15.1 km).</p>
+      <p class="quote" style="margin-top:16px; font-size:19px;">“Both signals occurred together, so the data cannot separate their effects or point to the cause of the slowdown.”</p>
+      <p class="small muted" style="margin-top:12px;">Question it prepares: <i>“How can I tell a glucose drop from fatigue on a hill when they happen at the same time?”</i></p>
+    </div>
+    <div style="width:740px;">
+      <div class="shot"><img src="../screenshots/run-scenario-03-desktop.png" alt="Desktop run screen, scenario 3: lowest glucose 62 mg/dL in the selected window at the same time as a hill and a slowdown"></div>
+      <p class="cap">Local build, 1440 × 900. The engine does not pick a winner when two signals overlap; it says they cannot be separated.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Glucose on the Run · App quotes translated from Polish</span><span>4 / 10</span></div>
+</section>
+
+<!-- 5. Scenario 02 -->
+<section class="slide" aria-label="Slide 5: scenario 2, hill with glucose in range">
+  <div class="row center" style="gap:36px;">
+    <div style="width:740px;">
+      <div class="shot"><img src="../screenshots/run-scenario-02-desktop.png" alt="Desktop run screen, scenario 2: slowdown on a hill while glucose stays in range, lowest 119 mg/dL"></div>
+      <p class="cap">Scenarios 02 and 03 use the same synthetic watch data. Only the glucose trace differs, and so does the story.</p>
+    </div>
+    <div class="col" style="width:376px;">
+      <p class="eyebrow">Scenario 02 · <span class="badge syn">synthetic data</span></p>
+      <h2 style="font-size:38px;">The hill is there. Low glucose is not.</h2>
+      <div class="facts" style="margin-top:18px;">
+        <div class="fact"><div class="k">Lowest glucose, window</div><div class="v">119 <small>mg/dL</small></div></div>
+        <div class="fact"><div class="k">Measured ascent</div><div class="v">41 <small>m</small></div></div>
+        <div class="fact"><div class="k">Pace at the moment</div><div class="v">6:47 <small>min/km</small></div></div>
+        <div class="fact"><div class="k">Heart rate</div><div class="v">163 <small>bpm</small></div></div>
+      </div>
+      <p class="small muted" style="margin-top:8px;">Window 74–94 min; every reading within 70–180 mg/dL.</p>
+      <p class="quote" style="margin-top:16px; font-size:19px;">“Terrain rose and pace dropped, while all glucose readings stayed within 70–180 mg/dL. This is co-occurrence, not proof of cause.”</p>
+      <p class="small muted" style="margin-top:12px;">The contrast is the insight: glucose drops out of the picture, the hill remains, and the app still makes no causal claim.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Glucose on the Run · App quotes translated from Polish</span><span>5 / 10</span></div>
+</section>
+
+<!-- 6. Scenario 04 -->
+<section class="slide" aria-label="Slide 6: scenario 4, a gap in sensor data">
+  <div class="row" style="gap:36px;">
+    <div class="col" style="width:500px;">
+      <p class="eyebrow">Scenario 04 · <span class="badge syn">synthetic data</span></p>
+      <h2 style="font-size:38px;">What we don’t know stays visible.</h2>
+      <p class="lead" style="margin-top:16px; font-size:19px;">Glucose readings stop at minute 55. The hill and the slowdown come later.</p>
+      <div class="facts" style="margin-top:16px; grid-template-columns:1fr;">
+        <div class="fact"><div class="k">Glucose missing in this run</div><div class="v">55–94 <small>min</small></div></div>
+        <div class="fact"><div class="k">Lowest glucose in the window</div><div class="v" style="font-size:22px;">“Brak danych” <small>(no data)</small></div></div>
+      </div>
+      <p class="quote" style="margin-top:16px; font-size:18px;">“We don’t know what glucose was then, so this section cannot be compared with it.”</p>
+      <p class="small muted" style="margin-top:12px;">No interpolation, no guessed value. The question becomes: <i>“How can I reduce sensor gaps during runs, and how should such gaps be treated?”</i></p>
+    </div>
+    <div style="width:616px;">
+      <div class="shot"><img src="../screenshots/run-scenario-04-desktop.png" alt="Desktop run screen, scenario 4: glucose chart shows a hatched no-data area from minute 55 to 94"></div>
+      <div class="shot" style="margin-top:12px;"><img src="../screenshots/moment-detail-scenario-04-desktop.png" alt="What we see, what we don't know, what to ask the doctor for scenario 4"></div>
+      <p class="cap">Every moment lists its unknowns, such as missing meal information and unrecorded feelings.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Glucose on the Run · App quotes translated from Polish</span><span>6 / 10</span></div>
+</section>
+
+<!-- 7. Brief -->
+<section class="slide" aria-label="Slide 7: the clinician brief">
+  <div class="row" style="gap:48px;">
+    <div style="width:346px;">
+      <div class="shot" style="border-radius:8px; height:606px;"><img src="../screenshots/brief-paper-scenario-03.png" alt="One-page clinician brief for scenario 3" style="height:606px; width:auto;"></div>
+    </div>
+    <div class="col" style="width:600px;">
+      <p class="eyebrow">For the visit</p>
+      <h2>One page for the diabetologist.</h2>
+      <p class="lead" style="margin:16px 0 20px;">The brief turns the selected moment into a short, factual handout. Print it or save it as PDF from the browser.</p>
+      <div class="card" style="margin-bottom:12px;">
+        <ul class="clean">
+          <li><b>01 What the data show</b> — the moment, its window and the computed facts.</li>
+          <li><b>Every reading below 70 mg/dL</b> listed with time and run minute; a count, not an episode duration.</li>
+          <li><b>02 What the data do not settle</b> — the unknowns, stated plainly.</li>
+          <li><b>03 Questions for the visit</b> and <b>04 the runner’s own observations</b>.</li>
+        </ul>
+      </div>
+      <p class="small muted">Scenario 03 shown: 16.7 km, 1:34:00, glucose coverage 100%, lowest reading 62 mg/dL,
+        2 readings below 70 and 0 below 54. The fact summary does not use the AI model.
+        Synthetic data are labelled on the page itself.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Glucose on the Run · Brief in Polish, the app’s user language</span><span>7 / 10</span></div>
+</section>
+
+<!-- 8. Architecture & provenance -->
+<section class="slide" aria-label="Slide 8: architecture and provenance">
+  <p class="eyebrow">Architecture &amp; data flow</p>
+  <h2 style="font-size:36px;">Small on purpose: one web app, one processor, no database.</h2>
+  <div class="arch">
+    <div class="node">
+      <h3>Browser</h3>
+      <div class="tech">Next.js 16 · React 19 · TypeScript · CSS + SVG</div>
+      <ul>
+        <li>Upload, consent, timeline, moment, brief</li>
+        <li>Results and notes live only in tab memory</li>
+        <li>Refresh or reset clears them</li>
+      </ul>
+    </div>
+    <div class="arrow">⇄</div>
+    <div class="node">
+      <h3>Next.js server</h3>
+      <div class="tech">Vercel · server-only secrets</div>
+      <ul>
+        <li>2 MB per file, proxied to the engine with a shared secret</li>
+        <li>HMAC-signs the computed result</li>
+        <li>AI routes: consent, guards, fallback</li>
+      </ul>
+    </div>
+    <div class="arrow">⇄</div>
+    <div class="node">
+      <h3>Python engine</h3>
+      <div class="tech">FastAPI · Vercel · stateless</div>
+      <ul>
+        <li>FIT + Dexcom CSV parsing, time alignment</li>
+        <li>Facts with IDs, ±10 min CGM windows, gaps</li>
+        <li>Moment selection, separability</li>
+      </ul>
+    </div>
+  </div>
+  <p class="small muted" style="margin-top:10px;">Only with separate consent: Next.js server → Anthropic Claude API, with selected computed summaries and nearby notes.
+    No FIT/CSV files, GPS, absolute dates, device identity or secrets are sent.</p>
+  <div class="ip">
+    <div class="box bg">
+      <h3>Background IP (pre-existing)</h3>
+      <p>From the author’s own UltraSoul project, commit <code>3c3f49d</code>: three Python modules
+        (<code>fit_parser</code>, <code>fit_adapter</code>, <code>run_signal_extractor</code>) and their three test files.
+        Imported byte-exact on 3 Oct 2026, 13:02 CEST, unmodified; SHA-256 hashes in <code>BACKGROUND_IP.md</code>.</p>
+    </div>
+    <div class="box new">
+      <h3>Built during HackYeah (after tag <code>task-reveal-2026</code>, 3 Oct 11:00)</h3>
+      <ul>
+        <li>Dexcom CSV parsing, alignment, facts and context engine, HTTP API</li>
+        <li>Whole UI, clinician brief, consent flows, AI integration with review and guards</li>
+        <li>Four synthetic FIT/CSV scenarios and their generator; engine, route and AI tests</li>
+      </ul>
+      <p class="small muted" style="margin-top:4px;">Pre-event neutral starter tagged <code>pre-hackathon-starter-2026</code>. AI coding assistants (Codex, Claude Code by Anthropic) logged in <code>AI_USAGE.md</code>.</p>
+    </div>
+  </div>
+  <div class="verify">
+    <span class="vk">Verified locally, 4 Oct 2026</span>
+    <span><b>103</b> engine tests</span><span><b>29</b> AI and transport tests</span><span><b>13</b> route tests, Next.js → Python</span><span>Playwright E2E, desktop + phone</span>
+  </div>
+  <div class="foot"><span>Glucose on the Run · Libraries and services listed in THIRD_PARTY.md</span><span>8 / 10</span></div>
+</section>
+
+<!-- 9. Safety, privacy, honesty -->
+<section class="slide" aria-label="Slide 9: safety, privacy and honesty">
+  <p class="eyebrow">Safety · privacy · honesty</p>
+  <h2>Useful because it knows where it stops.</h2>
+  <div class="three">
+    <div class="card">
+      <h3>Clinical safety</h3>
+      <ul class="clean" style="margin-top:10px;">
+        <li>No insulin or medication doses, no food advice, no diagnosis. Code rejects AI output that tries.</li>
+        <li>Co-occurrence, never causation.</li>
+        <li>CGM is read in a ±10 min window, not as blood glucose at that second.</li>
+        <li>Every displayed number comes from computed facts; missing data stays missing.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Privacy</h3>
+      <ul class="clean" style="margin-top:10px;">
+        <li>Two consents: processing to import, and a separate one naming the AI provider. Import sends nothing to AI.</li>
+        <li>No accounts, no database, no browser storage. Original files and GPS are not kept.</li>
+        <li>The AI provider’s own retention policy applies and is disclosed in the repo.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Honesty &amp; limits</h3>
+      <ul class="clean" style="margin-top:10px;">
+        <li>All demo glucose data are synthetic and labelled on screen and in the brief.</li>
+        <li>Not clinically validated. AI review is a quality check, not medical verification.</li>
+        <li>One run at a time; running FIT and Dexcom Clarity CSV only; 2 MB per file.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="payload">
+    <div><h3>What Claude receives (after AI consent)</h3>
+      <p>Computed facts for the selected moment: lowest CGM reading, reading count and change, pace and heart-rate window halves,
+        ascent, missing data, plus the runner’s nearby notes as untrusted data.</p></div>
+    <div><h3>What it never receives</h3>
+      <p>FIT or CSV files, raw streams, GPS, the run title, absolute dates and times, device identity, file names or credentials.</p></div>
+  </div>
+  <div class="foot"><span>Glucose on the Run · “To nie jest porada medyczna” — this is not medical advice</span><span>9 / 10</span></div>
+</section>
+
+<!-- 10. Next steps -->
+<section class="slide" aria-label="Slide 10: next steps">
+  <p class="eyebrow">Next steps</p>
+  <h2>From one run to a real clinic conversation.</h2>
+  <div class="four">
+    <div class="card"><div class="n">01</div><h3>Clinic pilot</h3><p>Test the brief with a diabetes clinic and runners who consent to share real data: is the visit shorter and more concrete?</p></div>
+    <div class="card"><div class="n">02</div><h3>More sources</h3><p>Other CGM exports and other watch formats, with the same rule: gaps stay visible.</p></div>
+    <div class="card"><div class="n">03</div><h3>Period view</h3><p>Several runs side by side, so recurring moments can be discussed, still without causal claims.</p></div>
+    <div class="card"><div class="n">04</div><h3>Official Garmin API</h3><p>Import runs through the official Garmin developer program instead of manual FIT files.</p></div>
+  </div>
+  <div class="links">
+    <div class="card"><p class="small muted">Live demo (no account, synthetic data)</p><p style="font-size:20px; margin-top:4px;"><a href="https://cukier-w-biegu.vercel.app/">cukier-w-biegu.vercel.app</a></p>
+      <p class="small muted" style="margin-top:6px;">Źródła → pick a scenario → consent → see the run.</p></div>
+    <div class="card"><p class="small muted">Public repository and provenance records</p><p style="font-size:20px; margin-top:4px;"><a href="https://github.com/szmefo/hackyeah-2026">github.com/szmefo/hackyeah-2026</a></p>
+      <p class="small muted" style="margin-top:6px;">BACKGROUND_IP.md · AI_USAGE.md · THIRD_PARTY.md · DECISIONS.md</p></div>
+  </div>
+  <p class="closing">What the data show. What they don’t. What to ask the doctor.</p>
+  <div class="foot"><span>Glucose on the Run · Solo project by Grzegorz Walencik · HackYeah 2026</span><span>10 / 10</span></div>
+</section>
+
+</main>
+</body>
+</html>
