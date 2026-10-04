@@ -96,3 +96,21 @@ Phase 1 is a synthetic single-run journey, clickable moments, in-memory demo obs
 and a printable clinician brief. Real FIT/CGM upload, health-data persistence, authentication
 and model narration remain later phases. Approved Python imports are provenance groundwork,
 not claimed as new hackathon logic or as already used by this UI demo.
+
+## Phase 3 status — 2026-10-04T02:46:27+02:00
+
+Phase 3 ran overnight as local work only (owner option B) on branch `overnight/phase-3`
+in the worktree `C:\hackyeah-2026-p3`, based on `origin/main` 3e62471. It adds one
+story per run, honest separability, watch-only strengths, one-click synthetic scenarios
+with byte-verified labels, an honest AI status, a one-page brief, and submission
+materials (HackTribe texts, demo script, morning checklist, 10-slide deck). Development
+assistance: Claude Code (Anthropic) with subagents; see AI_USAGE.md.
+
+Not done yet, each awaiting Greg's approval: production deploy of engine and web,
+production Anthropic checks on the new moment wording, route tests against the deployed
+URL, push and fast-forward merge to `main`, and the HackTribe submission. Exact steps:
+docs/PHASE_3_REVIEW.md "Morning handoff" and submission/CHECKLIST.md.
+
+Still unresolved: the deadline (agenda 11:00 vs task rules "11:00 PM"; plan for 11:00),
+the platform name (HackTribe in the rules, Challenge Rocket in the task details), and the
+team name. Main-rules clauses above marked TBD were not re-checked overnight.

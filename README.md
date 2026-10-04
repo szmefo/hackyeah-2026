@@ -39,7 +39,8 @@ a run summary beside three aligned plots on desktop, with a stacked layout on ph
 [UI scope and production verification](docs/CREAM_LAVENDER_UI.md).
 The production AI provider is **Anthropic (Claude)**; analysis requires separate consent.
 
-1. Open **Źródła**, click **Wybierz przykładową parę**.
+1. Open **Źródła**. Under **Scenariusze demo** click **Wczytaj scenariusz** on one of
+   four cards, or click **Wybierz przykładową parę** for the built-in pair.
 2. Confirm processing consent, click **Połącz pliki i zobacz bieg**.
 3. Inspect the selected moment, compare glucose/pace/heart rate/terrain and switch to the gap.
 4. Add an observation and open **Brief dla lekarza** → **Drukuj / zapisz PDF**.
@@ -58,40 +59,47 @@ the browser print flow; long notes/AI content can require more than one page.
 
 **Live app: https://cukier-w-biegu.vercel.app/**
 
-For the fastest demo, open **Źródła → Wybierz przykładową parę**, confirm processing
-consent and import. No account is required. For the four alternative scenarios,
-use the file locations below. [Short jury instructions](submission/README.md).
+For the fastest demo, open **Źródła → Scenariusze demo → Wczytaj scenariusz**,
+confirm processing consent and import. No account is required.
+[Short jury instructions](submission/README.md) ·
+[Submission texts](submission/SUBMISSION.md) · [Demo script](submission/DEMO_SCRIPT.md) ·
+[Slide deck (PDF)](submission/Glucose-on-the-Run.pdf).
 
-## Additional synthetic scenarios
+The scenario cards are phase 3 work (branch `overnight/phase-3`). They are live only
+after the phase 3 deployment that awaits owner approval; see
+[PHASE_3_REVIEW.md](docs/PHASE_3_REVIEW.md#morning-handoff). Until then the live site
+offers only **Wybierz przykładową parę**.
 
-On the presentation computer, all four synthetic pairs are available at
-**`C:\_HackYeah2026\tmp\synthetic-scenarios`** (relative local path:
-`tmp\synthetic-scenarios`). This is a local demo folder, not a GitHub directory.
+## Synthetic scenarios
 
-For judges reviewing the repository on another computer, the same corrected
-FIT/CSV pairs are committed in **`demos/synthetic-scenarios`**. Download or clone
-the repository to use them; do not rely on the presenter’s local `C:` path.
+Four complete FIT/CSV pairs are versioned in [demos/synthetic-scenarios](demos/synthetic-scenarios/README.md).
+The app serves byte-identical copies from `public/scenarios/<folder>/` and loads each
+with one click on **Źródła**. Each card also links both files for download.
 
-Four complete FIT/CSV pairs are versioned in [demos/synthetic-scenarios](demos/synthetic-scenarios/README.md):
-
-| Folder | Scenario |
+| Folder | Scenario (title in the app) |
 | --- | --- |
-| `01-niski-cukier-na-plaskim` | Lower glucose readings and slower pace on a mostly flat route |
-| `02-podbieg-cukier-w-normie` | Uphill section with glucose readings remaining above 70 mg/dL |
-| `03-podbieg-i-niski-cukier` | Uphill section and lower glucose readings in the same window |
-| `04-luka-w-danych` | Glucose readings stop before the final part of the run |
+| `01-niski-cukier-na-plaskim` | Niski cukier na płaskim: lower glucose reading and slower pace on a mostly flat route |
+| `02-podbieg-cukier-w-normie` | Podbieg, glukoza w zakresie: uphill section with readings within 70–180 mg/dL |
+| `03-podbieg-i-niski-cukier` | Podbieg i niski cukier naraz: uphill and a lower reading in the same window; the data cannot separate them |
+| `04-luka-w-danych` | Luka w danych sensora: glucose readings stop before the final part of the run |
 
-These are wholly synthetic measurements. Upload `bieg.fit` and `glukoza.csv` from
-the **same folder**, select **Europe/Warsaw**, and confirm processing consent.
-Leave the checkbox for the downloaded website example **unchecked**: it validates
-only the exact built-in pair. Other uploads are labelled uploaded data, including
-these locally generated synthetic scenarios. FIT and CSV dates are aligned.
+These are wholly synthetic measurements. A run is labelled **Dane syntetyczne** only
+when both uploaded files are byte-identical to one of five known pairs (four scenarios
+plus the built-in pair), including a manual upload of the downloaded files. Any other
+file, or a FIT and CSV from different scenarios, is labelled uploaded data. Each run
+shows one story (the built-in pair shows two moments: a sensor gap and a co-occurrence).
+For a manual upload choose `bieg.fit` and `glukoza.csv` from the **same folder** and
+select **Europe/Warsaw**. On the presentation computer the same pairs are also in
+`C:\_HackYeah2026\tmp\synthetic-scenarios` (a local folder, not in GitHub).
 
 Regenerate all four pairs from the repository root:
 
 ```powershell
 engine/.venv/Scripts/python.exe demos/synthetic-scenarios/generate.py
 ```
+
+Then copy the regenerated files to `public/scenarios/` so both copies stay
+byte-identical; otherwise the synthetic label no longer matches.
 
 ## Running locally
 Node **24.x**, npm, Python **3.12+**, Git and PowerShell **7**.
@@ -170,8 +178,11 @@ git diff --stat task-reveal-2026..HEAD
 `pre-hackathon-starter-2026` records neutral preparation. Imports remain Background IP.
 Phase 1 implemented Opowieść and synthetic review; phase 2 adds actual import, measured
 contexts and optional model integration. Version 04 adds the cream/lavender UI;
-corrected, reproducible synthetic scenarios are committed separately. No DB/auth, Garmin, period summaries, extra
-diabetes profiles or final submission in this phase.
+corrected, reproducible synthetic scenarios are committed separately. Phase 3 (local
+branch `overnight/phase-3`, pending owner approval) adds one story per run, honest
+separability, watch-only strengths, one-click scenarios with byte-verified synthetic
+labels, a one-page brief and submission materials. No DB/auth, Garmin, period summaries,
+extra diabetes profiles or multi-run views.
 
 ## Verification
 [Phase 1](docs/PHASE_1_REVIEW.md) · [Phase 2](docs/PHASE_2_REVIEW.md) ·
@@ -183,4 +194,13 @@ synthetic import, missing-data selection, observations and their presence in the
 All four additional scenarios passed the Python analysis pipeline; scenario 03 also
 passed the public import endpoint (HTTP 200). Native print/PDF was not re-tested
 for this UI release; no new paid AI call was made during its verification.
-[Submission folder](submission/README.md) remains a placeholder.
+
+Phase 3 was verified locally only: build, checks, engine pytest, AI/transport tests,
+route tests against a local engine and Next server, Playwright in Chrome at desktop and
+390 px for all five pairs, and A4 page counts of the brief. Production deploy, production
+AI and the native print dialog are not verified yet.
+[Phase 3 review and morning handoff](docs/PHASE_3_REVIEW.md).
+
+[Submission folder](submission/README.md): jury guide, HackTribe texts
+([SUBMISSION.md](submission/SUBMISSION.md)), demo script, morning checklist, slide deck
+and screenshots. Nothing has been submitted yet.

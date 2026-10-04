@@ -71,3 +71,12 @@ eliminate default provider abuse-monitoring retention. Supabase remains unconnec
 ## Cream and lavender implementation — 2026-10-03T15:30:58+02:00
 
 Visual reference: owner-selected ImageGen mockup C:/_HackYeah2026/mockups/2026-10-03/ux-ui-v3/04-krem-i-lawenda.png, generated in the earlier design session. Implemented using existing system fonts and CSS; no new runtime packages, external font/image downloads, datasets or UltraSoul imports. The image is a design reference, not a data source or runtime asset. Detailed provenance and checks: docs/CREAM_LAVENDER_UI.md.
+
+## Phase 3 local verification tools — 2026-10-04T02:45:27+02:00
+
+No new runtime or repository dependencies (package.json, package-lock.json and engine/requirements.txt are unchanged since origin/main 3e62471).
+
+| Resource | Version / source | License / terms | Purpose and data |
+| --- | --- | --- | --- |
+| Playwright (npm) | Installed in a scratch directory outside the repository; drove the system Google Chrome | Apache-2.0 | Local browser E2E, screenshots and A4 PDF exports of the brief and slide deck; synthetic data only |
+| pypdfium2 | Ephemeral, outside the repository | Apache-2.0 / BSD-3-Clause (PDFium) | Counting and rendering PDF pages for verification only |
