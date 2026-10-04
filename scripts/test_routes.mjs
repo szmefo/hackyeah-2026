@@ -11,7 +11,7 @@ const glucose = await readFile(
 );
 const scenarios = [
   ["01-niski-cukier-na-plaskim", "Scenariusz 1: Niski cukier na płaskim"],
-  ["02-podbieg-cukier-w-normie", "Scenariusz 2: Podbieg, cukier w normie"],
+  ["02-podbieg-cukier-w-normie", "Scenariusz 2: Podbieg, glukoza w zakresie"],
   ["03-podbieg-i-niski-cukier", "Scenariusz 3: Podbieg i niski cukier naraz"],
   ["04-luka-w-danych", "Scenariusz 4: Luka w danych sensora"],
 ];

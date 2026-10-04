@@ -17,7 +17,8 @@ Każdy jest dostępny jednym kliknięciem na stronie **Źródła**:
 
 1. **Niski cukier na płaskim** — zwolnienie na płaskim odcinku w tym samym czasie
    co niższy odczyt glukozy.
-2. **Podbieg, cukier w normie** — zwolnienie na podbiegu przy stabilnej glukozie.
+2. **Podbieg, glukoza w zakresie** — zwolnienie na podbiegu przy odczytach
+   glukozy w zakresie 70–180 mg/dL.
 3. **Podbieg i niski cukier naraz** — oba sygnały w jednym oknie; dane nie
    rozdzielają ich wpływu.
 4. **Luka w danych sensora** — brak odczytów w drugiej części biegu, pokazany

@@ -192,7 +192,7 @@ export const demoScenarios: SyntheticPair[] = [
   scenario(
     2,
     "02-podbieg-cukier-w-normie",
-    "Podbieg, cukier w normie",
+    "Podbieg, glukoza w zakresie",
     "Zobacz zwolnienie na podbiegu przy odczytach glukozy stabilnych przez cały bieg.",
   ),
   scenario(
