@@ -149,9 +149,10 @@ Web needs `ENGINE_URL`, `ENGINE_SHARED_SECRET`; engine needs the same secret.
 Only web needs optional `ANTHROPIC_API_KEY` / `ANTHROPIC_MODEL` (or OpenAI settings). No secrets in Git.
 Manual authenticated artifact deployment; automatic GitHub deployment remains disabled.
 [Cloud status](docs/CLOUD.md).
-The current UI deployment uses application source commit `a86ea60`; later commits
-add verification records and corrected local demo assets. Pushing to GitHub alone
-does not publish a new Vercel release.
+Current production (2026-10-04): web from source commit `6f1c6b4`, engine from `d84ebff`
+(phase 3: four one-click synthetic scenarios, distinct moments, one-page brief, tightened
+AI rules). Deployment IDs and artifact hashes: [phase-3-deployment.json](docs/phase-3-deployment.json).
+Pushing to GitHub alone does not publish a new Vercel release.
 
 ## Background IP
 [BACKGROUND_IP.md](BACKGROUND_IP.md): six approved UltraSoul source/test imports with

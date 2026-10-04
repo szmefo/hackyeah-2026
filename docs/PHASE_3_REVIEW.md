@@ -342,3 +342,27 @@ local `main` in `C:\hackyeah-2026` only when Codex is not working there:
 Paste the fields from `submission/SUBMISSION.md` into HackTribe, attach
 `submission/Glucose-on-the-Run.pdf` (check it has at most 10 pages), set the team
 name, and submit. Treat 11:00 as the hard deadline. No deploy or push after submission.
+
+## Production deployment and checks (2026-10-04 morning)
+
+- 07:21–07:22 — ChatGPT (OpenAI, computer use), on Greg's instruction, deployed engine
+  `dpl_5kiuxc5suszbVVk4bHFva5htNtBX` and web `dpl_6BQ9sihPhZNA7934KDzvjvqTRATt` from
+  `d84ebff`, pushed `overnight/phase-3` to `main`, ran production checks (check, build,
+  29 AI/transport, 103 pytest, 13 production route tests, secret scan) and saved the
+  HackTribe submission (receipt verified 07:39). Its evidence is outside the repository:
+  `C:\_HackYeah2026\review\phase-3\` and `phase-3-final-receipt.json`.
+- Its live scenario 1 AI output had three problems: an alternative framing the low CGM
+  reading as a possible sensor or attachment artefact, a claim that two low readings meant
+  the episode was not continuous, and questions addressed to the runner.
+- ~09:40 — Claude Code fixed the prompt and the reviewer rules (`6f1c6b4`). Checks:
+  `npm run check` pass, 29/29 AI/transport tests, `npm run build` pass. Web redeployed as
+  `dpl_7cZJ8f7iMUww6AhM2QYTfRsGK1uM` (engine unchanged). Production: `/api/ai-status`
+  `{"configured":true,"provider":"Anthropic"}`, engine `/health` ok,
+  `test_routes.mjs` against https://cukier-w-biegu.vercel.app 13 pass, 0 fail.
+- Live scenario 1 AI re-run (claude-sonnet-4-6) passed review. It now calls the low
+  reading one to discuss with the doctor, states that the data do not show how long the
+  lower level lasted, and asks only questions for the doctor.
+- Not verified: AI on scenarios 2–4 after the fix, the native print dialog, and the
+  brief with an AI section on one page.
+
+Recorded at 2026-10-04T10:27+02:00 (Europe/Warsaw).

@@ -94,3 +94,11 @@ notes, never source files or GPS. Provider retention: AI_INTERPRETATION.md.
 Final web revision, deployment and artifact hashes: phase-2-deployment.json.
 Artifact exports exclude .git, env credentials and unrelated source; source hashes
 allow matching the deployed artifact to Git without changing commit authorship.
+
+### Phase 3 — scenarios, distinct moments and AI rules (2026-10-04)
+
+Engine dpl_5kiuxc5suszbVVk4bHFva5htNtBX (source d84ebff, 07:21, ChatGPT on Greg's
+instruction). Web dpl_7cZJ8f7iMUww6AhM2QYTfRsGK1uM (source 6f1c6b4, ~09:40, Claude Code),
+replacing dpl_6BQ9sihPhZNA7934KDzvjvqTRATt (d84ebff, 07:22). Same manual artifact flow
+(git archive of committed files plus existing project link); environment variables
+unchanged. Hashes: phase-3-deployment.json. Checks: PHASE_3_REVIEW.md.

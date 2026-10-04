@@ -1,0 +1,253 @@
+{
+  "sourceCommit": "6f1c6b4",
+  "recordedAt": "2026-10-04T10:25:23+02:00",
+  "engine": {
+    "sourceCommit": "d84ebff",
+    "id": "dpl_5kiuxc5suszbVVk4bHFva5htNtBX",
+    "url": "https://cukier-w-biegu-engine.vercel.app",
+    "deployedAt": "2026-10-04T07:21+02:00 (artifact time; deployed by ChatGPT with computer use)",
+    "artifact": "C:/_HackYeah2026/deploy/phase3-engine-d84ebff",
+    "artifactTarSha256": "cbc3fdf55cc40051deb17c15f628f75ae0141a52259a79e9c9af14f5c907df0d",
+    "files": [
+      {
+        "path": ".python-version",
+        "sha256": "7b55f8e67b5623c4bef3fa691288da9437d79d3aba156de48d481db32ac7d16d"
+      },
+      {
+        "path": ".vercelignore",
+        "sha256": "bcbacced1e1c464bd834ad0bbd5a24932626a8f879f5246793bfb430924d9d41"
+      },
+      {
+        "path": "app/services/analysis.py",
+        "sha256": "098ff906bbdce687f8df279116845ab0ff19db08127a4914c752d0c0a864b082"
+      },
+      {
+        "path": "app/services/fit_adapter.py",
+        "sha256": "1f15f6377fa6e0185f869113e6844761671c5f69c85465dce0bf14d35e0fb35a"
+      },
+      {
+        "path": "app/services/fit_parser.py",
+        "sha256": "f2b06761491560f0e0d771b3d567b116762c51c6dc7bd65af010fffc0474b07a"
+      },
+      {
+        "path": "app/services/glucose.py",
+        "sha256": "b865dbbbfcebeff63dad1b903e61553f95dd4db649a821dbd8b064e855ceb13c"
+      },
+      {
+        "path": "app/services/run_signal_extractor.py",
+        "sha256": "1d2755c437851c80697a184afc2fab044901c43504418a7b78f7f270ba072078"
+      },
+      {
+        "path": "main.py",
+        "sha256": "27661c6884f8a1f09da260c9bc3fe246be757bbbc1dfa44adba5f951d76587e5"
+      },
+      {
+        "path": "requirements.txt",
+        "sha256": "2bd9e8905533a59fe3f0e3cb55d1d751c29e19a49410d0bc151068c3b35cd5b2"
+      },
+      {
+        "path": "vercel.json",
+        "sha256": "cd7d42d02d0db5ffdba62be11dcf41827591a02d45278af9c2bcace2c86b407c"
+      }
+    ]
+  },
+  "web": {
+    "sourceCommit": "6f1c6b4",
+    "id": "dpl_7cZJ8f7iMUww6AhM2QYTfRsGK1uM",
+    "url": "https://cukier-w-biegu.vercel.app",
+    "deploymentUrl": "https://cukier-w-biegu-8wle7xyo9-hack-yeah1.vercel.app",
+    "replaces": {
+      "id": "dpl_6BQ9sihPhZNA7934KDzvjvqTRATt",
+      "sourceCommit": "d84ebff",
+      "deployedAt": "2026-10-04T07:22+02:00 (ChatGPT)"
+    },
+    "artifact": "C:/_HackYeah2026/deploy/phase3-web-6f1c6b4",
+    "artifactTarSha256": "3495fc8fbfd0c0025beb76680e3bac2eca240197735ce29277f54028d8e43b29",
+    "files": [
+      {
+        "path": ".gitignore",
+        "sha256": "e68e2bf50165a6f6939ce3f7622fbd8683033af293fa3c9c2f0a8eae826e5ddb"
+      },
+      {
+        "path": ".vercelignore",
+        "sha256": "74a32d731ce875e366296d5f4cd81fcef5c8b87585a1892115b57fd4afa90cf3"
+      },
+      {
+        "path": "data/README.md",
+        "sha256": "746cacb23eb8933489b3870bdd46da7d2b6053f7d8a3b69025e6c14d197e8119"
+      },
+      {
+        "path": "data/demo-run.json",
+        "sha256": "186ec81ba73685c109f2e6f7194914bcb0bd1173711ef8107f95c15afc9b674b"
+      },
+      {
+        "path": "data/example.json",
+        "sha256": "757d0998c3320edbf61419b489177a7187d30ab70cd1144e87a30a0696779999"
+      },
+      {
+        "path": "next.config.ts",
+        "sha256": "c88af8a6fc9fbf79ba8fffbe410f87624654672b5672fe7cf219e6017ee0a2d9"
+      },
+      {
+        "path": "package-lock.json",
+        "sha256": "fb8fa6eb950f1701d42b133d15f27465c54c76a8a389909b92f0f9254ca1c386"
+      },
+      {
+        "path": "package.json",
+        "sha256": "f028e502f796352143a8cfe13e72f16c5c76e5f046856bae9039c7e323f23f08"
+      },
+      {
+        "path": "public/demo-glucose.csv",
+        "sha256": "34c019d0b9b82076a3803b9827810ea7e939bf6e7b227e7ae429fca25d98a02e"
+      },
+      {
+        "path": "public/demo-run.fit",
+        "sha256": "4b4a6789bf9e5ea1a0d6d40739ca8cef50a0cfc310e22a6cc68feee5c7394f71"
+      },
+      {
+        "path": "public/scenarios/01-niski-cukier-na-plaskim/bieg.fit",
+        "sha256": "0d0afe1326fbcdffca1456131695664be9e1e69fd7b69016121d7363a7607c9c"
+      },
+      {
+        "path": "public/scenarios/01-niski-cukier-na-plaskim/glukoza.csv",
+        "sha256": "f75c139deb32395b7849406ba8aaf5296cad38fc504d212f307d6984bc3f42c7"
+      },
+      {
+        "path": "public/scenarios/02-podbieg-cukier-w-normie/bieg.fit",
+        "sha256": "1659b7b23e05a72be548c70ae88ed58093074b0cd4648b543da912d04fc62a7b"
+      },
+      {
+        "path": "public/scenarios/02-podbieg-cukier-w-normie/glukoza.csv",
+        "sha256": "1e972945e09d2f8447553a44d2b0dd2062ce221e050da4fe761730b048bd563c"
+      },
+      {
+        "path": "public/scenarios/03-podbieg-i-niski-cukier/bieg.fit",
+        "sha256": "f9994a02db82071afb76b2f9c6786ea4f34b72191c99ed119f77a2c8afe0bfb8"
+      },
+      {
+        "path": "public/scenarios/03-podbieg-i-niski-cukier/glukoza.csv",
+        "sha256": "13ee95509da53f50e993b4756e20350e7a65b3ad298db95bb53c52bde6cf6f8a"
+      },
+      {
+        "path": "public/scenarios/04-luka-w-danych/bieg.fit",
+        "sha256": "2423a9465830b0dda31b580b6565f13df441272db7604ab3ed113430159dd7c0"
+      },
+      {
+        "path": "public/scenarios/04-luka-w-danych/glukoza.csv",
+        "sha256": "7f0472c7440528aa4942d492acad269f9a235a5c1fdbc4f1e1f9cd91e9f73f6c"
+      },
+      {
+        "path": "src/app/api/ai-status/route.ts",
+        "sha256": "c555cbdf37cdd1ac53cac6a446ed6d3f92fd651bdd2d79cf5d2ab1f3b9e02181"
+      },
+      {
+        "path": "src/app/api/health/route.ts",
+        "sha256": "41ea2ed4e65e76a564fad61237a58018986fa0e40ba2f1ebf9ef41342a49abe6"
+      },
+      {
+        "path": "src/app/api/import/route.ts",
+        "sha256": "feba00dd85ec7aa5a4ff92d11a131639ea30772cab401439b88507fcde16cd8b"
+      },
+      {
+        "path": "src/app/api/interpret/route.ts",
+        "sha256": "a0831f17a2746304b3e53c24ffc9a97461659cf7be01cab54ef8bcd54177d1f8"
+      },
+      {
+        "path": "src/app/brief/page.tsx",
+        "sha256": "c093c4465f7824d5ad535905a20ca783f174f84f9e35e94619d43cc5f9194d3c"
+      },
+      {
+        "path": "src/app/cream-lavender.css",
+        "sha256": "6af3b37d1975ec058a97c5222377962f82cb5573410e425c44c14d5d47a99da9"
+      },
+      {
+        "path": "src/app/globals.css",
+        "sha256": "3efa409034309c622261e297f908e286e620c62fe2b6942c01e9de271a0554de"
+      },
+      {
+        "path": "src/app/icon.svg",
+        "sha256": "d3f875ca1830af1763f590b94dc558e5d3a2445b09195ab1c841e218bdf79158"
+      },
+      {
+        "path": "src/app/layout.tsx",
+        "sha256": "243beabcbb0a3cd5d112aaa7123e706043459c4e21b842153e466a42417cf4ac"
+      },
+      {
+        "path": "src/app/page.tsx",
+        "sha256": "3804be1f96771cfe6ba5b7ab575e3c4cbfee5f23d46eb3912ce84e3198595f22"
+      },
+      {
+        "path": "src/app/runs/page.tsx",
+        "sha256": "2254a25fc40a6efd3be3b3dc1b5ff11fafa8d8aeb6a572578b89d4ce88ff7a88"
+      },
+      {
+        "path": "src/app/scenarios.css",
+        "sha256": "9abd2fdb8c018f3091fbed189c9f5613e4f480e149867396b7fb762832838fc7"
+      },
+      {
+        "path": "src/app/sources/page.tsx",
+        "sha256": "f11805522a3579addb1ceeb4f9ca70e1e449127ef14a4f935c05da66b2d934c4"
+      },
+      {
+        "path": "src/components/ai-analysis.tsx",
+        "sha256": "73befae3072333307f0f91c15546b57e0d7cedf44e9cc48b773860a6fe2bb021"
+      },
+      {
+        "path": "src/components/app-shell.tsx",
+        "sha256": "2d21dae787556999a521e357f87aecc99c41e37d3aaefbb3b6150143da332ab6"
+      },
+      {
+        "path": "src/components/clinician-brief.tsx",
+        "sha256": "9dbca9b11484e9f7a3ce3639d087356b3d4ea79a4bf4e1e6b6375fb9ed6e419a"
+      },
+      {
+        "path": "src/components/demo-context.tsx",
+        "sha256": "b8e4b0891000863be551357f195253920032885cfc325d6c62149384b1790bb1"
+      },
+      {
+        "path": "src/components/health-check.tsx",
+        "sha256": "1da4e0a37b1433db46107505ede19ce92ea3bac02f2ba53e5fc605b1274e292c"
+      },
+      {
+        "path": "src/components/icons.tsx",
+        "sha256": "a8ef6f67bd0b17bfca0e939940f0725dcbaec7122322980cfee28eef2351111c"
+      },
+      {
+        "path": "src/components/run-experience.tsx",
+        "sha256": "c9b0fd02b4637074d655eca4adae22880963bf8726032980addb2155a5f7f6d0"
+      },
+      {
+        "path": "src/components/timeline.tsx",
+        "sha256": "9e85a439ae1d41a84689a74ec8940432884100d8e58eb219a9b23cc433c4fe19"
+      },
+      {
+        "path": "src/lib/demo.ts",
+        "sha256": "a09a15a213204e5118cae7e5bc7553410ea60004cd5fae1879f652d1e1a18af3"
+      },
+      {
+        "path": "src/lib/run-story.ts",
+        "sha256": "39eb3e6ea13e3f85c8a010bdff5e9f76574f40f0751d55f675003643ac3a40da"
+      },
+      {
+        "path": "src/lib/server/ai.ts",
+        "sha256": "d92d28c9c6808a48dfb37e19fb235d5f9415067e16aed8363f36a80ca1aaf0a3"
+      },
+      {
+        "path": "src/lib/server/llm-transport.ts",
+        "sha256": "eb045046564c7ea4f6e83756c2acd3a95c57f4686afc8b67b7d818cb53386c6b"
+      },
+      {
+        "path": "src/lib/server/provider-config.ts",
+        "sha256": "94c97b0b19b481a2823419a0859cae0e3adad002d9a05d63e0f7f99bca7d1e72"
+      },
+      {
+        "path": "src/lib/server/run-integrity.ts",
+        "sha256": "72dda668232b8da70ae253f55c9bf4867970aa2096d77710c295cae0fc6b7b37"
+      },
+      {
+        "path": "tsconfig.json",
+        "sha256": "c474ca7e02166e9f4d328c6a8bd629ea7d31d9d12cab480d5c9bc6886e3612be"
+      }
+    ]
+  }
+}
