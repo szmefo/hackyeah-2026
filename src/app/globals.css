@@ -1633,9 +1633,13 @@ textarea {
   .paper-title {
     margin: 14px 0;
   }
+  /* One-line title on paper leaves room for the runner's observations. */
   .paper-title h1 {
-    font-size: 31px;
-    margin: 8px 0;
+    font-size: 26px;
+    margin: 6px 0;
+  }
+  .paper-title h1 br {
+    display: none;
   }
   .paper-title > p:last-child {
     font-size: 11px;
@@ -1696,6 +1700,11 @@ textarea {
   }
   .paper-observations ul {
     max-height: none;
+  }
+  .paper-section.paper-observations li {
+    font-size: 9px;
+    line-height: 1.35;
+    margin-bottom: 3px;
   }
   .synthetic-badge {
     -webkit-print-color-adjust: exact;

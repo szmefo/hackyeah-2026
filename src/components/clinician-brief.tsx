@@ -15,6 +15,14 @@ import {
   minuteLabel,
   factReferenceLabel,
 } from "@/lib/demo";
+const BRIEF_OBSERVATIONS = 3;
+const BRIEF_OBSERVATION_CHARS = 110;
+function clampText(text: string, limit: number) {
+  const trimmed = text.trim();
+  return trimmed.length <= limit
+    ? trimmed
+    : `${trimmed.slice(0, limit - 1).trimEnd()}…`;
+}
 export function ClinicianBrief() {
   const { selectedId, observations, currentRun: run, aiResult } = useDemo();
   const selected =
@@ -23,6 +31,9 @@ export function ClinicianBrief() {
   const synthetic = isSyntheticRun(run);
   // Keep the brief to one printed page: at most three strengths.
   const strengths = (run.strengths ?? []).filter((s) => s.trim()).slice(0, 3);
+  // Same reason: the three most recent observations, each clamped, plus a count.
+  const shownObservations = observations.slice(-BRIEF_OBSERVATIONS);
+  const hiddenObservations = observations.length - shownObservations.length;
   return (
     <AppShell active="brief">
       <div className="brief-toolbar no-print">
@@ -49,7 +60,7 @@ export function ClinicianBrief() {
         <div className="paper-title">
           <p className="eyebrow">Do rozmowy z diabetologiem</p>
           <h1>
-            Jeden bieg.
+            Jeden bieg.{" "}
             <br />
             Konkretny kontekst.
           </h1>
@@ -210,11 +221,17 @@ export function ClinicianBrief() {
           <h2>04 / Obserwacje biegacza</h2>
           {observations.length ? (
             <ul>
-              {observations.map((o, i) => (
+              {shownObservations.map((o, i) => (
                 <li key={i}>
-                  {minuteLabel(o.minute)}. minuta · {o.kind}: {o.text}
+                  {minuteLabel(o.minute)}. minuta · {o.kind}:{" "}
+                  {clampText(o.text, BRIEF_OBSERVATION_CHARS)}
                 </li>
               ))}
+              {hiddenObservations > 0 && (
+                <li>
+                  Starsze obserwacje pominięte w wydruku: {hiddenObservations}.
+                </li>
+              )}
             </ul>
           ) : (
             <p>
