@@ -225,3 +225,120 @@ point, scenario 2 was named "Podbieg, cukier w normie" and showed the CGM senten
 a strength. Neither is true now.
 
 Recorded at 2026-10-04T02:08:34+02:00 (Europe/Warsaw).
+
+## Final local gate (HEAD 89f5715, 2026-10-04T02:50:11+02:00)
+
+| Check | Result |
+| --- | --- |
+| `git status --short` | clean (only ignored files: `.env.local`, `.next/`, `.verification/`, caches) |
+| `npm run check` | pass |
+| `npm run build` | pass (all routes plus `/icon.svg`) |
+| `engine/.venv python -m pytest tests -q` (cwd `engine`) | 103 passed, 1 warning (existing Starlette/httpx deprecation) |
+| `node --experimental-strip-types --test scripts/test_ai.mjs scripts/test_transport.mjs` | 29 pass, 0 fail |
+| `python -m unittest test_demo` (cwd `scripts`) | 5 tests OK |
+| `QA_BASE_URL=http://127.0.0.1:3811 node --test scripts/test_routes.mjs` | 13 pass, 0 fail; `/api/ai-status` = `{"configured":false,"provider":null}` |
+| Gitleaks 8.30.1 `git --log-opts=origin/main..HEAD --redact` and `dir submission` | 15 commits scanned, no leaks found |
+| grep of `git diff origin/main...HEAD` for `sk-ant-`, `sk-…`, `BEGIN … PRIVATE KEY`, assigned `ENGINE_SHARED_SECRET`/`API_KEY` values, and the actual `.env.local` values | 0 matches |
+
+Servers: engine (uvicorn) on 127.0.0.1:8811 and `next start` on 127.0.0.1:3811 with a
+fresh random `ENGINE_SHARED_SECRET`, no AI key; both stopped after the run. Nothing was
+deployed, pushed or merged; the production AI endpoint was not called.
+
+## Morning handoff
+
+Prepared at 2026-10-04T02:50:11+02:00. **None of these commands has been run.** Each step needs Greg's
+approval. PowerShell on this computer. The detailed version with expected outputs,
+the four-scenario browser table and the Claude checklist is `submission/CHECKLIST.md`.
+Deploy uses the manual artifact flow from `docs/CLOUD.md` (`git archive` of committed
+files plus the existing `.vercel` project link); environment variables are already set
+in both Vercel projects, so do not change env.
+
+### 1. Review and optional re-run of the gate (about 10 min)
+
+```powershell
+cd C:\hackyeah-2026-p3
+git status --short
+git log --oneline origin/main..overnight/phase-3
+npm run check
+node --experimental-strip-types --test scripts/test_ai.mjs scripts/test_transport.mjs   # 29 pass
+cd engine; C:\hackyeah-2026\engine\.venv\Scripts\python.exe -m pytest tests -q; cd ..    # 103 passed
+```
+
+### 2. Deploy engine, then web (about 15 min)
+
+```powershell
+vercel whoami                                   # owner account of scope hack-yeah1
+$repo = "C:\hackyeah-2026-p3"
+$sha  = (git -C $repo rev-parse --short HEAD).Trim()
+
+# 2a. engine -> project cukier-w-biegu-engine
+$eng = "C:\_HackYeah2026\deploy\phase3-engine-$sha"
+New-Item -ItemType Directory -Force $eng | Out-Null
+git -C $repo archive -o "$eng.tar" HEAD engine/main.py engine/requirements.txt engine/vercel.json engine/.python-version engine/.vercelignore engine/app
+tar -xf "$eng.tar" -C $eng --strip-components=1
+Copy-Item -Recurse "C:\_HackYeah2026\deploy\phase2-engine\.vercel" "$eng\.vercel"
+Get-Content "$eng\.vercel\project.json"         # "projectName":"cukier-w-biegu-engine"
+Set-Location $eng; vercel deploy --prod --scope hack-yeah1
+curl.exe -s https://cukier-w-biegu-engine.vercel.app/health
+
+# 2b. web -> project cukier-w-biegu
+$web = "C:\_HackYeah2026\deploy\phase3-web-$sha"
+New-Item -ItemType Directory -Force $web | Out-Null
+git -C $repo archive -o "$web.tar" HEAD src data public package.json package-lock.json next.config.ts tsconfig.json .gitignore .vercelignore
+tar -xf "$web.tar" -C $web
+Copy-Item -Recurse "C:\_HackYeah2026\deploy\cream-lavender-a86ea60\.vercel" "$web\.vercel"
+Get-Content "$web\.vercel\project.json"         # "projectName":"cukier-w-biegu"
+Set-Location $web; vercel deploy --prod --scope hack-yeah1
+```
+
+Note both deployment URLs and IDs. Rollback (both projects together, only if needed):
+`vercel rollback https://cukier-w-biegu-ec4av15y9-hack-yeah1.vercel.app --scope hack-yeah1`
+(web, from `$web`) and `vercel rollback dpl_5vHuojkv9sFRdUqGXX6Zx779jUTQ --scope hack-yeah1`
+(engine, from `$eng`). After a rollback, `submission/SUBMISSION.md` needs its fallback wording.
+
+### 3. Production checks (about 25 min)
+
+```powershell
+curl.exe -s https://cukier-w-biegu.vercel.app/api/ai-status            # {"configured":true,"provider":"Anthropic"}
+curl.exe -s -o NUL -w "%{http_code}`n" https://cukier-w-biegu.vercel.app/scenarios/03-podbieg-i-niski-cukier/glukoza.csv   # 200
+curl.exe -s -o NUL -w "%{http_code}`n" https://cukier-w-biegu.vercel.app/icon.svg                                         # 200
+cd C:\hackyeah-2026-p3
+$env:QA_BASE_URL = "https://cukier-w-biegu.vercel.app"
+node --test scripts/test_routes.mjs                                     # 13 pass, 0 fail; no paid model call
+Remove-Item Env:QA_BASE_URL
+```
+
+Then in Chrome: the four scenario cards on **Źródła** (expected moments in
+`submission/CHECKLIST.md` 3b), one Claude analysis per scenario with at least 35 s
+between calls (rate limit 2/min, 8/h), and the brief print preview with and without
+an AI section (1 page expected without; with AI it may run to 2 pages).
+
+### 4. Record the deployment (about 10 min)
+
+Add `docs/phase-3-deployment.json` (source `$sha`, both deployment IDs/URLs, artifact
+paths and SHA-256), append step 3 results here and in `docs/CLOUD.md`, update README
+"Deployment" (currently `a86ea60`), and commit as `docs:` on `overnight/phase-3`.
+
+### 5. Push and fast-forward `main` (about 5 min)
+
+```powershell
+cd C:\hackyeah-2026-p3
+git status --short
+git fetch origin
+git merge-base --is-ancestor origin/main overnight/phase-3; $?        # True = fast-forward possible (origin/main was 3e62471)
+git push -u origin overnight/phase-3
+git push origin overnight/phase-3:main                               # fast-forward only; never --force
+git ls-remote origin main                                            # equals git rev-parse HEAD
+```
+
+If `origin/main` moved (the check prints False or the push is rejected): `git fetch origin`,
+`git merge origin/main` on `overnight/phase-3`, resolve conflicts, re-run the gate (step 1
+plus `npm run build` and the route tests), then push both commands again. Update the
+local `main` in `C:\hackyeah-2026` only when Codex is not working there:
+`git -C C:\hackyeah-2026 merge --ff-only origin/main`.
+
+### 6. Submission (about 20 min, before 10:30)
+
+Paste the fields from `submission/SUBMISSION.md` into HackTribe, attach
+`submission/Glucose-on-the-Run.pdf` (check it has at most 10 pages), set the team
+name, and submit. Treat 11:00 as the hard deadline. No deploy or push after submission.
