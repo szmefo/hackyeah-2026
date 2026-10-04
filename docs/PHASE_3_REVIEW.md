@@ -158,7 +158,70 @@ browsers and printer margins were not tested.
 - The default landing run (`data/demo-run.json`, "Bieg nad Wisłą") is a phase 1 static
   fixture. It still shows three illustrative moments, unlike the engine's one story per
   run. Only its gap separability was corrected.
-- The "Co poszło dobrze" heading also holds the neutral CGM-coverage observation in
-  scenario 2; the owner may want to rename the heading.
+- ~~The "Co poszło dobrze" heading also holds the neutral CGM-coverage observation in
+  scenario 2; the owner may want to rename the heading.~~ Resolved: the CGM sentence was
+  removed from strengths (see "Review findings").
 
 Recorded at 2026-10-03T22:26:10+02:00 (Europe/Warsaw).
+
+## Review findings (2026-10-04)
+
+Reviewers checked the branch at bcc2d2c. Each finding was reproduced before it was
+fixed. All eight were real, and none was skipped. The fixes are local commits that
+have not been pushed:
+
+| Commit | Topic |
+| --- | --- |
+| d9d7d5b | fix(engine): keep glucose out of strengths and claims out of narratives |
+| ddf6e52 | fix(demo): name scenario 2 "Podbieg, glukoza w zakresie" |
+| 8cd72ef | fix(ui): keep a flat run flat in the pace chart terrain fill |
+| 26f81d8 | fix(brief): keep the clinician brief on one A4 page with observations |
+
+| Severity | Finding | Resolution |
+| --- | --- | --- |
+| major | The CGM sentence "Odczyty sensora objęły cały bieg i żaden z nich nie był niższy niż 70 mg/dL." appeared under "Co poszło dobrze". That framed glucose as a success. It also ignored high readings: a run at 265–286 mg/dL was still listed. | Removed. Strengths now hold only sentences derived from the watch, so the intro "Obliczone z pomiarów zegarka" is true for every item. Glucose coverage is still shown as "Pokrycie glukozy" in the brief metrics. Regression test: scenario 02 with every reading raised by 150 gives `strengths == []`. |
+| major | The uphill, in-range narrative always said "W danych widać podbieg, nie spadek glukozy.", even when glucose fell from 178 to 72 mg/dL inside the window. | Sentence dropped. The narrative keeps only the computed fact that every reading fell within 70–180 mg/dL. Regression test uses the falling CSV from the review. |
+| minor | Gender agreement: "wystąpił flaga Low/High z sensora". | `_occurred()` picks "wystąpiła" when the subject starts with "flaga". Covered by a regression test that uses the Low-flag CSV from the review. |
+| minor | The uphill, in-range question mentioned "zwolnienie" even when no slowdown was detected. | Without a slowdown, the question now reads "Czy taki podbieg przy glukozie w zakresie warto omawiać w kontekście cukrzycy?". |
+| minor | The name "Podbieg, cukier w normie" implied a clinical judgement. | Renamed to "Podbieg, glukoza w zakresie" in `src/lib/demo.ts`, `scripts/test_routes.mjs` and `submission/README.md`. Folder slugs are unchanged, because byte matching uses file paths. `demos/synthetic-scenarios/README.md` only mentions the slug. |
+| major | The terrain fill auto-scaled to ±5 m. In scenario 1 ("na płaskim"), a 4 m wobble therefore drew as hills next to "Nie było tu podbiegu". | The terrain domain now spans at least 60 m. Measured at 390 px: the scenario 1 terrain edge varies by 7 of 150 SVG units, while the 44 m hill in scenario 2 still spans 78 units. Evidence: `.verification/review-fix/chart-s1-390.png`. |
+| minor | Run screen: the "Obliczone z pomiarów zegarka" intro was wrong for the CGM sentence. | Resolved by the first fix. |
+| minor | The "one-page" brief spilled onto a second A4 page after two or three observations. | The brief now prints the three most recent observations. Each is clamped to 110 characters with "…", followed by "Starsze obserwacje pominięte w wydruku: N." if any were left out. In print, the title fits on one line and observations use 9 px. The on-screen brief applies the same cap; the run screen keeps the full observations. |
+
+Page counts measured with `page.pdf` (A4, print media) after client-side navigation,
+using 500-character observations. All were **1 page**:
+
+| Pair | 0 obs | 1 obs | 3 obs | 5 obs |
+| --- | --- | --- | --- | --- |
+| Built-in | 1 | 1 | 1 | 1 |
+| Scenario 1 | 1 | 1 | 1 | 1 |
+| Scenario 3 | 1 | 1 | 1 | 1 |
+
+Scenarios 2 and 4 were measured at 0, 3 and 5 observations (an earlier 160-character
+clamp, also 1 page). The built-in pair leaves the least room: about 22 px of the A4
+content height with 5 observations. An "ai"-status AI section in the brief was not
+measured, because there is no key locally. With that section, a long brief could still
+run onto a second page.
+
+Checks after the fixes, final run at HEAD 26f81d8:
+
+| Command | Result |
+| --- | --- |
+| `npm run check` | pass |
+| `npm run build` | pass |
+| `node --experimental-strip-types --test scripts/test_ai.mjs scripts/test_transport.mjs` | 29 pass, 0 fail |
+| `engine/.venv python -m pytest tests -q` (cwd `engine`) | 103 passed, 1 warning (the existing Starlette/httpx deprecation) |
+| `python -m unittest test_demo` (cwd `scripts`) | 5 tests OK |
+| `QA_BASE_URL=http://127.0.0.1:3811 node --test scripts/test_routes.mjs` | 13 pass, 0 fail |
+| Playwright E2E, scenarios 1 and 2, at 1440x900 and 390x844 | 4 runs, 14/14 checks each |
+
+Servers: the engine ran on 127.0.0.1:8811 and `next start` on 127.0.0.1:3811, sharing a
+random local secret. No AI key was set. Nothing was deployed, pushed or merged, and
+the production AI endpoint was not called. The browser evidence is in
+`.verification/review-fix/` (gitignored).
+
+Note: the table above under "Browser E2E" records the state before review. At that
+point, scenario 2 was named "Podbieg, cukier w normie" and showed the CGM sentence as
+a strength. Neither is true now.
+
+Recorded at 2026-10-04T02:08:34+02:00 (Europe/Warsaw).
